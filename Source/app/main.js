@@ -18,13 +18,14 @@ require.config({
         'moment': 'lib/moment/moment-with-locales',
         'config': 'app/main/config',
         'mainCtrl': 'app/main/controllers/mainCtrl',
-        'routeResolver': 'app/main/services/routeResolverSvc'
+        'routeResolver': 'app/main/services/routeResolverSvc',
+        'linq': 'lib/linq/jquery.linq'
     },
     shim: {
         'jQuery': {
             exports: 'jQuery'
         },
-        'jQueryUi': {
+        'linq': {
             deps: ['jQuery']
         },
         'toastr': {
@@ -68,7 +69,7 @@ require.config({
             deps: ['angular'],
         },
         'mainCtrl': {
-            deps: ['routeResolver', 'app/app', 'app/routes', 'angularSanitize', 'angularCookies', 'text', 'angularLocalStorage', 'angularUIRoute']
+            deps: ['routeResolver', 'app/app', 'app/routes', 'angularSanitize', 'angularCookies',  'angularLocalStorage', 'angularUIRoute']
         },
         'app/app': {
             deps: ['angular']
@@ -80,7 +81,7 @@ require.config({
 });
 
 require([
- 'bootstrap','toastr', 'moment','mainCtrl'
+ 'bootstrap', 'toastr', 'moment', 'mainCtrl', 'text', 'linq'
 ], function () {
     'use strict';
       angular.bootstrap(document, ['app']);
