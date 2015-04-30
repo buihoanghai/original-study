@@ -1,0 +1,79 @@
+﻿/*#region Setup angular*/
+/* This helps the ng-show/ng-hide animations start at the right place. */
+/* Since Angular has this but needs to load, this gives us the class early. */
+
+.ng-hide {
+    display: none !important;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+.hide-false {
+    display: none !important;
+}
+
+.hide-true {
+    display: inline !important;
+}
+/*#endregion*/
+/*#region Spinner*/
+.spinner-wrapper {
+    background: url('images/dot-pixel.png');
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+    .spinner-wrapper .loader-logo img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 140px;
+        margin-left: -67px;
+        margin-top: -110px;
+        height: auto;
+    }
+
+    .spinner-wrapper img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        z-index: 10;
+        margin-top: -15px;
+        margin-left: -15px;
+    }
+
+/*preloader*/
+#preload {
+    background: url('images/dot-pixel.png');
+    width: 100%;
+    min-height: 500px;
+    display: none;
+    position: fixed;
+    top: 0;
+    margin-left: -10px;
+}
+
+    #preload img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        z-index: 12;
+        margin-top: -64px;
+        margin-left: -110px;
+    }
+
+    #preload .loader-logo img {
+        width: 140px;
+        margin-left: -160px;
+        margin-top: -110px;
+        height: auto;
+    }
+/*#endregion*/

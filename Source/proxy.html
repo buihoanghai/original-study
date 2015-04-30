@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<script src="scripts/xdomain.js"></script>
+<script>
+  xdomain.masters({
+    'http://127.0.0.1:3000':'*',
+    'http://localhost:3000': '*',
+    'http://localhost:1988': '*',
+  });
+  xdomain.debug = false;
+</script>
