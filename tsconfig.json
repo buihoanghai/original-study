@@ -16,8 +16,8 @@
     "noFallthroughCasesInSwitch": true
   },
   "references": [
-    { "path": "./apps/web" },
-    { "path": "./apps/cms" },
+    { "path": "./apps/mindmap-web" },
+    { "path": "./apps/mindmap-cms" },
     { "path": "./packages/domain" },
     { "path": "./packages/editor" },
     { "path": "./packages/sync" },

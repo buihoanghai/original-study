@@ -1,0 +1,103 @@
+import type { CollectionConfig } from 'payload'
+
+/**
+ * Mindmaps Collection
+ *
+ * Stores mindmap documents with metadata, status, and ownership.
+ * Based on the Mindmap domain type from @mindmap/domain.
+ *
+ * Features:
+ * - Versioning enabled (draft/publish workflow)
+ * - Access control by owner
+ * - Status: draft, published, archived
+ */
+export const Mindmaps: CollectionConfig = {
+  slug: 'mindmaps',
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'status', 'owner', 'updatedAt'],
+  },
+  versions: {
+    drafts: true,
+  },
+  access: {
+    // Users can only read their own mindmaps
+    read: ({ req: { user } }) => {
+      if (!user) return false
+      return {
+        owner: {
+          equals: user.id,
+        },
+      }
+    },
+    // Users can only create mindmaps for themselves
+    create: ({ req: { user } }) => Boolean(user),
+    // Users can only update their own mindmaps
+    update: ({ req: { user } }) => {
+      if (!user) return false
+      return {
+        owner: {
+          equals: user.id,
+        },
+      }
+    },
+    // Users can only delete their own mindmaps
+    delete: ({ req: { user } }) => {
+      if (!user) return false
+      return {
+        owner: {
+          equals: user.id,
+        },
+      }
+    },
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+      label: 'Title',
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      label: 'Description',
+    },
+    {
+      name: 'status',
+      type: 'select',
+      required: true,
+      defaultValue: 'draft',
+      options: [
+        {
+          label: 'Draft',
+          value: 'draft',
+        },
+        {
+          label: 'Published',
+          value: 'published',
+        },
+        {
+          label: 'Archived',
+          value: 'archived',
+        },
+      ],
+      label: 'Status',
+    },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      hasMany: false,
+      label: 'Owner',
+      // Auto-set owner to current user on creation
+      defaultValue: ({ user }) => user?.id,
+      admin: {
+        readOnly: true,
+      },
+    },
+  ],
+  timestamps: true, // Adds createdAt and updatedAt
+}
+
