@@ -8,5 +8,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     include: ['tests/int/**/*.int.spec.ts'],
+    hookTimeout: 60000, // 60 seconds for database connection
+    testTimeout: 30000, // 30 seconds per test
   },
 })
