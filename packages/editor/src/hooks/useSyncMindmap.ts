@@ -30,42 +30,58 @@ export const useSyncMindmap = (cmsUrl: string, authToken?: string) => {
 
   /**
    * Save current mindmap and nodes to CMS
+   * @param skipConflictCheck - Skip conflict detection (force save)
    */
-  const save = useCallback(async () => {
-    if (!mindmap) {
-      setSyncError('No mindmap to save')
-      return { success: false, error: 'No mindmap to save' }
-    }
-
-    setSyncing(true)
-    setSyncError(null)
-
-    try {
-      // Save mindmap metadata
-      const mindmapResult = await syncClient.saveMindmap(mindmap)
-      if (!mindmapResult.success) {
-        throw new Error(mindmapResult.error || 'Failed to save mindmap')
+  const save = useCallback(
+    async (skipConflictCheck = false) => {
+      if (!mindmap) {
+        setSyncError('No mindmap to save')
+        return { success: false, error: 'No mindmap to save' }
       }
 
-      const savedMindmap = mindmapResult.data!
+      setSyncing(true)
+      setSyncError(null)
 
-      // Save all nodes
-      const nodesResult = await syncClient.saveNodes(nodes, savedMindmap.id!)
-      if (!nodesResult.success) {
-        throw new Error(nodesResult.error || 'Failed to save nodes')
+      try {
+        // Save mindmap metadata
+        const mindmapResult = await syncClient.saveMindmap(mindmap, {
+          skipConflictCheck,
+        })
+        if (!mindmapResult.success) {
+          // Return conflict data if present
+          if (mindmapResult.conflict) {
+            setSyncing(false)
+            return {
+              success: false,
+              error: mindmapResult.error,
+              conflict: mindmapResult.conflict,
+            }
+          }
+          throw new Error(mindmapResult.error || 'Failed to save mindmap')
+        }
+
+        const savedMindmap = mindmapResult.data!
+
+        // Save all nodes
+        const nodesResult = await syncClient.saveNodes(nodes, savedMindmap.id!)
+        if (!nodesResult.success) {
+          throw new Error(nodesResult.error || 'Failed to save nodes')
+        }
+
+        setLastSyncedAt(new Date())
+        setSyncing(false)
+
+        return { success: true, mindmapId: savedMindmap.id }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error'
+        setSyncError(errorMessage)
+        setSyncing(false)
+        return { success: false, error: errorMessage }
       }
-
-      setLastSyncedAt(new Date())
-      setSyncing(false)
-
-      return { success: true, mindmapId: savedMindmap.id }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setSyncError(errorMessage)
-      setSyncing(false)
-      return { success: false, error: errorMessage }
-    }
-  }, [mindmap, nodes, syncClient, setSyncing, setSyncError, setLastSyncedAt])
+    },
+    [mindmap, nodes, syncClient, setSyncing, setSyncError, setLastSyncedAt]
+  )
 
   /**
    * Load mindmap and nodes from CMS

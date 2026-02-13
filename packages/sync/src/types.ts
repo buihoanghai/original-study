@@ -41,6 +41,16 @@ export interface SaveResult<T> {
    * Error message if save failed
    */
   error?: string
+
+  /**
+   * Conflict data if a conflict was detected
+   */
+  conflict?: {
+    local: T
+    remote: T
+    localUpdated: Date
+    remoteUpdated: Date
+  }
 }
 
 /**
@@ -118,6 +128,7 @@ export enum SyncErrorType {
   AUTH_ERROR = 'AUTH_ERROR',
   NOT_FOUND = 'NOT_FOUND',
   VALIDATION_ERROR = 'VALIDATION_ERROR',
+  CONFLICT_ERROR = 'CONFLICT_ERROR',
   UNKNOWN_ERROR = 'UNKNOWN_ERROR',
 }
 

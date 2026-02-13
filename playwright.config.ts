@@ -17,26 +17,48 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'html',
 
   use: {
-    baseURL: 'http://127.0.0.1:3333',
+    baseURL: 'http://localhost:3333',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
 
   projects: [
+    // Setup project for authentication
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
+    // Chromium tests with authentication
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
   ],
 
-  webServer: {
-    command: 'PORT=3333 npm run dev:web',
-    url: 'http://127.0.0.1:3333',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000, // 2 minutes for server to start
-    stdout: 'pipe',
-    stderr: 'pipe',
-  },
+  webServer: [
+    // Start CMS first
+    {
+      command: 'npm run dev:cms',
+      url: 'http://localhost:3001',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+      stdout: 'pipe',
+      stderr: 'pipe',
+    },
+    // Then start web app
+    {
+      command: 'PORT=3333 npm run dev:web',
+      url: 'http://localhost:3333',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+      stdout: 'pipe',
+      stderr: 'pipe',
+    },
+  ],
 })
 

@@ -1,12 +1,13 @@
 import type { Flashcard, SRSMetadata } from '@mindmap/domain'
 import type { ReviewRating } from '@mindmap/flashcard'
 import { calculateNextReview, createInitialSRS } from '@mindmap/flashcard'
-import type { ApiResponse } from './api'
+import type { ApiResult } from './api'
 
 /**
  * Flashcard API Client
  *
  * Provides functions to interact with Payload CMS Flashcards collection.
+ * All functions use cookie-based authentication and return ApiResult<T>.
  */
 
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
@@ -16,7 +17,7 @@ const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
  */
 export async function getFlashcardsByNode(
   nodeId: string
-): Promise<ApiResponse<Flashcard[]>> {
+): Promise<ApiResult<Flashcard[]>> {
   try {
     const response = await fetch(
       `${CMS_URL}/api/flashcards?where[nodeId][equals]=${nodeId}`,
@@ -25,13 +26,15 @@ export async function getFlashcardsByNode(
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
       }
     )
 
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
       return {
         success: false,
-        error: `Failed to fetch flashcards: ${response.statusText}`,
+        error: errorData.errors?.[0]?.message || `Failed to fetch flashcards: ${response.statusText}`,
       }
     }
 
@@ -43,7 +46,7 @@ export async function getFlashcardsByNode(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: `Failed to fetch flashcards: ${error instanceof Error ? error.message : 'Network error'}`,
     }
   }
 }
@@ -51,19 +54,21 @@ export async function getFlashcardsByNode(
 /**
  * Get all flashcards for a mindmap
  */
-export async function getAllFlashcards(): Promise<ApiResponse<Flashcard[]>> {
+export async function getAllFlashcards(): Promise<ApiResult<Flashcard[]>> {
   try {
     const response = await fetch(`${CMS_URL}/api/flashcards`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Include cookies for authentication
     })
 
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
       return {
         success: false,
-        error: `Failed to fetch flashcards: ${response.statusText}`,
+        error: errorData.errors?.[0]?.message || `Failed to fetch flashcards: ${response.statusText}`,
       }
     }
 
@@ -75,7 +80,7 @@ export async function getAllFlashcards(): Promise<ApiResponse<Flashcard[]>> {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: `Failed to fetch flashcards: ${error instanceof Error ? error.message : 'Network error'}`,
     }
   }
 }
@@ -83,7 +88,7 @@ export async function getAllFlashcards(): Promise<ApiResponse<Flashcard[]>> {
 /**
  * Get flashcards that are due for review
  */
-export async function getDueFlashcards(): Promise<ApiResponse<Flashcard[]>> {
+export async function getDueFlashcards(): Promise<ApiResult<Flashcard[]>> {
   try {
     const now = new Date().toISOString()
     const response = await fetch(
@@ -93,13 +98,15 @@ export async function getDueFlashcards(): Promise<ApiResponse<Flashcard[]>> {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
       }
     )
 
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
       return {
         success: false,
-        error: `Failed to fetch due flashcards: ${response.statusText}`,
+        error: errorData.errors?.[0]?.message || `Failed to fetch due flashcards: ${response.statusText}`,
       }
     }
 
@@ -111,7 +118,7 @@ export async function getDueFlashcards(): Promise<ApiResponse<Flashcard[]>> {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: `Failed to fetch due flashcards: ${error instanceof Error ? error.message : 'Network error'}`,
     }
   }
 }
@@ -123,7 +130,7 @@ export async function createFlashcard(
   nodeId: string,
   question: string,
   answer: string
-): Promise<ApiResponse<Flashcard>> {
+): Promise<ApiResult<Flashcard>> {
   try {
     const srs = createInitialSRS()
 
@@ -132,6 +139,7 @@ export async function createFlashcard(
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Include cookies for authentication
       body: JSON.stringify({
         nodeId,
         question,
@@ -141,14 +149,15 @@ export async function createFlashcard(
           ease: srs.ease,
           nextReview: srs.nextReview.toISOString(),
         },
-        owner: 'default-user', // TODO: Replace with actual user ID when auth is implemented
+        // Owner is auto-set by Payload CMS from authenticated user
       }),
     })
 
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
       return {
         success: false,
-        error: `Failed to create flashcard: ${response.statusText}`,
+        error: errorData.errors?.[0]?.message || `Failed to create flashcard: ${response.statusText}`,
       }
     }
 
@@ -160,7 +169,7 @@ export async function createFlashcard(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: `Failed to create flashcard: ${error instanceof Error ? error.message : 'Network error'}`,
     }
   }
 }
@@ -171,20 +180,22 @@ export async function createFlashcard(
 export async function updateFlashcard(
   id: string,
   updates: Partial<Pick<Flashcard, 'question' | 'answer'>>
-): Promise<ApiResponse<Flashcard>> {
+): Promise<ApiResult<Flashcard>> {
   try {
     const response = await fetch(`${CMS_URL}/api/flashcards/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Include cookies for authentication
       body: JSON.stringify(updates),
     })
 
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
       return {
         success: false,
-        error: `Failed to update flashcard: ${response.statusText}`,
+        error: errorData.errors?.[0]?.message || `Failed to update flashcard: ${response.statusText}`,
       }
     }
 
@@ -196,7 +207,7 @@ export async function updateFlashcard(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: `Failed to update flashcard: ${error instanceof Error ? error.message : 'Network error'}`,
     }
   }
 }
@@ -206,19 +217,21 @@ export async function updateFlashcard(
  */
 export async function deleteFlashcard(
   id: string
-): Promise<ApiResponse<void>> {
+): Promise<ApiResult<void>> {
   try {
     const response = await fetch(`${CMS_URL}/api/flashcards/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Include cookies for authentication
     })
 
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
       return {
         success: false,
-        error: `Failed to delete flashcard: ${response.statusText}`,
+        error: errorData.errors?.[0]?.message || `Failed to delete flashcard: ${response.statusText}`,
       }
     }
 
@@ -228,7 +241,7 @@ export async function deleteFlashcard(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: `Failed to delete flashcard: ${error instanceof Error ? error.message : 'Network error'}`,
     }
   }
 }
@@ -240,7 +253,7 @@ export async function reviewFlashcard(
   id: string,
   currentSRS: SRSMetadata,
   rating: ReviewRating
-): Promise<ApiResponse<Flashcard>> {
+): Promise<ApiResult<Flashcard>> {
   try {
     const newSRS = calculateNextReview(currentSRS, rating)
 
@@ -249,6 +262,7 @@ export async function reviewFlashcard(
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Include cookies for authentication
       body: JSON.stringify({
         srs: {
           interval: newSRS.interval,
@@ -259,9 +273,10 @@ export async function reviewFlashcard(
     })
 
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
       return {
         success: false,
-        error: `Failed to review flashcard: ${response.statusText}`,
+        error: errorData.errors?.[0]?.message || `Failed to review flashcard: ${response.statusText}`,
       }
     }
 
@@ -273,7 +288,7 @@ export async function reviewFlashcard(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: `Failed to review flashcard: ${error instanceof Error ? error.message : 'Network error'}`,
     }
   }
 }

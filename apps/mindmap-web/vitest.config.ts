@@ -33,7 +33,11 @@ export default defineConfig({
       '@/components': path.resolve(__dirname, './components'),
       '@/lib': path.resolve(__dirname, './lib'),
       '@/app': path.resolve(__dirname, './app'),
+      '@mindmap/domain': path.resolve(__dirname, '../../packages/domain/src'),
+      '@mindmap/editor': path.resolve(__dirname, '../../packages/editor/src'),
+      '@mindmap/sync': path.resolve(__dirname, '../../packages/sync/src'),
     },
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
   },
 })
 

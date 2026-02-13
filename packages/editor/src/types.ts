@@ -63,6 +63,7 @@ export interface EditorState {
   isSyncing: boolean
   lastSyncedAt: Date | null
   syncError: string | null
+  saveCallback: (() => Promise<void>) | null
 }
 
 /**

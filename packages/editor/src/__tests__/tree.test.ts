@@ -148,6 +148,14 @@ describe('Tree Operations', () => {
       expect(result.nodes[0].nodeId).toBe(root.nodeId)
       expect(result.edges).toHaveLength(0)
     })
+
+    it('should throw error when deleting root node', () => {
+      const root = createNode({ text: 'Root' }, { x: 0, y: 0 })
+      const nodes: MindmapNode[] = [root]
+      const edges: NodeEdge[] = []
+
+      expect(() => deleteNode(nodes, edges, root.nodeId)).toThrow('Cannot delete root node')
+    })
   })
 })
 

@@ -39,6 +39,8 @@ interface EditorActions {
   setSyncing: (isSyncing: boolean) => void
   setSyncError: (error: string | null) => void
   setLastSyncedAt: (date: Date) => void
+  setSaveCallback: (callback: (() => Promise<void>) | null) => void
+  triggerSave: () => Promise<void>
 
   // UI
   setZoom: (zoom: number) => void
@@ -68,6 +70,7 @@ const initialState: EditorState = {
   isSyncing: false,
   lastSyncedAt: null,
   syncError: null,
+  saveCallback: null,
 }
 
 /**
@@ -273,6 +276,21 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       set((state) => {
         state.lastSyncedAt = date
       })
+    },
+
+    setSaveCallback: (callback: (() => Promise<void>) | null) => {
+      set((state) => {
+        state.saveCallback = callback
+      })
+    },
+
+    triggerSave: async () => {
+      const { saveCallback } = get()
+      if (saveCallback) {
+        await saveCallback()
+      } else {
+        console.warn('No save callback registered')
+      }
     },
 
     // UI

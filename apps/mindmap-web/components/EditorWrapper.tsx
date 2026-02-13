@@ -5,6 +5,10 @@ import { MindmapEditor } from '@mindmap/editor'
 import { useSyncMindmap } from '@mindmap/editor'
 import { useEditorStore } from '@mindmap/editor'
 import { FlashcardPanel } from './FlashcardPanel'
+import { KeyboardShortcutsHelp } from './KeyboardShortcutsHelp'
+import { SyncStatus } from './SyncStatus'
+import { ToastContainer, useToast } from './Toast'
+import { ConflictResolution, type ConflictData } from './ConflictResolution'
 
 interface EditorWrapperProps {
   mindmapId: string
@@ -20,10 +24,55 @@ export function EditorWrapper({ mindmapId }: EditorWrapperProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showFlashcardPanel, setShowFlashcardPanel] = useState(false)
+  const [conflict, setConflict] = useState<ConflictData | null>(null)
   const selectedNodeId = useEditorStore((state) => state.ui.selectedNodeId)
+  const setSaveCallback = useEditorStore((state) => state.setSaveCallback)
+  const { toasts, closeToast, success, error: showError } = useToast()
   const { save, load } = useSyncMindmap(
     process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
   )
+
+  // Wrap save function to show toast notifications and handle conflicts
+  const handleSave = async (skipConflictCheck = false) => {
+    const result = await save(skipConflictCheck)
+    if (result.success) {
+      success('Mindmap saved successfully')
+      setConflict(null) // Clear any existing conflict
+    } else if (result.conflict) {
+      // Show conflict resolution UI
+      setConflict(result.conflict as ConflictData)
+    } else {
+      showError(result.error || 'Failed to save mindmap')
+    }
+  }
+
+  // Handle conflict resolution
+  const handleConflictResolve = async (
+    resolution: 'local' | 'remote' | 'cancel'
+  ) => {
+    if (resolution === 'cancel') {
+      setConflict(null)
+      return
+    }
+
+    if (resolution === 'local') {
+      // Force save local version (skip conflict check)
+      await handleSave(true)
+    } else if (resolution === 'remote') {
+      // Load remote version and discard local changes
+      if (conflict?.remote.id) {
+        await load(conflict.remote.id)
+        success('Loaded remote version')
+      }
+      setConflict(null)
+    }
+  }
+
+  // Register save callback for Ctrl+S hotkey
+  useEffect(() => {
+    setSaveCallback(handleSave)
+    return () => setSaveCallback(null)
+  }, [handleSave, setSaveCallback])
 
   // Load mindmap on mount
   useEffect(() => {
@@ -94,12 +143,13 @@ export function EditorWrapper({ mindmapId }: EditorWrapperProps) {
     <div className="h-screen w-full relative">
       {/* Toolbar */}
       <div className="absolute top-4 right-4 z-40 flex gap-2">
+        <SyncStatus onSave={handleSave} />
         <button
           onClick={() => setShowFlashcardPanel(!showFlashcardPanel)}
           className={`px-4 py-2 text-sm font-medium rounded-md shadow-sm ${
             showFlashcardPanel
               ? 'bg-blue-600 text-white'
-              : 'bg-white text-zinc-700 border border-zinc-300 hover:bg-zinc-50'
+              : 'bg-white text-zinc-700 border border-zinc-300 hover:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-700 dark:hover:bg-zinc-700'
           }`}
           title="Toggle flashcard panel (Ctrl+Shift+F)"
         >
@@ -114,6 +164,17 @@ export function EditorWrapper({ mindmapId }: EditorWrapperProps) {
         isVisible={showFlashcardPanel}
         onClose={() => setShowFlashcardPanel(false)}
       />
+
+      <KeyboardShortcutsHelp />
+
+      <ToastContainer toasts={toasts} onClose={closeToast} />
+
+      {conflict && (
+        <ConflictResolution
+          conflict={conflict}
+          onResolve={handleConflictResolve}
+        />
+      )}
     </div>
   )
 }

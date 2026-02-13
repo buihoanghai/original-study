@@ -57,6 +57,7 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
 
   return (
     <div
+      data-testid={`node-${node.nodeId}`}
       style={{
         padding: '10px 15px',
         borderRadius: '8px',
@@ -81,6 +82,7 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
+          data-testid="node-input"
           style={{
             width: '100%',
             border: 'none',

@@ -96,7 +96,7 @@ export const MindmapEditor: React.FC = () => {
   useNavigation()
 
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
+    <div style={{ width: '100%', height: '100vh' }} data-testid="mindmap-canvas">
       <ReactFlow
         nodes={reactFlowNodes}
         edges={reactFlowEdges}

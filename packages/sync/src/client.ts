@@ -8,6 +8,7 @@ import {
   SyncError,
   SyncErrorType,
 } from './types'
+import { withRetry, isOnline, type RetryOptions } from './retry'
 
 /**
  * SyncClient
@@ -28,9 +29,23 @@ import {
  */
 export class SyncClient {
   private config: SyncConfig
+  private retryOptions: RetryOptions
 
-  constructor(config: SyncConfig) {
+  constructor(config: SyncConfig, retryOptions?: RetryOptions) {
     this.config = config
+    this.retryOptions = retryOptions || {
+      maxAttempts: 3,
+      initialDelay: 1000,
+      shouldRetry: (error: Error) => {
+        // Retry on network errors, but not on auth or validation errors
+        return (
+          error.message.includes('Network') ||
+          error.message.includes('fetch') ||
+          !error.message.includes('Authentication') &&
+          !error.message.includes('not found')
+        )
+      },
+    }
   }
 
   /**
@@ -108,39 +123,78 @@ export class SyncClient {
   /**
    * Save a mindmap to CMS
    * Creates new mindmap if no ID, updates if ID exists
+   * Detects conflicts by comparing updatedAt timestamps
    */
-  async saveMindmap(mindmap: Mindmap): Promise<SaveResult<SyncedMindmap>> {
+  async saveMindmap(
+    mindmap: Mindmap,
+    options?: { skipConflictCheck?: boolean }
+  ): Promise<SaveResult<SyncedMindmap>> {
+    // Check if online
+    if (!isOnline()) {
+      return {
+        success: false,
+        error: 'No network connection. Please check your internet and try again.',
+      }
+    }
+
     try {
       const syncedMindmap = mindmap as SyncedMindmap
 
-      if (syncedMindmap.id) {
-        // Update existing mindmap
-        const data = await this.request<{ doc: SyncedMindmap }>(
-          `/api/mindmaps/${syncedMindmap.id}`,
-          {
-            method: 'PATCH',
-            body: JSON.stringify(mindmap),
-          }
-        )
+      // Check for conflicts before updating (if ID exists and not skipping)
+      if (
+        syncedMindmap.id &&
+        !options?.skipConflictCheck &&
+        syncedMindmap.updatedAt
+      ) {
+        const remoteResult = await this.loadMindmap(syncedMindmap.id)
+        if (remoteResult.success && remoteResult.data) {
+          const remote = remoteResult.data
+          const localUpdated = new Date(syncedMindmap.updatedAt)
+          const remoteUpdated = new Date(remote.updatedAt!)
 
-        return {
-          success: true,
-          data: data.doc,
-        }
-      } else {
-        // Create new mindmap
-        const data = await this.request<{ doc: SyncedMindmap }>(
-          '/api/mindmaps',
-          {
-            method: 'POST',
-            body: JSON.stringify(mindmap),
+          // Conflict detected: remote was updated after local
+          if (remoteUpdated > localUpdated) {
+            return {
+              success: false,
+              error: 'Conflict: Remote version is newer than local version',
+              conflict: {
+                local: syncedMindmap,
+                remote,
+                localUpdated,
+                remoteUpdated,
+              },
+            }
           }
-        )
-
-        return {
-          success: true,
-          data: data.doc,
         }
+      }
+
+      const result = await withRetry(async () => {
+        if (syncedMindmap.id) {
+          // Update existing mindmap
+          const data = await this.request<{ doc: SyncedMindmap }>(
+            `/api/mindmaps/${syncedMindmap.id}`,
+            {
+              method: 'PATCH',
+              body: JSON.stringify(mindmap),
+            }
+          )
+          return data.doc
+        } else {
+          // Create new mindmap
+          const data = await this.request<{ doc: SyncedMindmap }>(
+            '/api/mindmaps',
+            {
+              method: 'POST',
+              body: JSON.stringify(mindmap),
+            }
+          )
+          return data.doc
+        }
+      }, this.retryOptions)
+
+      return {
+        success: true,
+        data: result,
       }
     } catch (error) {
       return {
@@ -154,8 +208,19 @@ export class SyncClient {
    * Load a mindmap from CMS
    */
   async loadMindmap(id: string): Promise<LoadResult<SyncedMindmap>> {
+    // Check if online
+    if (!isOnline()) {
+      return {
+        success: false,
+        error: 'No network connection. Please check your internet and try again.',
+      }
+    }
+
     try {
-      const data = await this.request<SyncedMindmap>(`/api/mindmaps/${id}`)
+      const data = await withRetry(
+        async () => this.request<SyncedMindmap>(`/api/mindmaps/${id}`),
+        this.retryOptions
+      )
 
       return {
         success: true,
@@ -177,10 +242,18 @@ export class SyncClient {
     nodes: MindmapNode[],
     mindmapId: string
   ): Promise<SaveResult<SyncedNode[]>> {
+    // Check if online
+    if (!isOnline()) {
+      return {
+        success: false,
+        error: 'No network connection. Please check your internet and try again.',
+      }
+    }
+
     try {
       const savedNodes: SyncedNode[] = []
 
-      // Save each node individually
+      // Save each node individually with retry
       // TODO: Implement batch API endpoint for better performance
       for (const node of nodes) {
         const syncedNode = node as SyncedNode
@@ -190,27 +263,31 @@ export class SyncClient {
           mindmap: mindmapId,
         }
 
-        if (syncedNode.id) {
-          // Update existing node
-          const data = await this.request<{ doc: SyncedNode }>(
-            `/api/mindmap-nodes/${syncedNode.id}`,
-            {
-              method: 'PATCH',
-              body: JSON.stringify(nodeData),
-            }
-          )
-          savedNodes.push(data.doc)
-        } else {
-          // Create new node
-          const data = await this.request<{ doc: SyncedNode }>(
-            '/api/mindmap-nodes',
-            {
-              method: 'POST',
-              body: JSON.stringify(nodeData),
-            }
-          )
-          savedNodes.push(data.doc)
-        }
+        const savedNode = await withRetry(async () => {
+          if (syncedNode.id) {
+            // Update existing node
+            const data = await this.request<{ doc: SyncedNode }>(
+              `/api/mindmap-nodes/${syncedNode.id}`,
+              {
+                method: 'PATCH',
+                body: JSON.stringify(nodeData),
+              }
+            )
+            return data.doc
+          } else {
+            // Create new node
+            const data = await this.request<{ doc: SyncedNode }>(
+              '/api/mindmap-nodes',
+              {
+                method: 'POST',
+                body: JSON.stringify(nodeData),
+              }
+            )
+            return data.doc
+          }
+        }, this.retryOptions)
+
+        savedNodes.push(savedNode)
       }
 
       return {
@@ -229,9 +306,21 @@ export class SyncClient {
    * Load all nodes for a mindmap from CMS
    */
   async loadNodes(mindmapId: string): Promise<LoadResult<SyncedNode[]>> {
+    // Check if online
+    if (!isOnline()) {
+      return {
+        success: false,
+        error: 'No network connection. Please check your internet and try again.',
+      }
+    }
+
     try {
-      const data = await this.request<{ docs: SyncedNode[] }>(
-        `/api/mindmap-nodes?where[mindmap][equals]=${mindmapId}`
+      const data = await withRetry(
+        async () =>
+          this.request<{ docs: SyncedNode[] }>(
+            `/api/mindmap-nodes?where[mindmap][equals]=${mindmapId}`
+          ),
+        this.retryOptions
       )
 
       return {

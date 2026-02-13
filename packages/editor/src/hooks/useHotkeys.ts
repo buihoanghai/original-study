@@ -28,6 +28,7 @@ export const useHotkeys = () => {
     undo,
     redo,
     setZoom,
+    triggerSave,
     setCenter,
   } = useEditorStore()
 
@@ -90,8 +91,7 @@ export const useHotkeys = () => {
       // Ctrl/Cmd + S: Save to CMS
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault()
-        // TODO: Implement save functionality
-        console.log('Save triggered (not yet implemented)')
+        triggerSave()
         return
       }
 

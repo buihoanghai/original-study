@@ -46,6 +46,14 @@ describe('Component Integration Tests', () => {
       expect(newMindmapLink).toHaveAttribute('href', '/new')
     })
 
+    it('should show login link when not authenticated', () => {
+      render(<Header />)
+
+      expect(screen.getByText('Login')).toBeInTheDocument()
+      const loginLink = screen.getByText('Login').closest('a')
+      expect(loginLink).toHaveAttribute('href', '/login')
+    })
+
     it('should apply correct CSS classes for styling', () => {
       render(<Header />)
 

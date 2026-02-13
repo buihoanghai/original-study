@@ -142,6 +142,13 @@ export function deleteNode(
   edges: NodeEdge[],
   nodeId: string
 ): { nodes: MindmapNode[]; edges: NodeEdge[] } {
+  // Check if node is root (has no parent edge)
+  const isRoot = !edges.some((e) => e.to === nodeId && e.type === 'parent-child')
+
+  if (isRoot) {
+    throw new Error('Cannot delete root node')
+  }
+
   // Find all descendant node IDs
   const descendantIds = getDescendantIds(edges, nodeId)
   const allIdsToDelete = new Set([nodeId, ...descendantIds])
