@@ -1,0 +1,63 @@
+name: Doctor Check
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  doctor:
+    name: Run Doctor Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Doctor (fast mode)
+        run: npm run doctor -- --fast
+        env:
+          CI: true
+          # Disable debug tracing in CI
+          DEBUG_TRACE: '0'
+          NEXT_PUBLIC_DEBUG_TRACE: '0'
+
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doctor-failure-logs
+          path: |
+            debug/
+            apps/mindmap-web/.next/
+            apps/mindmap-cms/.next/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  summary:
+    name: Check Summary
+    runs-on: ubuntu-latest
+    needs: doctor
+    if: always()
+
+    steps:
+      - name: Check doctor result
+        run: |
+          if [ "${{ needs.doctor.result }}" != "success" ]; then
+            echo "❌ Doctor check failed"
+            exit 1
+          else
+            echo "✅ Doctor check passed"
+          fi
+
