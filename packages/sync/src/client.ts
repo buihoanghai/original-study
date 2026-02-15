@@ -75,6 +75,7 @@ export class SyncClient {
     try {
       const response = await fetch(url, {
         ...options,
+        credentials: 'include', // Include cookies for authentication
         headers: {
           ...this.getHeaders(),
           ...options.headers,
@@ -117,6 +118,68 @@ export class SyncClient {
         'Network request failed',
         { originalError: error }
       )
+    }
+  }
+
+  /**
+   * Transform domain Mindmap to Payload API format
+   */
+  private transformToPayloadFormat(mindmap: Mindmap): any {
+    return {
+      title: mindmap.metadata.title,
+      description: mindmap.metadata.description,
+      status: mindmap.status,
+      // owner is auto-set by Payload CMS from authenticated user
+    }
+  }
+
+  /**
+   * Transform Payload API response to domain Mindmap format
+   */
+  private transformFromPayloadFormat(payloadDoc: any): Mindmap {
+    return {
+      id: payloadDoc.id,
+      metadata: {
+        title: payloadDoc.title,
+        description: payloadDoc.description || '',
+        created: new Date(payloadDoc.createdAt),
+        updated: new Date(payloadDoc.updatedAt),
+      },
+      status: payloadDoc.status,
+      ownerId: typeof payloadDoc.owner === 'string' ? payloadDoc.owner : payloadDoc.owner?.id,
+    }
+  }
+
+  /**
+   * Transform domain MindmapNode to Payload API format
+   */
+  private transformNodeToPayloadFormat(node: MindmapNode, mindmapId: string): any {
+    // Omit the author field - Payload will auto-set it to the current user
+    // The domain uses 'current-user' placeholder which is not a valid ObjectId
+    return {
+      nodeId: node.nodeId,
+      mindmap: mindmapId,
+      content: node.content,
+      position: node.position,
+      // metadata.author is omitted - Payload's defaultValue will set it
+    }
+  }
+
+  /**
+   * Transform Payload API node to domain MindmapNode format
+   */
+  private transformNodeFromPayloadFormat(payloadNode: any): MindmapNode {
+    return {
+      nodeId: payloadNode.nodeId,
+      content: payloadNode.content,
+      position: payloadNode.position,
+      metadata: {
+        created: new Date(payloadNode.createdAt),
+        updated: new Date(payloadNode.updatedAt),
+        author: typeof payloadNode.metadata?.author === 'string'
+          ? payloadNode.metadata.author
+          : payloadNode.metadata?.author?.id || 'unknown',
+      },
     }
   }
 
@@ -168,33 +231,47 @@ export class SyncClient {
         }
       }
 
+      // Transform domain format to Payload API format
+      const payloadData = this.transformToPayloadFormat(mindmap)
+
       const result = await withRetry(async () => {
         if (syncedMindmap.id) {
           // Update existing mindmap
-          const data = await this.request<{ doc: SyncedMindmap }>(
+          const data = await this.request<{ doc: any }>(
             `/api/mindmaps/${syncedMindmap.id}`,
             {
               method: 'PATCH',
-              body: JSON.stringify(mindmap),
+              body: JSON.stringify(payloadData),
             }
           )
           return data.doc
         } else {
           // Create new mindmap
-          const data = await this.request<{ doc: SyncedMindmap }>(
+          const data = await this.request<{ doc: any }>(
             '/api/mindmaps',
             {
               method: 'POST',
-              body: JSON.stringify(mindmap),
+              body: JSON.stringify(payloadData),
             }
           )
           return data.doc
         }
       }, this.retryOptions)
 
+      console.log('[SyncClient] saveMindmap result from API:', result)
+
+      // Validate result before transforming
+      if (!result || !result.id) {
+        console.error('[SyncClient] Invalid result from API:', result)
+        throw new Error('Invalid response from server: missing mindmap data')
+      }
+
+      // Transform Payload response back to domain format
+      const domainMindmap = this.transformFromPayloadFormat(result)
+
       return {
         success: true,
-        data: result,
+        data: domainMindmap as SyncedMindmap,
       }
     } catch (error) {
       return {
@@ -217,14 +294,23 @@ export class SyncClient {
     }
 
     try {
-      const data = await withRetry(
-        async () => this.request<SyncedMindmap>(`/api/mindmaps/${id}`),
+      // GET request returns the document directly, not wrapped in { doc: {...} }
+      const payloadDoc = await withRetry(
+        async () => this.request<any>(`/api/mindmaps/${id}`),
         this.retryOptions
       )
 
+      // Validate payloadDoc before transforming
+      if (!payloadDoc || !payloadDoc.id) {
+        throw new Error('Invalid response from server: missing mindmap data')
+      }
+
+      // Transform Payload response to domain format
+      const domainMindmap = this.transformFromPayloadFormat(payloadDoc)
+
       return {
         success: true,
-        data,
+        data: domainMindmap as SyncedMindmap,
       }
     } catch (error) {
       return {
@@ -258,15 +344,13 @@ export class SyncClient {
       for (const node of nodes) {
         const syncedNode = node as SyncedNode
 
-        const nodeData = {
-          ...node,
-          mindmap: mindmapId,
-        }
+        // Transform domain node to Payload API format
+        const nodeData = this.transformNodeToPayloadFormat(node, mindmapId)
 
         const savedNode = await withRetry(async () => {
           if (syncedNode.id) {
             // Update existing node
-            const data = await this.request<{ doc: SyncedNode }>(
+            const data = await this.request<{ doc: any }>(
               `/api/mindmap-nodes/${syncedNode.id}`,
               {
                 method: 'PATCH',
@@ -276,7 +360,7 @@ export class SyncClient {
             return data.doc
           } else {
             // Create new node
-            const data = await this.request<{ doc: SyncedNode }>(
+            const data = await this.request<{ doc: any }>(
               '/api/mindmap-nodes',
               {
                 method: 'POST',
@@ -287,7 +371,9 @@ export class SyncClient {
           }
         }, this.retryOptions)
 
-        savedNodes.push(savedNode)
+        // Transform back to domain format and add to saved nodes
+        const domainNode = this.transformNodeFromPayloadFormat(savedNode)
+        savedNodes.push({ ...domainNode, id: savedNode.id } as SyncedNode)
       }
 
       return {
@@ -317,15 +403,21 @@ export class SyncClient {
     try {
       const data = await withRetry(
         async () =>
-          this.request<{ docs: SyncedNode[] }>(
+          this.request<{ docs: any[] }>(
             `/api/mindmap-nodes?where[mindmap][equals]=${mindmapId}`
           ),
         this.retryOptions
       )
 
+      // Transform Payload nodes to domain format
+      const domainNodes = data.docs.map(payloadNode => {
+        const domainNode = this.transformNodeFromPayloadFormat(payloadNode)
+        return { ...domainNode, id: payloadNode.id } as SyncedNode
+      })
+
       return {
         success: true,
-        data: data.docs,
+        data: domainNodes,
       }
     } catch (error) {
       return {

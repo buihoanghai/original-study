@@ -1,0 +1,718 @@
+
+> mindmap-learning-app@0.1.0 test:e2e
+> playwright test
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m> mindmap-learning-app@0.1.0 dev:cms
+[2m[WebServer] [22m> npm run dev --workspace=apps/mindmap-cms
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m> mindmap-cms@1.0.0 dev
+[2m[WebServer] [22m> cross-env NODE_OPTIONS=--no-deprecation next dev -p 3001
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m [33m[1m⚠[22m[39m Warning: Found multiple lockfiles. Selecting /home/haibui/projects/original-study/package-lock.json.
+[2m[WebServer] [22m   Consider removing the lockfiles at:
+[2m[WebServer] [22m   * /home/haibui/projects/original-study/apps/mindmap-cms/pnpm-lock.yaml
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m   [1m[38;2;173;127;168m▲ Next.js 15.4.11[39m[22m
+
+[1A[2K[2m[WebServer] [22m   - Local:        http://localhost:3001
+[2m[WebServer] [22m   - Network:      http://192.168.1.133:3001
+[2m[WebServer] [22m   - Environments: .env
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m [32m[1m✓[22m[39m Starting...
+
+[1A[2K[2m[WebServer] [22m [32m[1m✓[22m[39m Ready in 1921ms
+
+[1A[2K[2m[WebServer] [22m [37m[1m○[22m[39m Compiling / ...
+
+[1A[2K[2m[WebServer] [22m [32m[1m✓[22m[39m Compiled / in 951ms (795 modules)
+
+[1A[2K[2m[WebServer] [22m[06:34:30] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 1992ms
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m> mindmap-learning-app@0.1.0 dev:web
+[2m[WebServer] [22m> npm run dev --workspace=apps/mindmap-web
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m> mindmap-web@0.1.0 dev
+[2m[WebServer] [22m> next dev
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m[33m[1m⚠[22m[39m Warning: Next.js inferred your workspace root, but it may not be correct.
+[2m[WebServer] [22m We detected multiple lockfiles and selected the directory of /home/haibui/projects/original-study/package-lock.json as the root directory.
+[2m[WebServer] [22m To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+[2m[WebServer] [22m   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+[2m[WebServer] [22m Detected additional lockfiles: 
+[2m[WebServer] [22m   * /home/haibui/projects/original-study/apps/mindmap-web/pnpm-lock.yaml
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m[1m[38;2;173;127;168m▲ Next.js 16.1.6[39m[22m (Turbopack)
+
+[1A[2K[2m[WebServer] [22m- Local:         http://localhost:3333
+[2m[WebServer] [22m- Network:       http://192.168.1.133:3333
+
+[1A[2K[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m[32m[1m✓[22m[39m Starting...
+
+[1A[2K[2m[WebServer] [22m[33m[1m⚠[22m[39m The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+[1A[2K[2m[WebServer] [22m[32m[1m✓[22m[39m Ready in 606ms
+
+[1A[2K[2m[WebServer] [22m [37m[1m○[22m[39m Compiling /api/[...slug] ...
+
+[1A[2K[2m[WebServer] [22m [32m[1m✓[22m[39m Compiled /api/[...slug] in 575ms (1392 modules)
+
+[1A[2K[2m[WebServer] [22m[06:34:34] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps [33m403[39m in 1906ms
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 2.3s[2m (compile: 148ms, proxy.ts: 54ms, render: 2.1s)[22m
+
+
+Running 10 tests using 8 workers
+
+[1A[2K[1/10] [setup] › e2e/auth.setup.ts:18:6 › authenticate
+[1A[2K[setup] › e2e/auth.setup.ts:18:6 › authenticate
+🔐 Setting up authentication...
+
+[1A[2K  Attempting API login...
+
+[1A[2K[2m[WebServer] [22m POST /api/users/login [32m200[39m in 98ms
+
+[1A[2K  ✓ API login successful
+
+[1A[2K  Navigating to login page...
+
+[1A[2K[2m[WebServer] [22m GET /login [32m200[39m in 94ms[2m (compile: 20ms, proxy.ts: 4ms, render: 70ms)[22m
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 8ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 6ms
+
+[1A[2K  ✓ Login page loaded
+
+[1A[2K  ✓ Form filled
+
+[1A[2K  ✓ Form submitted, waiting for redirect...
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/login [32m200[39m in 9ms
+
+[1A[2K[2m[WebServer] [22m POST /api/users/login [32m200[39m in 64ms
+
+[1A[2K  [Network] POST /api/users/login: 200
+
+[1A[2K  [Network] Response body: {
+  "message": "Authentication Passed",
+  "exp": 1771032876,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGYzYjJiNGRhYjg4OGFkNjdlMzA2MiIsImNvbGxlY3Rpb24iOiJ1c2VycyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInNpZCI6IjRkMDk4ZDdlLTY4NzQtNGFiYS1iNTk5LWFkOTQ0NjZmYmM0NSIsImlhdCI6MTc3MTAyNTY3NiwiZXhwIjoxNzcxMDMyODc2fQ.WqFmO9NP-dQKjmxWsaKrWU3djN7TdYGec_RACQX0iEE",
+  "user": {
+    "createdAt": "2026-02-13T14:54:35.798Z",
+    "email": "test@example.com",
+    "sessions": [
+      {
+        "id": "afebc509-147f-482f-96c5-4b9beca3e0b6",
+        "createdAt": "2026-02-13T22:08:01.300Z",
+        "expiresAt": "2026-02-14T00:08:01.300Z"
+      },
+      {
+        "id": "1e313dc1-5005-476b-bc5a-77fcf60cefba",
+        "createdAt": "2026-02-13T22:43:28.382Z",
+        "expiresAt": "2026-02-14T00:43:28.382Z"
+      },
+      {
+        "id": "8e53f1ae-4792-47c4-b848-21fc77e1b8b4",
+        "createdAt": "2026-02-13T22:43:29.348Z",
+        "expiresAt": "2026-02-14T00:43:29.348Z"
+      },
+      {
+        "id": "47b81d09-84c9-436c-855b-580934a5c568",
+        "createdAt": "2026-02-13T22:53:03.251Z",
+        "expiresAt": "2026-02-14T00:53:03.251Z"
+      },
+      {
+        "id": "544bfeb3-f1eb-4044-9c0f-245a43005ec6",
+        "createdAt": "2026-02-13T22:53:04.544Z",
+        "expiresAt": "2026-02-14T00:53:04.544Z"
+      },
+      {
+        "id": "fd106178-d863-438e-86ac-40c29fac8564",
+        "createdAt": "2026-02-13T23:03:14.796Z",
+        "expiresAt": "2026-02-14T01:03:14.796Z"
+      },
+      {
+        "id": "7a189e3d-31b6-4ee3-9d2f-ba9ac134b41f",
+        "createdAt": "2026-02-13T23:03:15.953Z",
+        "expiresAt": "2026-02-14T01:03:15.953Z"
+      },
+      {
+        "id": "4cd6a2eb-5236-4342-9f33-cd57d7025057",
+        "createdAt": "2026-02-13T23:03:28.779Z",
+        "expiresAt": "2026-02-14T01:03:28.779Z"
+      },
+      {
+        "id": "cae3b31b-ef40-4843-a787-cacb170ade41",
+        "createdAt": "2026-02-13T23:03:29.722Z",
+        "expiresAt": "2026-02-14T01:03:29.722Z"
+      },
+      {
+        "id": "928d0448-b381-4d95-82fe-f3effc62c9b9",
+        "createdAt": "2026-02-13T23:07:59.421Z",
+        "expiresAt": "2026-02-14T01:07:59.421Z"
+      },
+      {
+        "id": "a7241eeb-a116-4534-9cd0-14048a6edc03",
+        "createdAt": "2026-02-13T23:08:00.358Z",
+        "expiresAt": "2026-02-14T01:08:00.358Z"
+      },
+      {
+        "id": "b326ed24-d082-4f81-9d8a-4d746e769ea6",
+        "createdAt": "2026-02-13T23:12:05.759Z",
+        "expiresAt": "2026-02-14T01:12:05.759Z"
+      },
+      {
+        "id": "3811bcd4-5366-4bd5-929e-f0915e43d301",
+        "createdAt": "2026-02-13T23:12:06.698Z",
+        "expiresAt": "2026-02-14T01:12:06.698Z"
+      },
+      {
+        "id": "47530324-8407-446b-a874-48b03373f6ad",
+        "createdAt": "2026-02-13T23:13:22.392Z",
+        "expiresAt": "2026-02-14T01:13:22.392Z"
+      },
+      {
+        "id": "e83b6ce8-a300-42dc-8d0f-49141f4a1512",
+        "createdAt": "2026-02-13T23:13:23.371Z",
+        "expiresAt": "2026-02-14T01:13:23.371Z"
+      },
+      {
+        "id": "c46cf5b8-b795-4579-933e-a92fcf0c826a",
+        "createdAt": "2026-02-13T23:18:12.671Z",
+        "expiresAt": "2026-02-14T01:18:12.671Z"
+      },
+      {
+        "id": "4a48ed20-6ab7-411d-ac4d-af0293b3faa4",
+        "createdAt": "2026-02-13T23:18:13.654Z",
+        "expiresAt": "2026-02-14T01:18:13.654Z"
+      },
+      {
+        "id": "a9f0a1b6-8f53-4bae-bb5a-71abd3770c6a",
+        "createdAt": "2026-02-13T23:19:08.566Z",
+        "expiresAt": "2026-02-14T01:19:08.566Z"
+      },
+      {
+        "id": "c18a1d54-9e96-4283-a5eb-e957752e7c19",
+        "createdAt": "2026-02-13T23:19:09.553Z",
+        "expiresAt": "2026-02-14T01:19:09.553Z"
+      },
+      {
+        "id": "ca0b6bdc-9d9b-408e-8226-2d1f9b48cab0",
+        "createdAt": "2026-02-13T23:21:36.858Z",
+        "expiresAt": "2026-02-14T01:21:36.858Z"
+      },
+      {
+        "id": "7905c0fc-1e2d-460c-b124-39467e6497f0",
+        "createdAt": "2026-02-13T23:21:37.866Z",
+        "expiresAt": "2026-02-14T01:21:37.866Z"
+      },
+      {
+        "id": "3f711ae1-a399-4c82-adb4-67ba155393c7",
+        "createdAt": "2026-02-13T23:24:01.835Z",
+        "expiresAt": "2026-02-14T01:24:01.835Z"
+      },
+      {
+        "id": "97472dce-9c35-4c59-b628-7eac24abb964",
+        "createdAt": "2026-02-13T23:24:02.805Z",
+        "expiresAt": "2026-02-14T01:24:02.805Z"
+      },
+      {
+        "id": "a087c8ff-69c2-4886-a0d9-bf98b7c30677",
+        "createdAt": "2026-02-13T23:25:42.105Z",
+        "expiresAt": "2026-02-14T01:25:42.105Z"
+      },
+      {
+        "id": "120b7eba-e575-41dd-9412-9937dceab6b1",
+        "createdAt": "2026-02-13T23:25:43.069Z",
+        "expiresAt": "2026-02-14T01:25:43.069Z"
+      },
+      {
+        "id": "bc43f493-d7e6-4e6e-b484-0ac8d0bb84f4",
+        "createdAt": "2026-02-13T23:29:29.923Z",
+        "expiresAt": "2026-02-14T01:29:29.923Z"
+      },
+      {
+        "id": "c6845d67-66ce-45a3-9ea1-5c0d6159fcf2",
+        "createdAt": "2026-02-13T23:29:30.896Z",
+        "expiresAt": "2026-02-14T01:29:30.896Z"
+      },
+      {
+        "id": "d11d25de-1f03-458f-bd97-0eb1e87d2541",
+        "createdAt": "2026-02-13T23:30:21.595Z",
+        "expiresAt": "2026-02-14T01:30:21.595Z"
+      },
+      {
+        "id": "6d10d5b2-15b7-4a60-85ef-c68fd4e1456d",
+        "createdAt": "2026-02-13T23:30:22.609Z",
+        "expiresAt": "2026-02-14T01:30:22.609Z"
+      },
+      {
+        "id": "7201a137-6060-4837-8f62-ec94a77fd1a7",
+        "createdAt": "2026-02-13T23:31:18.987Z",
+        "expiresAt": "2026-02-14T01:31:18.987Z"
+      },
+      {
+        "id": "82d69da9-f2ec-417d-987e-405b3d432b1a",
+        "createdAt": "2026-02-13T23:31:19.953Z",
+        "expiresAt": "2026-02-14T01:31:19.953Z"
+      },
+      {
+        "id": "60d44e73-078b-423f-93f7-891a5a2f7069",
+        "createdAt": "2026-02-13T23:31:49.264Z",
+        "expiresAt": "2026-02-14T01:31:49.264Z"
+      },
+      {
+        "id": "7187477e-348d-4834-a187-0c15df8deb42",
+        "createdAt": "2026-02-13T23:31:50.240Z",
+        "expiresAt": "2026-02-14T01:31:50.240Z"
+      },
+      {
+        "id": "1b9fd7ab-5642-4c32-bb04-6669dd35bab8",
+        "createdAt": "2026-02-13T23:32:56.051Z",
+        "expiresAt": "2026-02-14T01:32:56.051Z"
+      },
+      {
+        "id": "3067b840-a599-4934-9d1d-828a61f7521e",
+        "createdAt": "2026-02-13T23:32:57.020Z",
+        "expiresAt": "2026-02-14T01:32:57.020Z"
+      },
+      {
+        "id": "2313a070-4c62-422c-9e30-2f7fbf23a30d",
+        "createdAt": "2026-02-13T23:34:35.781Z",
+        "expiresAt": "2026-02-14T01:34:35.781Z"
+      },
+      {
+        "id": "4d098d7e-6874-4aba-b599-ad94466fbc45",
+        "createdAt": "2026-02-13T23:34:36.770Z",
+        "expiresAt": "2026-02-14T01:34:36.770Z"
+      }
+    ],
+    "id": "698f3b2b4dab888ad67e3062",
+    "collection": "users",
+    "_strategy": "local-jwt"
+  }
+}
+
+[1A[2K[2m[WebServer] [22m[06:34:36] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps [33m403[39m in 11ms
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 60ms[2m (compile: 3ms, proxy.ts: 4ms, render: 53ms)[22m
+
+[1A[2K[2m[WebServer] [22m[06:34:36] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps [33m403[39m in 12ms
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 45ms[2m (compile: 10ms, proxy.ts: 4ms, render: 30ms)[22m
+
+[1A[2K  ✓ Redirected to home page
+
+[1A[2K  ✓ User avatar visible
+
+[1A[2K  Cookies found: 1
+
+[1A[2K    - payload-token: localhost
+
+[1A[2K✓ Authentication state saved
+
+[1A[2K[2/10] [chromium] › e2e/editor-complete.spec.ts:59:7 › Editor - Keyboard Shortcuts › Enter - should add sibling node
+[1A[2K[3/10] [chromium] › e2e/editor-complete.spec.ts:78:7 › Editor - Keyboard Shortcuts › Esc - should exit edit mode
+[1A[2K[4/10] [chromium] › e2e/editor-complete.spec.ts:36:7 › Editor - Keyboard Shortcuts › Tab - should add child node
+[1A[2K[5/10] [chromium] › e2e/editor-complete.spec.ts:99:7 › Editor - Keyboard Shortcuts › Ctrl+Z - should undo last action
+[1A[2K[6/10] [chromium] › e2e/editor-complete.spec.ts:204:7 › Editor - Save Workflow › Save new mindmap with Ctrl+S
+[1A[2K[7/10] [chromium] › e2e/editor-complete.spec.ts:136:7 › Editor - User Journeys › Complete mindmap creation journey
+[1A[2K[8/10] [chromium] › e2e/editor.spec.ts:4:7 › Editor Page - E2E Smoke Test › should load the home page
+[1A[2K[9/10] [chromium] › e2e/editor-complete.spec.ts:164:7 › Editor - User Journeys › Edit existing node content
+[1A[2K[2m[WebServer] [22m[06:34:40] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps [33m403[39m in 26ms
+
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 488ms[2m (compile: 37ms, proxy.ts: 17ms, render: 433ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 494ms[2m (compile: 93ms, proxy.ts: 14ms, render: 387ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 536ms[2m (compile: 134ms, proxy.ts: 30ms, render: 372ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 348ms[2m (compile: 33ms, proxy.ts: 11ms, render: 305ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 344ms[2m (compile: 44ms, proxy.ts: 16ms, render: 285ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 332ms[2m (compile: 62ms, proxy.ts: 5ms, render: 265ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 345ms[2m (compile: 91ms, proxy.ts: 2ms, render: 251ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 499ms[2m (compile: 95ms, proxy.ts: 14ms, render: 390ms)[22m
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 26ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 24ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 68ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 24ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 43ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 73ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps [32m200[39m in 63ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps [32m200[39m in 58ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 56ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 88ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps [32m200[39m in 77ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 86ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 83ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 80ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps [32m200[39m in 40ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps [32m200[39m in 28ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 29ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps [32m200[39m in 29ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 64ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps [32m200[39m in 80ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmaps [32m201[39m in 103ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmaps [32m201[39m in 105ms
+
+[1A[2K[10/10] [chromium] › e2e/editor.spec.ts:17:7 › Editor Page - E2E Smoke Test › should navigate to new mindmap page
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 114ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmaps [32m201[39m in 130ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 93ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmaps [32m201[39m in 82ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmaps [32m201[39m in 89ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmaps [32m201[39m in 98ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmaps [32m201[39m in 97ms
+
+[1A[2K[2m[WebServer] [22m[06:34:41] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps [33m403[39m in 7ms
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 83ms[2m (compile: 10ms, proxy.ts: 3ms, render: 70ms)[22m
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 6ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 10ms
+
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 53ms[2m (compile: 8ms, proxy.ts: 3ms, render: 43ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /editor/698fb511379e05f58776f771 [32m200[39m in 845ms[2m (compile: 514ms, proxy.ts: 4ms, render: 328ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /editor/698fb511379e05f58776f76f [32m200[39m in 853ms[2m (compile: 518ms, proxy.ts: 4ms, render: 330ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /editor/698fb511379e05f58776f77f [32m200[39m in 775ms[2m (compile: 434ms, proxy.ts: 7ms, render: 334ms)[22m
+[2m[WebServer] [22m GET /editor/698fb511379e05f58776f78c [32m200[39m in 766ms[2m (compile: 426ms, proxy.ts: 4ms, render: 336ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /editor/698fb511379e05f58776f78e [32m200[39m in 740ms[2m (compile: 390ms, proxy.ts: 11ms, render: 339ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /editor/698fb511379e05f58776f799 [32m200[39m in 732ms[2m (compile: 379ms, proxy.ts: 10ms, render: 343ms)[22m
+
+[1A[2K[2m[WebServer] [22m GET /editor/698fb511379e05f58776f7a3 [32m200[39m in 745ms[2m (compile: 378ms, proxy.ts: 9ms, render: 358ms)[22m
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f77f [32m200[39m in 124ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f771 [32m200[39m in 127ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f77f [32m200[39m in 128ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f78c [32m200[39m in 130ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f76f [32m200[39m in 120ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f799 [32m200[39m in 121ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f78e [32m200[39m in 113ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f76f [32m200[39m in 107ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f78e [32m200[39m in 121ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f799 [32m200[39m in 122ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f78c [32m200[39m in 122ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f771 [32m200[39m in 71ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f7a3 [32m200[39m in 73ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb511379e05f58776f7a3 [32m200[39m in 74ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f77f [32m200[39m in 78ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f771 [32m200[39m in 84ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f78c [32m200[39m in 85ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f76f [32m200[39m in 88ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f78e [32m200[39m in 95ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f799 [32m200[39m in 99ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f7a3 [32m200[39m in 109ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f77f [32m200[39m in 69ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f771 [32m200[39m in 38ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f77f [32m200[39m in 92ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f78c [32m200[39m in 69ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f76f [32m200[39m in 70ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f78e [32m200[39m in 72ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f799 [32m200[39m in 72ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f771 [32m200[39m in 105ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f78e [32m200[39m in 104ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f799 [32m200[39m in 107ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f78c [32m200[39m in 111ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f76f [32m200[39m in 115ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f7a3 [32m200[39m in 97ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb511379e05f58776f7a3 [32m200[39m in 116ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f77f [32m200[39m in 107ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f771 [32m200[39m in 118ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f78c [32m200[39m in 77ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f76f [32m200[39m in 79ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f799 [32m200[39m in 84ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f78e [32m200[39m in 95ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f7a3 [32m200[39m in 95ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f77f [32m200[39m in 43ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes [32m200[39m in 44ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes [32m200[39m in 62ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes [32m200[39m in 64ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes [32m200[39m in 68ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes [32m200[39m in 68ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f771 [32m200[39m in 92ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f78c [32m200[39m in 95ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f76f [32m200[39m in 97ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f799 [32m200[39m in 102ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes [32m200[39m in 108ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f78e [32m200[39m in 119ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes [32m200[39m in 85ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes [32m200[39m in 45ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmap-nodes?where[mindmap][equals]=698fb511379e05f58776f7a3 [32m200[39m in 97ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 111ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 110ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 144ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 148ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 205ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 206ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 228ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 232ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 307ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 315ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 289ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 268ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 298ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmap-nodes [32m201[39m in 280ms
+
+[1A[2K  1) [chromium] › e2e/editor-complete.spec.ts:36:7 › Editor - Keyboard Shortcuts › Tab - should add child node 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m2[39m
+    Received: [31m3[39m
+
+      50 |     // Verify child node was created
+      51 |     const nodesAfter = await page.locator('[data-testid^="node-"]').count()
+    > 52 |     expect(nodesAfter).toBe(nodesBefore + 1)
+         |                        ^
+      53 |
+      54 |     // Verify child is in editing mode
+      55 |     const input = page.locator('input[data-testid="node-input"]')
+        at /home/haibui/projects/original-study/e2e/editor-complete.spec.ts:52:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---K-e3f91-Tab---should-add-child-node-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---K-e3f91-Tab---should-add-child-node-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/editor-complete-Editor---K-e3f91-Tab---should-add-child-node-chromium/error-context.md
+
+
+[1A[2K[2m[WebServer] [22m PATCH /api/mindmaps/698fb511379e05f58776f78e [32m200[39m in 49ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmap-nodes/698fb513379e05f58776f83a [32m200[39m in 7ms
+
+[1A[2K[2m[WebServer] [22m PATCH /api/mindmap-nodes/698fb513379e05f58776f83a [32m200[39m in 21ms
+
+[1A[2K  2) [chromium] › e2e/editor-complete.spec.ts:136:7 › Editor - User Journeys › Complete mindmap creation journey 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThanOrEqual[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: >= [32m3[39m
+    Received:    [31m2[39m
+
+      159 |     // 4. Verify structure
+      160 |     const nodes = await page.locator('[data-testid^="node-"]').count()
+    > 161 |     expect(nodes).toBeGreaterThanOrEqual(3) // root + 2 phases
+          |                   ^
+      162 |   })
+      163 |
+      164 |   test('Edit existing node content', async ({ page }) => {
+        at /home/haibui/projects/original-study/e2e/editor-complete.spec.ts:161:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---U-13001-te-mindmap-creation-journey-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---U-13001-te-mindmap-creation-journey-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/editor-complete-Editor---U-13001-te-mindmap-creation-journey-chromium/error-context.md
+
+
+[1A[2K  3) [chromium] › e2e/editor-complete.spec.ts:204:7 › Editor - Save Workflow › Save new mindmap with Ctrl+S 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThanOrEqual[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: >= [32m2[39m
+    Received:    [31m1[39m
+
+      223 |     // For now, we just verify the hotkey doesn't cause errors
+      224 |     const nodes = await page.locator('[data-testid^="node-"]').count()
+    > 225 |     expect(nodes).toBeGreaterThanOrEqual(2)
+          |                   ^
+      226 |   })
+      227 | })
+        at /home/haibui/projects/original-study/e2e/editor-complete.spec.ts:225:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---S-7ea3e-ave-new-mindmap-with-Ctrl-S-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---S-7ea3e-ave-new-mindmap-with-Ctrl-S-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/editor-complete-Editor---S-7ea3e-ave-new-mindmap-with-Ctrl-S-chromium/error-context.md
+
+
+[1A[2K  4) [chromium] › e2e/editor-complete.spec.ts:78:7 › Editor - Keyboard Shortcuts › Esc - should exit edit mode 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeFocused[2m([22m[2m)[22m failed
+
+    Locator:  locator('input[data-testid="node-input"]')
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeFocused" with timeout 5000ms[22m
+    [2m  - waiting for locator('input[data-testid="node-input"]')[22m
+    [2m    9 × locator resolved to <input value="" type="text" data-testid="node-input"/>[22m
+    [2m      - unexpected value "inactive"[22m
+
+
+      87 |     // Verify in editing mode
+      88 |     const input = page.locator('input[data-testid="node-input"]')
+    > 89 |     await expect(input).toBeFocused()
+         |                         ^
+      90 |
+      91 |     // Press Esc to exit editing
+      92 |     await page.keyboard.press('Escape')
+        at /home/haibui/projects/original-study/e2e/editor-complete.spec.ts:89:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---K-6d816-Esc---should-exit-edit-mode-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---K-6d816-Esc---should-exit-edit-mode-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/editor-complete-Editor---K-6d816-Esc---should-exit-edit-mode-chromium/error-context.md
+
+
+[1A[2K  4 failed
+    [chromium] › e2e/editor-complete.spec.ts:36:7 › Editor - Keyboard Shortcuts › Tab - should add child node 
+    [chromium] › e2e/editor-complete.spec.ts:78:7 › Editor - Keyboard Shortcuts › Esc - should exit edit mode 
+    [chromium] › e2e/editor-complete.spec.ts:136:7 › Editor - User Journeys › Complete mindmap creation journey 
+    [chromium] › e2e/editor-complete.spec.ts:204:7 › Editor - Save Workflow › Save new mindmap with Ctrl+S 
+  6 passed (25.4s)
+
+[36m  Serving HTML report at http://localhost:9323. Press Ctrl+C to quit.[39m

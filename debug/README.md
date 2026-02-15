@@ -18,6 +18,8 @@ This infrastructure provides:
 
 ## Quick Start
 
+**New to debug workflow?** → Start with `QUICK_START.md` (5-minute setup)
+
 ### Enable Debug Tracing
 
 ```bash
@@ -38,10 +40,11 @@ npm run triage
 
 ### Debug a Bug
 
-1. **Read**: `HOW_TO_USE.md` (start here!)
-2. **Follow**: `WORKFLOW.md` (the mandatory process)
-3. **Classify**: `plans/code-never-reached.md` (decision tree)
-4. **Document**: `templates/AI_DEBUG_BUNDLE.md` (fill this for PRs)
+1. **Quick start**: `QUICK_START.md` (5-minute guide)
+2. **Read**: `HOW_TO_USE.md` (detailed examples)
+3. **Follow**: `WORKFLOW.md` (the mandatory process)
+4. **Classify**: `plans/code-never-reached.md` (decision tree)
+5. **Document**: `templates/AI_DEBUG_BUNDLE.md` (fill this for PRs)
 
 ---
 
@@ -50,7 +53,8 @@ npm run triage
 ```
 debug/
 ├── README.md                      # This file
-├── HOW_TO_USE.md                  # Quick start guide
+├── QUICK_START.md                 # 5-minute setup guide (START HERE!)
+├── HOW_TO_USE.md                  # Detailed usage guide
 ├── WORKFLOW.md                    # Mandatory debug workflow
 ├── plans/
 │   └── code-never-reached.md      # Decision tree & checklists

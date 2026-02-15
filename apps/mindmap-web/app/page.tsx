@@ -1,8 +1,14 @@
+import { cookies } from 'next/headers'
 import { getMindmaps } from '@/lib/api'
 import { MindmapList } from '@/components/MindmapList'
 
 export default async function Home() {
-  const result = await getMindmaps()
+  // Get cookies from the incoming request to forward to the backend API
+  // This is required for Server Components to authenticate with Payload CMS
+  const cookieStore = await cookies()
+  const cookieHeader = cookieStore.toString()
+
+  const result = await getMindmaps(cookieHeader)
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

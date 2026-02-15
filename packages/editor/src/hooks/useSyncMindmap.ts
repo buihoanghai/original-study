@@ -1,7 +1,8 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { SyncClient } from '@mindmap/sync'
 import { useEditorStore } from '../store/editorStore'
 import type { Mindmap, NodeEdge } from '@mindmap/domain'
+import { createNode } from '../operations/tree'
 
 /**
  * useSyncMindmap Hook
@@ -21,12 +22,13 @@ export const useSyncMindmap = (cmsUrl: string, authToken?: string) => {
     nodes,
     edges,
     loadMindmap,
+    updateMindmap,
     setSyncing,
     setSyncError,
     setLastSyncedAt,
   } = useEditorStore()
 
-  const syncClient = new SyncClient({ cmsUrl, authToken })
+  const syncClient = useMemo(() => new SyncClient({ cmsUrl, authToken }), [cmsUrl, authToken])
 
   /**
    * Save current mindmap and nodes to CMS
@@ -61,9 +63,20 @@ export const useSyncMindmap = (cmsUrl: string, authToken?: string) => {
         }
 
         const savedMindmap = mindmapResult.data!
+        console.log('[useSyncMindmap] savedMindmap:', savedMindmap)
+
+        // Ensure the saved mindmap has an ID
+        if (!savedMindmap || !savedMindmap.id) {
+          console.error('[useSyncMindmap] savedMindmap is missing or has no ID:', savedMindmap)
+          throw new Error('Saved mindmap missing ID')
+        }
+
+        // Update the mindmap in the store with the saved version (which has the ID)
+        console.log('[useSyncMindmap] Updating mindmap in store with:', savedMindmap)
+        updateMindmap(savedMindmap as Mindmap)
 
         // Save all nodes
-        const nodesResult = await syncClient.saveNodes(nodes, savedMindmap.id!)
+        const nodesResult = await syncClient.saveNodes(nodes, savedMindmap.id)
         if (!nodesResult.success) {
           throw new Error(nodesResult.error || 'Failed to save nodes')
         }
@@ -80,7 +93,7 @@ export const useSyncMindmap = (cmsUrl: string, authToken?: string) => {
         return { success: false, error: errorMessage }
       }
     },
-    [mindmap, nodes, syncClient, setSyncing, setSyncError, setLastSyncedAt]
+    [mindmap, nodes, syncClient, updateMindmap, setSyncing, setSyncError, setLastSyncedAt]
   )
 
   /**
@@ -106,7 +119,36 @@ export const useSyncMindmap = (cmsUrl: string, authToken?: string) => {
           throw new Error(nodesResult.error || 'Failed to load nodes')
         }
 
-        const loadedNodes = nodesResult.data!
+        let loadedNodes = nodesResult.data!
+
+        console.log('[useSyncMindmap] Loaded nodes:', loadedNodes)
+        console.log('[useSyncMindmap] Nodes count:', loadedNodes.length)
+
+        // If no nodes exist, create and save a root node with the mindmap title
+        if (loadedNodes.length === 0) {
+          console.log('[useSyncMindmap] No nodes found, creating root node')
+          const rootNode = createNode(
+            { text: loadedMindmap.metadata.title },
+            { x: 0, y: 0 }
+          )
+          console.log('[useSyncMindmap] Created root node:', rootNode)
+
+          // Save the root node to CMS
+          console.log('[useSyncMindmap] Saving root node to CMS...')
+          const saveNodesResult = await syncClient.saveNodes([rootNode], mindmapId)
+          console.log('[useSyncMindmap] Save result:', saveNodesResult)
+
+          if (saveNodesResult.success && saveNodesResult.data) {
+            loadedNodes = saveNodesResult.data
+            console.log('[useSyncMindmap] Using saved nodes from CMS')
+          } else {
+            // If save fails, still use the local node
+            loadedNodes = [rootNode]
+            console.log('[useSyncMindmap] Save failed, using local node')
+          }
+        }
+
+        console.log('[useSyncMindmap] Final nodes to load into store:', loadedNodes)
 
         // Build edges from node relationships
         // TODO: This assumes edges are stored separately or derived from node structure
@@ -121,6 +163,7 @@ export const useSyncMindmap = (cmsUrl: string, authToken?: string) => {
 
         return { success: true }
       } catch (error) {
+        console.error('[useSyncMindmap] Error loading mindmap:', error)
         const errorMessage = error instanceof Error ? error.message : 'Unknown error'
         setSyncError(errorMessage)
         setSyncing(false)

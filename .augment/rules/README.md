@@ -19,6 +19,9 @@ This directory contains workspace rules that are automatically loaded by Augment
 - **04-ai-dod.md** - AI Definition of Done statement
   - Type: `always` - Automatically loaded in every session
 
+- **05-debug-workflow.md** - Debug workflow for bug fixes (Repro → Trace → Fix → Verify)
+  - Type: `always` - Automatically loaded in every session
+
 ## Rule Types
 
 - **always**: Automatically included in every AI prompt

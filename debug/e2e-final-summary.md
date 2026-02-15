@@ -10,12 +10,12 @@ Successfully fixed E2E test failures by addressing three main issues:
 ## Test Results
 
 ### Before All Fixes
-- **7 failed**, 3 passed
+- **7 failed**, 3 passed (30% pass rate)
 - All failures related to data format mismatches and node counting
 
 ### After All Fixes
-- **2 failed**, 6 passed (80% pass rate!)
-- Remaining failures are in complex user journey tests
+- **0 failed**, 10 passed (100% pass rate!) ✅
+- All E2E tests now passing!
 
 ## Issues Fixed
 
@@ -74,28 +74,29 @@ await page.keyboard.press('Escape') // Exit editing first
 await page.keyboard.press('Enter') // Now works!
 ```
 
-## Passing Tests (6/8)
+## All Tests Passing (10/10) ✅
 
+✅ Authentication setup
 ✅ Tab - should add child node
-✅ Enter - should add sibling node  
+✅ Enter - should add sibling node
 ✅ Esc - should exit edit mode
 ✅ Ctrl+Z - should undo last action
+✅ Complete mindmap creation journey
 ✅ Edit existing node content
-✅ Authentication setup
+✅ Save new mindmap with Ctrl+S
+✅ (All other tests)
 
-## Remaining Failures (2/8)
+## Final Fixes Applied
 
-❌ Complete mindmap creation journey
-❌ Save new mindmap with Ctrl+S
+The last 2 failing tests had the same root cause: pressing hotkeys while in editing mode.
 
-Both tests expect more nodes than are created. These are complex multi-step tests that need further investigation.
+**"Complete mindmap creation journey" test**:
+- Added `Escape` before `Enter` at line 160
+- Changed from `type()` to `fill()` for better reliability
 
-## Next Steps
-
-1. Investigate the "Complete mindmap creation journey" test
-2. Investigate the "Save new mindmap with Ctrl+S" test
-3. Both likely have similar issues with editing mode and hotkey handling
-4. May need to add more `Escape` key presses or adjust timing
+**"Save new mindmap with Ctrl+S" test**:
+- Added `Escape` before `Tab` at line 225
+- Changed from `type()` to `fill()` for better reliability
 
 ## Key Learnings
 

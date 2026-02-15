@@ -18,14 +18,21 @@ export interface NodeData extends Record<string, unknown> {
  */
 export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => {
   const { node, isSelected, isEditing, isCollapsed } = data
-  const { updateNode, stopEditing } = useEditorStore()
+  const { updateNode, stopEditing, addSibling, addChild } = useEditorStore()
   const inputRef = useRef<HTMLInputElement>(null)
+  const isCreatingNodeRef = useRef(false)
 
   // Focus input when entering edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      inputRef.current.focus()
-      inputRef.current.select()
+      // Use setTimeout to ensure focus happens after React Flow's event handling
+      const timeoutId = setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus()
+          inputRef.current.select()
+        }
+      }, 0)
+      return () => clearTimeout(timeoutId)
     }
   }, [isEditing])
 
@@ -39,7 +46,13 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
 
   // Handle blur (exit edit mode)
   const handleBlur = useCallback(() => {
-    stopEditing()
+    // Don't stop editing if we're creating a new node
+    // The new node will automatically enter editing mode
+    if (!isCreatingNodeRef.current) {
+      stopEditing()
+    }
+    // Reset the flag
+    isCreatingNodeRef.current = false
   }, [stopEditing])
 
   // Handle key down in input
@@ -50,9 +63,23 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
 
       if (e.key === 'Escape') {
         stopEditing()
+      } else if (e.key === 'Enter') {
+        // Enter while editing: create sibling and focus on it
+        e.preventDefault()
+        isCreatingNodeRef.current = true
+        addSibling(node.nodeId)
+        // Note: stopEditing is not needed here because addSibling
+        // automatically sets the new node to editing mode
+      } else if (e.key === 'Tab') {
+        // Tab while editing: create child and focus on it
+        e.preventDefault()
+        isCreatingNodeRef.current = true
+        addChild(node.nodeId)
+        // Note: stopEditing is not needed here because addChild
+        // automatically sets the new node to editing mode
       }
     },
-    [stopEditing]
+    [stopEditing, addSibling, addChild, node.nodeId]
   )
 
   return (
@@ -83,6 +110,7 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           data-testid="node-input"
+          autoFocus
           style={{
             width: '100%',
             border: 'none',

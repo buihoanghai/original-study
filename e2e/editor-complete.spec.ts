@@ -35,35 +35,42 @@ test.describe('Editor - Keyboard Shortcuts', () => {
 
   test('Tab - should add child node', async ({ page }) => {
     // Click on the first node (root)
-    const rootNode = page.locator('[data-testid^="node-"]').first()
+    // Use a more specific selector that excludes the input element
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
     await rootNode.click()
 
-    // Count nodes before
-    const nodesBefore = await page.locator('[data-testid^="node-"]').count()
+    // Count nodes before (exclude input element)
+    const nodesBefore = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
 
     // Press Tab to add child
     await page.keyboard.press('Tab')
 
-    // Wait for new node to appear
-    await page.waitForTimeout(200)
+    // Wait for input to appear and be visible (child is in editing mode)
+    const input = page.locator('input[data-testid="node-input"]')
+    await expect(input).toBeVisible({ timeout: 2000 })
 
     // Verify child node was created
-    const nodesAfter = await page.locator('[data-testid^="node-"]').count()
+    const nodesAfter = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
     expect(nodesAfter).toBe(nodesBefore + 1)
 
-    // Verify child is in editing mode
-    const input = page.locator('input[data-testid="node-input"]')
-    await expect(input).toBeFocused()
+    // Verify we can type in the input (it's in editing mode)
+    await input.fill('New child')
+    await expect(input).toHaveValue('New child')
   })
 
-  test('Enter - should add sibling node', async ({ page }) => {
+  test('Enter - should add sibling node (after Escape)', async ({ page }) => {
     // Click on root node
-    const rootNode = page.locator('[data-testid^="node-"]').first()
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
     await rootNode.click()
 
     // Create a child first
     await page.keyboard.press('Tab')
-    await page.keyboard.type('First child')
+    const input = page.locator('input[data-testid="node-input"]')
+    await expect(input).toBeVisible({ timeout: 2000 })
+    await input.fill('First child')
+
+    // Exit editing mode first (hotkeys don't work while editing)
+    await page.keyboard.press('Escape')
     await page.waitForTimeout(200)
 
     // Press Enter to add sibling
@@ -71,22 +78,98 @@ test.describe('Editor - Keyboard Shortcuts', () => {
     await page.waitForTimeout(200)
 
     // Verify sibling node was created
-    const nodes = await page.locator('[data-testid^="node-"]').count()
+    const nodes = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
     expect(nodes).toBeGreaterThanOrEqual(3) // root + 2 children
   })
 
+  test('Enter while editing - should create sibling and autofocus on it', async ({ page }) => {
+    // Click on root node
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
+    await rootNode.click()
+
+    // Create a child first
+    await page.keyboard.press('Tab')
+    const input = page.locator('input[data-testid="node-input"]')
+    await expect(input).toBeVisible({ timeout: 2000 })
+    await input.fill('First child')
+
+    // Count nodes before pressing Enter
+    const nodesBefore = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
+
+    // Press Enter while still editing - should create sibling and autofocus on it
+    await page.keyboard.press('Enter')
+    await page.waitForTimeout(300)
+
+    // Verify sibling node was created
+    const nodesAfter = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
+    expect(nodesAfter).toBe(nodesBefore + 1)
+
+    // Verify the new sibling node is in editing mode (input should be autofocused)
+    const newInput = page.locator('input[data-testid="node-input"]')
+    await expect(newInput).toBeVisible()
+    await expect(newInput).toBeFocused()
+
+    // Verify the new input is empty (ready for user to type)
+    const inputValue = await newInput.inputValue()
+    expect(inputValue).toBe('')
+
+    // CRITICAL: Verify user can type immediately without clicking
+    // This tests that autofocus is working correctly
+    await page.keyboard.type('Second child')
+    const newInputValue = await newInput.inputValue()
+    expect(newInputValue).toBe('Second child')
+  })
+
+
+  test('Tab while editing - should create child and autofocus on it', async ({ page }) => {
+    // Click on root node
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
+    await rootNode.click()
+
+    // Create a child first
+    await page.keyboard.press('Tab')
+    const input = page.locator('input[data-testid="node-input"]')
+    await expect(input).toBeVisible({ timeout: 2000 })
+    await input.fill('Parent node')
+
+    // Count nodes before pressing Tab
+    const nodesBefore = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
+
+    // Press Tab while still editing - should create child and autofocus on it
+    await page.keyboard.press('Tab')
+    await page.waitForTimeout(300)
+
+    // Verify child node was created
+    const nodesAfter = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
+    expect(nodesAfter).toBe(nodesBefore + 1)
+
+    // Verify the new child node is in editing mode (input should be autofocused)
+    const newInput = page.locator('input[data-testid="node-input"]')
+    await expect(newInput).toBeVisible()
+    await expect(newInput).toBeFocused()
+
+    // Verify the new input is empty
+    const inputValue = await newInput.inputValue()
+    expect(inputValue).toBe('')
+
+    // CRITICAL: Verify user can type immediately without clicking
+    await page.keyboard.type('Child node')
+    const newInputValue = await newInput.inputValue()
+    expect(newInputValue).toBe('Child node')
+  })
+
+
   test('Esc - should exit edit mode', async ({ page }) => {
     // Click on root node
-    const rootNode = page.locator('[data-testid^="node-"]').first()
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
     await rootNode.click()
 
     // Start editing a node
     await page.keyboard.press('Tab')
-    await page.waitForTimeout(200)
 
-    // Verify in editing mode
+    // Verify in editing mode (input is visible)
     const input = page.locator('input[data-testid="node-input"]')
-    await expect(input).toBeFocused()
+    await expect(input).toBeVisible({ timeout: 2000 })
 
     // Press Esc to exit editing
     await page.keyboard.press('Escape')
@@ -98,7 +181,7 @@ test.describe('Editor - Keyboard Shortcuts', () => {
 
   test('Ctrl+Z - should undo last action', async ({ page }) => {
     // Click on root node
-    const rootNode = page.locator('[data-testid^="node-"]').first()
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
     await rootNode.click()
 
     // Create a child node
@@ -108,14 +191,14 @@ test.describe('Editor - Keyboard Shortcuts', () => {
     await page.waitForTimeout(200)
 
     // Count nodes before undo
-    const nodesBefore = await page.locator('[data-testid^="node-"]').count()
+    const nodesBefore = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
 
     // Undo
     await page.keyboard.press('Control+z')
     await page.waitForTimeout(200)
 
     // Verify node was removed
-    const nodesAfter = await page.locator('[data-testid^="node-"]').count()
+    const nodesAfter = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
     expect(nodesAfter).toBeLessThan(nodesBefore)
   })
 })
@@ -135,7 +218,7 @@ test.describe('Editor - User Journeys', () => {
 
   test('Complete mindmap creation journey', async ({ page }) => {
     // Click on root node
-    const rootNode = page.locator('[data-testid^="node-"]').first()
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
     await rootNode.click()
 
     // 1. Edit root node
@@ -147,23 +230,29 @@ test.describe('Editor - User Journeys', () => {
 
     // 2. Add first child
     await page.keyboard.press('Tab')
-    await page.keyboard.type('Phase 1')
+    const input = page.locator('input[data-testid="node-input"]')
+    await expect(input).toBeVisible({ timeout: 2000 })
+    await input.fill('Phase 1')
+
+    // Exit editing mode before using Enter hotkey
+    await page.keyboard.press('Escape')
     await page.waitForTimeout(200)
 
     // 3. Add sibling
     await page.keyboard.press('Enter')
-    await page.keyboard.type('Phase 2')
+    await expect(input).toBeVisible({ timeout: 2000 })
+    await input.fill('Phase 2')
     await page.keyboard.press('Escape')
     await page.waitForTimeout(200)
 
     // 4. Verify structure
-    const nodes = await page.locator('[data-testid^="node-"]').count()
+    const nodes = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
     expect(nodes).toBeGreaterThanOrEqual(3) // root + 2 phases
   })
 
   test('Edit existing node content', async ({ page }) => {
     // Click on root node
-    const rootNode = page.locator('[data-testid^="node-"]').first()
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
     await rootNode.click()
 
     // Create a node
@@ -173,7 +262,7 @@ test.describe('Editor - User Journeys', () => {
     await page.waitForTimeout(200)
 
     // Double-click to edit again
-    const node = page.locator('[data-testid^="node-"]').nth(1)
+    const node = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').nth(1)
     await node.dblclick()
     await page.waitForTimeout(200)
 
@@ -203,15 +292,23 @@ test.describe('Editor - Save Workflow', () => {
 
   test('Save new mindmap with Ctrl+S', async ({ page }) => {
     // Click on root node
-    const rootNode = page.locator('[data-testid^="node-"]').first()
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
     await rootNode.click()
 
     // Create content
     await rootNode.dblclick()
     await page.keyboard.press('Control+a')
     await page.keyboard.type('Test Mindmap')
+
+    // Exit editing mode before using Tab hotkey
+    await page.keyboard.press('Escape')
+    await page.waitForTimeout(200)
+
+    // Add child node
     await page.keyboard.press('Tab')
-    await page.keyboard.type('Child node')
+    const input = page.locator('input[data-testid="node-input"]')
+    await expect(input).toBeVisible({ timeout: 2000 })
+    await input.fill('Child node')
     await page.keyboard.press('Escape')
     await page.waitForTimeout(200)
 
@@ -221,7 +318,7 @@ test.describe('Editor - Save Workflow', () => {
 
     // Note: Actual save verification would require CMS to be running
     // For now, we just verify the hotkey doesn't cause errors
-    const nodes = await page.locator('[data-testid^="node-"]').count()
+    const nodes = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
     expect(nodes).toBeGreaterThanOrEqual(2)
   })
 })

@@ -39,15 +39,26 @@ function transformToMindmap(doc: any): Mindmap {
 
 /**
  * Get all mindmaps for the current user
+ *
+ * IMPORTANT: When called from Server Components, cookies must be forwarded manually.
+ * Pass the cookies from the request headers to authenticate with the backend.
  */
-export async function getMindmaps(): Promise<ApiResult<Mindmap[]>> {
+export async function getMindmaps(cookies?: string): Promise<ApiResult<Mindmap[]>> {
   try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    }
+
+    // Forward cookies from Server Component if provided
+    if (cookies) {
+      headers['Cookie'] = cookies
+    }
+
     const response = await fetch(`${CMS_URL}/api/mindmaps`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include', // Include cookies for authentication
+      headers,
+      credentials: 'include', // Include cookies for authentication (client-side)
+      cache: 'no-store', // Don't cache authenticated requests
     })
 
     if (!response.ok) {
@@ -78,15 +89,25 @@ export async function getMindmaps(): Promise<ApiResult<Mindmap[]>> {
 
 /**
  * Get a single mindmap by ID
+ *
+ * IMPORTANT: When called from Server Components, cookies must be forwarded manually.
  */
-export async function getMindmap(id: string): Promise<ApiResult<Mindmap>> {
+export async function getMindmap(id: string, cookies?: string): Promise<ApiResult<Mindmap>> {
   try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    }
+
+    // Forward cookies from Server Component if provided
+    if (cookies) {
+      headers['Cookie'] = cookies
+    }
+
     const response = await fetch(`${CMS_URL}/api/mindmaps/${id}`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       credentials: 'include',
+      cache: 'no-store', // Don't cache authenticated requests
     })
 
     if (!response.ok) {
@@ -116,19 +137,30 @@ export async function getMindmap(id: string): Promise<ApiResult<Mindmap>> {
 
 /**
  * Get nodes for a mindmap
+ *
+ * IMPORTANT: When called from Server Components, cookies must be forwarded manually.
  */
 export async function getMindmapNodes(
-  mindmapId: string
+  mindmapId: string,
+  cookies?: string
 ): Promise<ApiResult<MindmapNode[]>> {
   try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    }
+
+    // Forward cookies from Server Component if provided
+    if (cookies) {
+      headers['Cookie'] = cookies
+    }
+
     const response = await fetch(
       `${CMS_URL}/api/mindmap-nodes?where[mindmap][equals]=${mindmapId}`,
       {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         credentials: 'include',
+        cache: 'no-store', // Don't cache authenticated requests
       }
     )
 

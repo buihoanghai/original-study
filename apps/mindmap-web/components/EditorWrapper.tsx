@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { MindmapEditor } from '@mindmap/editor'
 import { useSyncMindmap } from '@mindmap/editor'
 import { useEditorStore } from '@mindmap/editor'
@@ -33,7 +33,7 @@ export function EditorWrapper({ mindmapId }: EditorWrapperProps) {
   )
 
   // Wrap save function to show toast notifications and handle conflicts
-  const handleSave = async (skipConflictCheck = false) => {
+  const handleSave = useCallback(async (skipConflictCheck = false) => {
     const result = await save(skipConflictCheck)
     if (result.success) {
       success('Mindmap saved successfully')
@@ -44,10 +44,10 @@ export function EditorWrapper({ mindmapId }: EditorWrapperProps) {
     } else {
       showError(result.error || 'Failed to save mindmap')
     }
-  }
+  }, [save, success, showError])
 
   // Handle conflict resolution
-  const handleConflictResolve = async (
+  const handleConflictResolve = useCallback(async (
     resolution: 'local' | 'remote' | 'cancel'
   ) => {
     if (resolution === 'cancel') {
@@ -66,13 +66,14 @@ export function EditorWrapper({ mindmapId }: EditorWrapperProps) {
       }
       setConflict(null)
     }
-  }
+  }, [conflict, handleSave, load, success])
 
   // Register save callback for Ctrl+S hotkey
   useEffect(() => {
     setSaveCallback(handleSave)
     return () => setSaveCallback(null)
-  }, [handleSave, setSaveCallback])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleSave])
 
   // Load mindmap on mount
   useEffect(() => {

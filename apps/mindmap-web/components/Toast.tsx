@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning'
 
@@ -114,7 +114,7 @@ export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
 export function useToast() {
   const [toasts, setToasts] = useState<ToastMessage[]>([])
 
-  const showToast = (
+  const showToast = useCallback((
     type: ToastType,
     message: string,
     duration: number = 5000
@@ -123,23 +123,23 @@ export function useToast() {
     const toast: ToastMessage = { id, type, message, duration }
     setToasts((prev) => [...prev, toast])
     return id
-  }
+  }, [])
 
-  const closeToast = (id: string) => {
+  const closeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id))
-  }
+  }, [])
 
-  const success = (message: string, duration?: number) =>
-    showToast('success', message, duration)
-  
-  const error = (message: string, duration?: number) =>
-    showToast('error', message, duration)
-  
-  const warning = (message: string, duration?: number) =>
-    showToast('warning', message, duration)
-  
-  const info = (message: string, duration?: number) =>
-    showToast('info', message, duration)
+  const success = useCallback((message: string, duration?: number) =>
+    showToast('success', message, duration), [showToast])
+
+  const error = useCallback((message: string, duration?: number) =>
+    showToast('error', message, duration), [showToast])
+
+  const warning = useCallback((message: string, duration?: number) =>
+    showToast('warning', message, duration), [showToast])
+
+  const info = useCallback((message: string, duration?: number) =>
+    showToast('info', message, duration), [showToast])
 
   return {
     toasts,

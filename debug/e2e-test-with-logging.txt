@@ -1,0 +1,291 @@
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m> mindmap-learning-app@0.1.0 dev:cms
+[2m[WebServer] [22m> npm run dev --workspace=apps/mindmap-cms
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m> mindmap-cms@1.0.0 dev
+[2m[WebServer] [22m> cross-env NODE_OPTIONS=--no-deprecation next dev -p 3001
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m [33m[1m⚠[22m[39m Warning: Found multiple lockfiles. Selecting /home/haibui/projects/original-study/package-lock.json.
+[2m[WebServer] [22m   Consider removing the lockfiles at:
+[2m[WebServer] [22m   * /home/haibui/projects/original-study/apps/mindmap-cms/pnpm-lock.yaml
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m   [1m[38;2;173;127;168m▲ Next.js 15.4.11[39m[22m
+
+[1A[2K[2m[WebServer] [22m   - Local:        http://localhost:3001
+[2m[WebServer] [22m   - Network:      http://192.168.1.133:3001
+[2m[WebServer] [22m   - Environments: .env
+[2m[WebServer] [22m
+[2m[WebServer] [22m [32m[1m✓[22m[39m Starting...
+
+[1A[2K[2m[WebServer] [22m [32m[1m✓[22m[39m Ready in 1927ms
+
+[1A[2K[2m[WebServer] [22m [37m[1m○[22m[39m Compiling / ...
+
+[1A[2K[2m[WebServer] [22m [32m[1m✓[22m[39m Compiled / in 1176ms (795 modules)
+
+[1A[2K[2m[WebServer] [22m[06:19:03] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 2272ms
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m> mindmap-learning-app@0.1.0 dev:web
+[2m[WebServer] [22m> npm run dev --workspace=apps/mindmap-web
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m> mindmap-web@0.1.0 dev
+[2m[WebServer] [22m> next dev
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m[33m[1m⚠[22m[39m Warning: Next.js inferred your workspace root, but it may not be correct.
+[2m[WebServer] [22m We detected multiple lockfiles and selected the directory of /home/haibui/projects/original-study/package-lock.json as the root directory.
+[2m[WebServer] [22m To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+[2m[WebServer] [22m   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+[2m[WebServer] [22m Detected additional lockfiles: 
+[2m[WebServer] [22m   * /home/haibui/projects/original-study/apps/mindmap-web/pnpm-lock.yaml
+[2m[WebServer] [22m
+
+[1A[2K[2m[WebServer] [22m[1m[38;2;173;127;168m▲ Next.js 16.1.6[39m[22m (Turbopack)
+
+[1A[2K[2m[WebServer] [22m- Local:         http://localhost:3333
+[2m[WebServer] [22m- Network:       http://192.168.1.133:3333
+
+[1A[2K[2m[WebServer] [22m
+[2m[WebServer] [22m[32m[1m✓[22m[39m Starting...
+
+[1A[2K[2m[WebServer] [22m[33m[1m⚠[22m[39m The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+[1A[2K[2m[WebServer] [22m[32m[1m✓[22m[39m Ready in 616ms
+
+[1A[2K[2m[WebServer] [22m [37m[1m○[22m[39m Compiling /api/[...slug] ...
+
+[1A[2K[2m[WebServer] [22m [32m[1m✓[22m[39m Compiled /api/[...slug] in 623ms (1392 modules)
+
+[1A[2K[2m[WebServer] [22m[06:19:07] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps [33m403[39m in 1971ms
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 2.4s[2m (compile: 163ms, proxy.ts: 55ms, render: 2.2s)[22m
+
+
+Running 2 tests using 1 worker
+
+[1A[2K[1/2] [setup] › e2e/auth.setup.ts:18:6 › authenticate
+[1A[2K[setup] › e2e/auth.setup.ts:18:6 › authenticate
+🔐 Setting up authentication...
+
+[1A[2K  Attempting API login...
+
+[1A[2K[2m[WebServer] [22m POST /api/users/login [32m200[39m in 100ms
+
+[1A[2K  ✓ API login successful
+
+[1A[2K  Navigating to login page...
+
+[1A[2K[2m[WebServer] [22m GET /login [32m200[39m in 108ms[2m (compile: 23ms, proxy.ts: 5ms, render: 81ms)[22m
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 6ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 9ms
+
+[1A[2K  ✓ Login page loaded
+
+[1A[2K  ✓ Form filled
+
+[1A[2K  ✓ Form submitted, waiting for redirect...
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/login [32m200[39m in 6ms
+
+[1A[2K[2m[WebServer] [22m POST /api/users/login [32m200[39m in 63ms
+
+[1A[2K  [Network] POST /api/users/login: 200
+
+[1A[2K  [Network] Response body: {
+  "message": "Authentication Passed",
+  "exp": 1771031949,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGYzYjJiNGRhYjg4OGFkNjdlMzA2MiIsImNvbGxlY3Rpb24iOiJ1c2VycyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInNpZCI6ImMxOGExZDU0LTllOTYtNDI4My1hNWViLWU5NTc3NTJlN2MxOSIsImlhdCI6MTc3MTAyNDc0OSwiZXhwIjoxNzcxMDMxOTQ5fQ.o99QAK46zzim4quqAVs4VmfnVBBkDA_WaR7uX0bktgw",
+  "user": {
+    "createdAt": "2026-02-13T14:54:35.798Z",
+    "email": "test@example.com",
+    "sessions": [
+      {
+        "id": "afebc509-147f-482f-96c5-4b9beca3e0b6",
+        "createdAt": "2026-02-13T22:08:01.300Z",
+        "expiresAt": "2026-02-14T00:08:01.300Z"
+      },
+      {
+        "id": "1e313dc1-5005-476b-bc5a-77fcf60cefba",
+        "createdAt": "2026-02-13T22:43:28.382Z",
+        "expiresAt": "2026-02-14T00:43:28.382Z"
+      },
+      {
+        "id": "8e53f1ae-4792-47c4-b848-21fc77e1b8b4",
+        "createdAt": "2026-02-13T22:43:29.348Z",
+        "expiresAt": "2026-02-14T00:43:29.348Z"
+      },
+      {
+        "id": "47b81d09-84c9-436c-855b-580934a5c568",
+        "createdAt": "2026-02-13T22:53:03.251Z",
+        "expiresAt": "2026-02-14T00:53:03.251Z"
+      },
+      {
+        "id": "544bfeb3-f1eb-4044-9c0f-245a43005ec6",
+        "createdAt": "2026-02-13T22:53:04.544Z",
+        "expiresAt": "2026-02-14T00:53:04.544Z"
+      },
+      {
+        "id": "fd106178-d863-438e-86ac-40c29fac8564",
+        "createdAt": "2026-02-13T23:03:14.796Z",
+        "expiresAt": "2026-02-14T01:03:14.796Z"
+      },
+      {
+        "id": "7a189e3d-31b6-4ee3-9d2f-ba9ac134b41f",
+        "createdAt": "2026-02-13T23:03:15.953Z",
+        "expiresAt": "2026-02-14T01:03:15.953Z"
+      },
+      {
+        "id": "4cd6a2eb-5236-4342-9f33-cd57d7025057",
+        "createdAt": "2026-02-13T23:03:28.779Z",
+        "expiresAt": "2026-02-14T01:03:28.779Z"
+      },
+      {
+        "id": "cae3b31b-ef40-4843-a787-cacb170ade41",
+        "createdAt": "2026-02-13T23:03:29.722Z",
+        "expiresAt": "2026-02-14T01:03:29.722Z"
+      },
+      {
+        "id": "928d0448-b381-4d95-82fe-f3effc62c9b9",
+        "createdAt": "2026-02-13T23:07:59.421Z",
+        "expiresAt": "2026-02-14T01:07:59.421Z"
+      },
+      {
+        "id": "a7241eeb-a116-4534-9cd0-14048a6edc03",
+        "createdAt": "2026-02-13T23:08:00.358Z",
+        "expiresAt": "2026-02-14T01:08:00.358Z"
+      },
+      {
+        "id": "b326ed24-d082-4f81-9d8a-4d746e769ea6",
+        "createdAt": "2026-02-13T23:12:05.759Z",
+        "expiresAt": "2026-02-14T01:12:05.759Z"
+      },
+      {
+        "id": "3811bcd4-5366-4bd5-929e-f0915e43d301",
+        "createdAt": "2026-02-13T23:12:06.698Z",
+        "expiresAt": "2026-02-14T01:12:06.698Z"
+      },
+      {
+        "id": "47530324-8407-446b-a874-48b03373f6ad",
+        "createdAt": "2026-02-13T23:13:22.392Z",
+        "expiresAt": "2026-02-14T01:13:22.392Z"
+      },
+      {
+        "id": "e83b6ce8-a300-42dc-8d0f-49141f4a1512",
+        "createdAt": "2026-02-13T23:13:23.371Z",
+        "expiresAt": "2026-02-14T01:13:23.371Z"
+      },
+      {
+        "id": "c46cf5b8-b795-4579-933e-a92fcf0c826a",
+        "createdAt": "2026-02-13T23:18:12.671Z",
+        "expiresAt": "2026-02-14T01:18:12.671Z"
+      },
+      {
+        "id": "4a48ed20-6ab7-411d-ac4d-af0293b3faa4",
+        "createdAt": "2026-02-13T23:18:13.654Z",
+        "expiresAt": "2026-02-14T01:18:13.654Z"
+      },
+      {
+        "id": "a9f0a1b6-8f53-4bae-bb5a-71abd3770c6a",
+        "createdAt": "2026-02-13T23:19:08.566Z",
+        "expiresAt": "2026-02-14T01:19:08.566Z"
+      },
+      {
+        "id": "c18a1d54-9e96-4283-a5eb-e957752e7c19",
+        "createdAt": "2026-02-13T23:19:09.553Z",
+        "expiresAt": "2026-02-14T01:19:09.553Z"
+      }
+    ],
+    "id": "698f3b2b4dab888ad67e3062",
+    "collection": "users",
+    "_strategy": "local-jwt"
+  }
+}
+
+[1A[2K[2m[WebServer] [22m[06:19:09] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps [33m403[39m in 9ms
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 58ms[2m (compile: 3ms, proxy.ts: 5ms, render: 49ms)[22m
+
+[1A[2K[2m[WebServer] [22m[06:19:09] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps [33m403[39m in 8ms
+
+[1A[2K[2m[WebServer] [22m GET / [32m200[39m in 35ms[2m (compile: 4ms, proxy.ts: 7ms, render: 24ms)[22m
+
+[1A[2K  ✓ Redirected to home page
+
+[1A[2K  ✓ User avatar visible
+
+[1A[2K  Cookies found: 1
+
+[1A[2K    - payload-token: localhost
+
+[1A[2K✓ Authentication state saved
+
+[1A[2K[2/2] [chromium] › e2e/editor-complete.spec.ts:36:7 › Editor - Keyboard Shortcuts › Tab - should add child node
+[1A[2K[2m[WebServer] [22m GET /new [32m200[39m in 76ms[2m (compile: 19ms, proxy.ts: 3ms, render: 54ms)[22m
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/users/me [32m200[39m in 27ms
+
+[1A[2K[2m[WebServer] [22m GET /api/users/me [32m200[39m in 16ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps [32m200[39m in 4ms
+
+[1A[2K[2m[WebServer] [22m POST /api/mindmaps [32m201[39m in 40ms
+
+[1A[2K[2m[WebServer] [22m GET /editor/698fb171c485ae36f0f55640 [32m200[39m in 423ms[2m (compile: 395ms, proxy.ts: 3ms, render: 25ms)[22m
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb171c485ae36f0f55640 [32m200[39m in 9ms
+
+[1A[2K[2m[WebServer] [22m OPTIONS /api/mindmaps/698fb171c485ae36f0f55640 [32m200[39m in 13ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb171c485ae36f0f55640 [32m200[39m in 12ms
+
+[1A[2K[2m[WebServer] [22m GET /api/mindmaps/698fb171c485ae36f0f55640 [32m200[39m in 13ms
+
+[1A[2K  1) [chromium] › e2e/editor-complete.spec.ts:36:7 › Editor - Keyboard Shortcuts › Tab - should add child node 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid^="node-"]').first()[22m
+
+
+      37 |     // Click on the first node (root)
+      38 |     const rootNode = page.locator('[data-testid^="node-"]').first()
+    > 39 |     await rootNode.click()
+         |                    ^
+      40 |
+      41 |     // Count nodes before
+      42 |     const nodesBefore = await page.locator('[data-testid^="node-"]').count()
+        at /home/haibui/projects/original-study/e2e/editor-complete.spec.ts:39:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---K-e3f91-Tab---should-add-child-node-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/editor-complete-Editor---K-e3f91-Tab---should-add-child-node-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/editor-complete-Editor---K-e3f91-Tab---should-add-child-node-chromium/error-context.md
+
+
+[1A[2K  1 failed
+    [chromium] › e2e/editor-complete.spec.ts:36:7 › Editor - Keyboard Shortcuts › Tab - should add child node 
+  1 passed (47.2s)

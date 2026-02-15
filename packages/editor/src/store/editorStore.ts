@@ -34,6 +34,7 @@ interface EditorActions {
   // Mindmap management
   createMindmap: (title: string, description?: string) => void
   loadMindmap: (mindmap: Mindmap, nodes: MindmapNode[], edges: NodeEdge[]) => void
+  updateMindmap: (mindmap: Mindmap) => void
 
   // Sync
   setSyncing: (isSyncing: boolean) => void
@@ -257,6 +258,12 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         state.historyIndex = -1
       })
       get().saveHistory()
+    },
+
+    updateMindmap: (mindmap: Mindmap) => {
+      set((state) => {
+        state.mindmap = mindmap
+      })
     },
 
     // Sync
