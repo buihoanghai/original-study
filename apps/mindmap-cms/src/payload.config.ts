@@ -11,6 +11,8 @@ import { Mindmaps } from './collections/Mindmaps'
 import { MindmapNodes } from './collections/MindmapNodes'
 import { Flashcards } from './collections/Flashcards'
 import { Comments } from './collections/Comments'
+import { NodeMastery } from './collections/NodeMastery'
+import { LearningSessions } from './collections/LearningSessions'
 import { entryLoggerPlugin } from './lib/entryLogger'
 
 const filename = fileURLToPath(import.meta.url)
@@ -24,7 +26,16 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Mindmaps, MindmapNodes, Flashcards, Comments],
+  collections: [
+    Users,
+    Media,
+    Mindmaps,
+    MindmapNodes,
+    Flashcards,
+    Comments,
+    NodeMastery,
+    LearningSessions,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { ensureStableNodeId } from '../hooks/ensureStableNodeId'
+import { autoGenerateLearningData } from '../hooks/autoGenerateLearningData'
 
 /**
  * MindmapNodes Collection
@@ -27,6 +28,7 @@ export const MindmapNodes: CollectionConfig = {
   },
   hooks: {
     beforeChange: [ensureStableNodeId],
+    afterChange: [autoGenerateLearningData],
   },
   access: {
     // TEMPORARY: Relaxed access control for debugging E2E tests

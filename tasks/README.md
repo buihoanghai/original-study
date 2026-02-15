@@ -45,9 +45,15 @@ Examples:
 
 ## Task Status
 
-| Task | Status              | Description               |
-| ---- | ------------------- | ------------------------- |
-| 001  | 📝 Pending Approval | Define core domain models |
+| Task | Status              | Description                                      |
+| ---- | ------------------- | ------------------------------------------------ |
+| 001  | ✅ Completed        | Define core domain models                        |
+| 002  | ✅ Completed        | Create CMS collections                           |
+| 003  | ✅ Completed        | Implement sync package                           |
+| 004  | ✅ Completed        | Build editor core                                |
+| 005  | ✅ Completed        | Build web frontend                               |
+| 006  | ✅ Completed        | Implement flashcard system                       |
+| 007  | 📝 Pending Approval | Adaptive Learning Calendar + Mastery System      |
 
 ## Template
 
@@ -73,11 +79,20 @@ Required sections:
 
 ## Current Task
 
-**Task 001: Define Core Domain Models**
+**Task 007: Adaptive Learning Calendar + Mastery System**
 
 - Status: 📝 Awaiting human approval
-- File: `tasks/001-define-domain-models.md`
+- File: `tasks/007-adaptive-learning-calendar.md`
+- Type: Feature (Major system evolution)
+- Estimated Effort: ~40 hours (1 week full-time)
+- Dependencies: Tasks 001, 002, 006 (all completed)
 - Next: Human reviews and approves before AI proceeds
+
+**Summary**: Transform Mindmap from passive knowledge visualization into an adaptive learning execution system with:
+- Auto-scheduled learning sessions
+- Per-node mastery tracking
+- Weekly calendar interface
+- Streak tracking and adaptive rescheduling
 
 ---
 
