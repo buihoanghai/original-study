@@ -75,10 +75,12 @@ describe('New Mindmap Page', () => {
         id: 'new-mindmap-123',
         metadata: {
           title: 'My New Mindmap',
+          description: '',
           created: new Date(),
           updated: new Date(),
         },
         status: 'draft',
+        ownerId: 'user-1',
       },
     })
 
@@ -109,10 +111,12 @@ describe('New Mindmap Page', () => {
         id: 'new-mindmap-456',
         metadata: {
           title: 'Mindmap without description',
+          description: '',
           created: new Date(),
           updated: new Date(),
         },
         status: 'draft',
+        ownerId: 'user-1',
       },
     })
 
@@ -174,7 +178,7 @@ describe('New Mindmap Page', () => {
 
   it('should disable inputs while creating', async () => {
     vi.mocked(api.createMindmap).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({ success: true, data: { id: '123', metadata: { title: 'Test', created: new Date(), updated: new Date() }, status: 'draft' } }), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve({ success: true, data: { id: '123', metadata: { title: 'Test', description: '', created: new Date(), updated: new Date() }, status: 'draft', ownerId: 'user-1' } }), 100))
     )
 
     render(<NewMindmapPage />)

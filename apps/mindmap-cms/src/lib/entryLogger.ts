@@ -41,35 +41,36 @@ export const entryLoggerPlugin = () => (config: Config): Config => {
     ...config,
     hooks: {
       ...config.hooks,
+      // TODO: afterOperation hook is not supported in current Payload version
       // Add global afterOperation hook to log all operations
-      afterOperation: [
-        ...(config.hooks?.afterOperation || []),
-        async (args) => {
-          const { req, operation, result } = args
+      // afterOperation: [
+      //   ...(config.hooks?.afterOperation || []),
+      //   async (args: any) => {
+      //     const { req, operation, result } = args
 
-          // Get or generate request ID
-          let requestId = getRequestId(req)
-          if (!requestId) {
-            requestId = generateRequestId()
-            setRequestId(req, requestId)
-          }
+      //     // Get or generate request ID
+      //     let requestId = getRequestId(req)
+      //     if (!requestId) {
+      //       requestId = generateRequestId()
+      //       setRequestId(req, requestId)
+      //     }
 
-          // Extract collection and operation info
-          const { collection } = getCollectionAndOperation(req)
+      //     // Extract collection and operation info
+      //     const { collection } = getCollectionAndOperation(req)
 
-          // Log the operation
-          logEntry({
-            requestId,
-            method: operation,
-            path: collection ? `/api/${collection}` : '/api',
-            userId: req.user?.id || null,
-            collection,
-            operation,
-          })
+      //     // Log the operation
+      //     logEntry({
+      //       requestId,
+      //       method: operation,
+      //       path: collection ? `/api/${collection}` : '/api',
+      //       userId: req.user?.id || null,
+      //       collection,
+      //       operation,
+      //     })
 
-          return result
-        },
-      ],
+      //     return result
+      //   },
+      // ],
     },
     onInit: async (payload) => {
       // Call original onInit if it exists

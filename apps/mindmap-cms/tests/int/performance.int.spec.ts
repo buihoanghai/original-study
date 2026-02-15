@@ -232,7 +232,7 @@ describe('Performance Tests', () => {
               srs: {
                 interval: 1,
                 ease: 2.5,
-                nextReview: new Date(Date.now() + i * 24 * 60 * 60 * 1000),
+                nextReview: new Date(Date.now() + i * 24 * 60 * 60 * 1000).toISOString(),
               },
             },
           })
@@ -277,7 +277,7 @@ describe('Performance Tests', () => {
               srs: {
                 interval: 1,
                 ease: 2.5,
-                nextReview: new Date(now + daysOffset * 24 * 60 * 60 * 1000),
+                nextReview: new Date(now + daysOffset * 24 * 60 * 60 * 1000).toISOString(),
               },
             },
           })
@@ -361,7 +361,7 @@ describe('Performance Tests', () => {
           collection: 'mindmap-nodes',
           id: node.id,
           data: {
-            content: { text: `Updated ${node.content.text}` },
+            content: { text: `Updated ${node.content?.text}` },
           },
         })
       )

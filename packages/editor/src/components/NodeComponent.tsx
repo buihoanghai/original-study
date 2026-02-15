@@ -25,13 +25,14 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
   // Focus input when entering edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      // Use setTimeout to ensure focus happens after React Flow's event handling
+      // Use a small delay to ensure focus happens after React Flow's event handling
+      // and DOM is fully rendered. 50ms is enough for React Flow to settle.
       const timeoutId = setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus()
           inputRef.current.select()
         }
-      }, 0)
+      }, 50)
       return () => clearTimeout(timeoutId)
     }
   }, [isEditing])

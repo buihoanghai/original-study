@@ -60,8 +60,7 @@ describe('Review Page', () => {
     answer: 'Answer',
     srs: {
       interval: 1,
-      repetitions: 0,
-      easeFactor: 2.5,
+      ease: 2.5,
       nextReview,
     },
   })

@@ -71,6 +71,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       expect(mindmap).toBeDefined()
@@ -91,6 +92,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       // User1 should be able to read their own mindmap
@@ -118,6 +120,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       // User2 should NOT be able to read user1's mindmap
@@ -144,8 +147,9 @@ describe('CMS Collections Integration Tests', () => {
             description: 'No title',
             status: 'draft',
             owner: user1.id,
-          },
+          } as any,
           user: user1,
+          draft: false,
         })
       ).rejects.toThrow()
     })
@@ -159,6 +163,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       // Update to published
@@ -196,6 +201,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       // User2 should NOT be able to update user1's mindmap
@@ -222,6 +228,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       // User2 should NOT be able to delete user1's mindmap
@@ -249,6 +256,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
     })
 
@@ -266,12 +274,13 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
 
       expect(node).toBeDefined()
       expect(node.nodeId).toBeDefined()
       expect(typeof node.nodeId).toBe('string')
-      expect(node.nodeId.length).toBeGreaterThan(0)
+      expect(node.nodeId!.length).toBeGreaterThan(0)
     })
 
     it('should enforce nodeId immutability', async () => {
@@ -289,6 +298,7 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
 
       const originalNodeId = node.nodeId
@@ -332,6 +342,7 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
 
       const originalNodeId = node.nodeId
@@ -353,7 +364,7 @@ describe('CMS Collections Integration Tests', () => {
       })
 
       expect(updated.nodeId).toBe(originalNodeId)
-      expect(updated.content.text).toBe('Updated Text')
+      expect(updated.content?.text).toBe('Updated Text')
       expect(updated.position.x).toBe(100)
       expect(updated.position.y).toBe(200)
     })
@@ -373,6 +384,7 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
 
       // User1 should be able to update their node
@@ -387,7 +399,7 @@ describe('CMS Collections Integration Tests', () => {
         user: user1,
       })
 
-      expect(updated.content.text).toBe('Updated by User 1')
+      expect(updated.content?.text).toBe('Updated by User 1')
 
       // User2 should NOT be able to update user1's node
       await expect(
@@ -418,8 +430,9 @@ describe('CMS Collections Integration Tests', () => {
               x: 0,
               y: 0,
             },
-          },
+          } as any,
           user: user1,
+          draft: false,
         })
       ).rejects.toThrow()
 
@@ -432,8 +445,9 @@ describe('CMS Collections Integration Tests', () => {
             content: {
               text: 'No position',
             },
-          },
+          } as any,
           user: user1,
+          draft: false,
         })
       ).rejects.toThrow()
     })
@@ -452,6 +466,7 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
 
       // Mindmap can be either ID or populated object
@@ -483,6 +498,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       testNode = await payload.create({
@@ -498,6 +514,7 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
     })
 
@@ -511,6 +528,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       expect(flashcard).toBeDefined()
@@ -518,8 +536,8 @@ describe('CMS Collections Integration Tests', () => {
       expect(flashcard.question).toBe('What is this?')
       expect(flashcard.answer).toBe('This is a test')
       expect(flashcard.srs).toBeDefined()
-      expect(flashcard.srs.interval).toBe(1)
-      expect(flashcard.srs.ease).toBe(2.5)
+      expect(flashcard.srs?.interval).toBe(1)
+      expect(flashcard.srs?.ease).toBe(2.5)
     })
 
     it('should update SRS metadata on review', async () => {
@@ -532,6 +550,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       // Simulate review - update SRS metadata
@@ -551,9 +570,9 @@ describe('CMS Collections Integration Tests', () => {
         user: user1,
       })
 
-      expect(updated.srs.interval).toBe(3)
-      expect(updated.srs.ease).toBe(2.6)
-      expect(updated.srs.nextReview).toBeDefined()
+      expect(updated.srs?.interval).toBe(3)
+      expect(updated.srs?.ease).toBe(2.6)
+      expect(updated.srs?.nextReview).toBeDefined()
     })
 
     it('should filter flashcards by nextReview date', async () => {
@@ -578,6 +597,7 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
 
       // Create flashcard due next week
@@ -595,6 +615,7 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
 
       // Query for flashcards due before tomorrow
@@ -625,6 +646,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       // User1 should be able to read their flashcard
@@ -664,8 +686,9 @@ describe('CMS Collections Integration Tests', () => {
             nodeId: testNode.nodeId,
             answer: 'Answer without question',
             owner: user1.id,
-          },
+          } as any,
           user: user1,
+          draft: false,
         })
       ).rejects.toThrow()
 
@@ -677,8 +700,9 @@ describe('CMS Collections Integration Tests', () => {
             nodeId: testNode.nodeId,
             question: 'Question without answer',
             owner: user1.id,
-          },
+          } as any,
           user: user1,
+          draft: false,
         })
       ).rejects.toThrow()
 
@@ -690,8 +714,9 @@ describe('CMS Collections Integration Tests', () => {
             question: 'Question',
             answer: 'Answer',
             owner: user1.id,
-          },
+          } as any,
           user: user1,
+          draft: false,
         })
       ).rejects.toThrow()
     })
@@ -711,6 +736,7 @@ describe('CMS Collections Integration Tests', () => {
           owner: user1.id,
         },
         user: user1,
+        draft: false,
       })
 
       testNode = await payload.create({
@@ -726,6 +752,7 @@ describe('CMS Collections Integration Tests', () => {
           },
         },
         user: user1,
+        draft: false,
       })
     })
 
@@ -736,8 +763,10 @@ describe('CMS Collections Integration Tests', () => {
           nodeId: testNode.nodeId,
           content: 'This is a test comment',
           author: user1.id,
+          status: 'pending',
         },
         user: user1,
+        draft: false,
       })
 
       expect(comment).toBeDefined()
@@ -756,8 +785,10 @@ describe('CMS Collections Integration Tests', () => {
           nodeId: testNode.nodeId,
           content: 'Comment to moderate',
           author: user1.id,
+          status: 'pending',
         },
         user: user1,
+        draft: false,
       })
 
       expect(comment.status).toBe('pending')
@@ -795,8 +826,10 @@ describe('CMS Collections Integration Tests', () => {
           nodeId: testNode.nodeId,
           content: 'User 1 Comment',
           author: user1.id,
+          status: 'pending',
         },
         user: user1,
+        draft: false,
       })
 
       // User1 should be able to update their comment
@@ -833,8 +866,9 @@ describe('CMS Collections Integration Tests', () => {
           data: {
             nodeId: testNode.nodeId,
             author: user1.id,
-          },
+          } as any,
           user: user1,
+          draft: false,
         })
       ).rejects.toThrow()
 
@@ -845,8 +879,9 @@ describe('CMS Collections Integration Tests', () => {
           data: {
             content: 'Comment without nodeId',
             author: user1.id,
-          },
+          } as any,
           user: user1,
+          draft: false,
         })
       ).rejects.toThrow()
     })

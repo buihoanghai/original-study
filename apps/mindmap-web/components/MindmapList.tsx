@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import type { MindmapListItem } from '../lib/api'
+import type { Mindmap } from '@mindmap/domain'
 
 interface MindmapListProps {
-  mindmaps: MindmapListItem[]
+  mindmaps: Mindmap[]
 }
 
 /**

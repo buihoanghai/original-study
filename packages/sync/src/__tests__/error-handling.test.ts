@@ -36,7 +36,17 @@ describe('SyncClient Error Handling', () => {
       const mockFetch = global.fetch as ReturnType<typeof vi.fn>
       mockFetch.mockRejectedValue(new Error('Request timeout'))
 
-      const result = await client.saveMindmap({ metadata: { title: 'Test' } })
+      const result = await client.saveMindmap({
+        id: 'test-id',
+        metadata: {
+          title: 'Test',
+          description: '',
+          created: new Date(),
+          updated: new Date(),
+        },
+        status: 'draft',
+        ownerId: 'user-1',
+      })
 
       expect(result.success).toBe(false)
       expect(result.error).toBe('Network request failed')
@@ -74,7 +84,17 @@ describe('SyncClient Error Handling', () => {
         status: 403,
       } as Response)
 
-      const result = await client.saveMindmap({ metadata: { title: 'Test' } })
+      const result = await client.saveMindmap({
+        id: 'test-id',
+        metadata: {
+          title: 'Test',
+          description: '',
+          created: new Date(),
+          updated: new Date(),
+        },
+        status: 'draft',
+        ownerId: 'user-1',
+      })
 
       expect(result.success).toBe(false)
       expect(result.error).toBe('Authentication failed')
@@ -105,7 +125,17 @@ describe('SyncClient Error Handling', () => {
         json: () => Promise.resolve({ message: 'Invalid data' }),
       } as Response)
 
-      const result = await client.saveMindmap({ metadata: { title: '' } })
+      const result = await client.saveMindmap({
+        id: 'test-id',
+        metadata: {
+          title: '',
+          description: '',
+          created: new Date(),
+          updated: new Date(),
+        },
+        status: 'draft',
+        ownerId: 'user-1',
+      })
 
       expect(result.success).toBe(false)
       expect(result.error).toBe('Invalid data')
@@ -120,7 +150,14 @@ describe('SyncClient Error Handling', () => {
       } as Response)
 
       // saveNodes with at least one node to trigger the request
-      const nodes = [{ nodeId: 'node-1', content: { text: 'Test' }, position: { x: 0, y: 0 } }]
+      const nodes = [
+        {
+          nodeId: 'node-1',
+          content: { text: 'Test' },
+          position: { x: 0, y: 0 },
+          metadata: { created: new Date(), updated: new Date(), author: 'test-user' },
+        },
+      ]
       const result = await client.saveNodes(nodes, 'mindmap-1')
 
       expect(result.success).toBe(false)
@@ -135,7 +172,17 @@ describe('SyncClient Error Handling', () => {
         json: () => Promise.resolve({}),
       } as Response)
 
-      const result = await client.saveMindmap({ metadata: { title: 'Test' } })
+      const result = await client.saveMindmap({
+        id: 'test-id',
+        metadata: {
+          title: 'Test',
+          description: '',
+          created: new Date(),
+          updated: new Date(),
+        },
+        status: 'draft',
+        ownerId: 'user-1',
+      })
 
       expect(result.success).toBe(false)
       expect(result.error).toBe('Request failed')
@@ -149,7 +196,17 @@ describe('SyncClient Error Handling', () => {
         json: () => Promise.reject(new Error('Invalid JSON')),
       } as Response)
 
-      const result = await client.saveMindmap({ metadata: { title: 'Test' } })
+      const result = await client.saveMindmap({
+        id: 'test-id',
+        metadata: {
+          title: 'Test',
+          description: '',
+          created: new Date(),
+          updated: new Date(),
+        },
+        status: 'draft',
+        ownerId: 'user-1',
+      })
 
       expect(result.success).toBe(false)
       expect(result.error).toBe('Request failed')
@@ -191,13 +248,14 @@ describe('SyncClient Error Handling', () => {
       const mockFetch = global.fetch as ReturnType<typeof vi.fn>
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(null),
+        json: () => Promise.reject(new Error('Unexpected end of JSON input')),
       } as Response)
 
       const result = await client.loadMindmap('test-id')
 
-      expect(result.success).toBe(true)
-      expect(result.data).toBeNull()
+      // When response.json() fails, it should return an error
+      expect(result.success).toBe(false)
+      expect(result.error).toBe('Network request failed')
     })
 
     it('should handle undefined error details', async () => {
@@ -240,8 +298,18 @@ describe('SyncClient Error Handling', () => {
       mockFetch.mockRejectedValue(new Error('Network error'))
 
       const nodes = [
-        { nodeId: 'node-1', content: { text: 'Node 1' }, position: { x: 0, y: 0 } },
-        { nodeId: 'node-2', content: { text: 'Node 2' }, position: { x: 100, y: 0 } },
+        {
+          nodeId: 'node-1',
+          content: { text: 'Node 1' },
+          position: { x: 0, y: 0 },
+          metadata: { created: new Date(), updated: new Date(), author: 'test-user' },
+        },
+        {
+          nodeId: 'node-2',
+          content: { text: 'Node 2' },
+          position: { x: 100, y: 0 },
+          metadata: { created: new Date(), updated: new Date(), author: 'test-user' },
+        },
       ]
 
       const result = await client.saveNodes(nodes, 'mindmap-1')
@@ -266,8 +334,18 @@ describe('SyncClient Error Handling', () => {
       })
 
       const nodes = [
-        { nodeId: 'node-1', content: { text: 'Node 1' }, position: { x: 0, y: 0 } },
-        { nodeId: 'node-2', content: { text: 'Node 2' }, position: { x: 100, y: 0 } },
+        {
+          nodeId: 'node-1',
+          content: { text: 'Node 1' },
+          position: { x: 0, y: 0 },
+          metadata: { created: new Date(), updated: new Date(), author: 'test-user' },
+        },
+        {
+          nodeId: 'node-2',
+          content: { text: 'Node 2' },
+          position: { x: 100, y: 0 },
+          metadata: { created: new Date(), updated: new Date(), author: 'test-user' },
+        },
       ]
 
       const result = await client.saveNodes(nodes, 'mindmap-1')

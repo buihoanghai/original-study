@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { Header } from '../Header'
 import { MindmapList } from '../MindmapList'
-import type { MindmapListItem } from '@/lib/api'
+import type { Mindmap } from '@mindmap/domain'
+import { AuthProvider } from '@/contexts/AuthContext'
 
 // Mock Next.js navigation
 const mockPush = vi.fn()
@@ -17,6 +18,11 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }))
 
+// Helper to render with AuthProvider
+const renderWithAuth = (component: React.ReactElement) => {
+  return render(<AuthProvider>{component}</AuthProvider>)
+}
+
 describe('Component Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -24,7 +30,7 @@ describe('Component Integration Tests', () => {
 
   describe('Header Component', () => {
     it('should render header with branding and navigation', () => {
-      render(<Header />)
+      renderWithAuth(<Header />)
 
       expect(screen.getByText('Mindmap Learning')).toBeInTheDocument()
       expect(screen.getByText('My Mindmaps')).toBeInTheDocument()
@@ -33,7 +39,7 @@ describe('Component Integration Tests', () => {
     })
 
     it('should have correct navigation links', () => {
-      render(<Header />)
+      renderWithAuth(<Header />)
 
       const homeLink = screen.getByText('Mindmap Learning').closest('a')
       const mindmapsLink = screen.getByText('My Mindmaps').closest('a')
@@ -47,7 +53,7 @@ describe('Component Integration Tests', () => {
     })
 
     it('should show login link when not authenticated', () => {
-      render(<Header />)
+      renderWithAuth(<Header />)
 
       expect(screen.getByText('Login')).toBeInTheDocument()
       const loginLink = screen.getByText('Login').closest('a')
@@ -55,14 +61,14 @@ describe('Component Integration Tests', () => {
     })
 
     it('should apply correct CSS classes for styling', () => {
-      render(<Header />)
+      renderWithAuth(<Header />)
 
       const header = screen.getByRole('banner')
       expect(header).toHaveClass('border-b', 'border-zinc-200', 'bg-white')
     })
 
     it('should have responsive navigation (hidden on mobile)', () => {
-      render(<Header />)
+      renderWithAuth(<Header />)
 
       const nav = screen.getByRole('navigation')
       expect(nav).toHaveClass('hidden', 'md:flex')
@@ -90,7 +96,7 @@ describe('Component Integration Tests', () => {
     })
 
     describe('With Mindmaps', () => {
-      const mockMindmaps: MindmapListItem[] = [
+      const mockMindmaps: Mindmap[] = [
         {
           id: 'mindmap-1',
           metadata: {
@@ -193,7 +199,7 @@ describe('Component Integration Tests', () => {
 
   describe('Header + MindmapList Integration', () => {
     it('should navigate from header to new mindmap page', () => {
-      const { rerender } = render(
+      const { rerender } = renderWithAuth(
         <div>
           <Header />
           <MindmapList mindmaps={[]} />
@@ -209,7 +215,7 @@ describe('Component Integration Tests', () => {
     })
 
     it('should show consistent navigation between header and list', () => {
-      const mockMindmaps: MindmapListItem[] = [
+      const mockMindmaps: Mindmap[] = [
         {
           id: 'mindmap-1',
           metadata: {
@@ -223,7 +229,7 @@ describe('Component Integration Tests', () => {
         },
       ]
 
-      render(
+      renderWithAuth(
         <div>
           <Header />
           <MindmapList mindmaps={mockMindmaps} />

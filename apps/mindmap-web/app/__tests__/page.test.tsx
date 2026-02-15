@@ -9,6 +9,13 @@ import * as api from '@/lib/api'
  * Tests the home page rendering with mindmap list and error states.
  */
 
+// Mock next/headers
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(() => Promise.resolve({
+    toString: () => 'mocked-cookie-header',
+  })),
+}))
+
 vi.mock('@/lib/api')
 vi.mock('@/components/MindmapList', () => ({
   MindmapList: ({ mindmaps }: { mindmaps: any[] }) => (
@@ -47,6 +54,7 @@ describe('Home Page', () => {
           updated: new Date(),
         },
         status: 'published' as const,
+        ownerId: 'user-1',
       },
       {
         id: '2',
@@ -57,6 +65,7 @@ describe('Home Page', () => {
           updated: new Date(),
         },
         status: 'draft' as const,
+        ownerId: 'user-1',
       },
     ]
 

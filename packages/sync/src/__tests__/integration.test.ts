@@ -44,7 +44,7 @@ describe('Sync Integration Tests', () => {
         ownerId: 'user-1',
       }
 
-      // First update succeeds
+      // First update succeeds (skip conflict check)
       ;(global.fetch as any).mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -52,17 +52,20 @@ describe('Sync Integration Tests', () => {
         }),
       })
 
-      const result1 = await client.saveMindmap(mindmap)
+      const result1 = await client.saveMindmap(mindmap, { skipConflictCheck: true })
       expect(result1.success).toBe(true)
 
       // Second update fails with conflict (409)
-      ;(global.fetch as any).mockResolvedValueOnce({
-        ok: false,
-        status: 409,
-        json: async () => ({ message: 'Conflict: Resource was modified' }),
-      })
+      // Provide 3 responses for retry attempts
+      for (let i = 0; i < 3; i++) {
+        ;(global.fetch as any).mockResolvedValueOnce({
+          ok: false,
+          status: 409,
+          json: () => Promise.resolve({ message: 'Conflict: Resource was modified' }),
+        } as Response)
+      }
 
-      const result2 = await client.saveMindmap(mindmap)
+      const result2 = await client.saveMindmap(mindmap, { skipConflictCheck: true })
       expect(result2.success).toBe(false)
       expect(result2.error).toContain('Conflict')
     })
@@ -251,16 +254,19 @@ describe('Sync Integration Tests', () => {
         ownerId: 'user-1',
       }
 
-      ;(global.fetch as any).mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        json: async () => ({
-          message: 'Validation failed',
-          errors: [{ field: 'status', message: 'Invalid status value' }],
-        }),
-      })
+      // Provide 3 responses for retry attempts
+      for (let i = 0; i < 3; i++) {
+        ;(global.fetch as any).mockResolvedValueOnce({
+          ok: false,
+          status: 400,
+          json: () => Promise.resolve({
+            message: 'Validation failed',
+            errors: [{ field: 'status', message: 'Invalid status value' }],
+          }),
+        } as Response)
+      }
 
-      const result = await client.saveMindmap(mindmap)
+      const result = await client.saveMindmap(mindmap, { skipConflictCheck: true })
       expect(result.success).toBe(false)
       expect(result.error).toContain('Validation failed')
     })

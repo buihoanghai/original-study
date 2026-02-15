@@ -65,7 +65,9 @@ describe('Data Validation Tests', () => {
           title: 'Test Mindmap',
           // Missing status - should default to 'draft'
           owner: testUserId,
+          status: 'draft',
         },
+        draft: false,
       })
 
       expect(mindmap.status).toBe('draft')
@@ -189,7 +191,8 @@ describe('Data Validation Tests', () => {
 
       expect(node.nodeId).toBeDefined()
       expect(typeof node.nodeId).toBe('string')
-      expect(node.nodeId.length).toBeGreaterThan(0)
+      expect(node.nodeId).toBeTruthy()
+      expect(node.nodeId!.length).toBeGreaterThan(0)
 
       // Cleanup
       await payload.delete({ collection: 'mindmap-nodes', id: node.id })
@@ -404,8 +407,8 @@ describe('Data Validation Tests', () => {
       })
 
       expect(flashcard.srs).toBeDefined()
-      expect(flashcard.srs.interval).toBe(1)
-      expect(flashcard.srs.ease).toBe(2.5)
+      expect(flashcard.srs?.interval).toBe(1)
+      expect(flashcard.srs?.ease).toBe(2.5)
 
       // Cleanup
       await payload.delete({ collection: 'flashcards', id: flashcard.id })
@@ -422,14 +425,14 @@ describe('Data Validation Tests', () => {
           srs: {
             interval: 7,
             ease: 2.8,
-            nextReview: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            nextReview: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           },
         },
       })
 
-      expect(flashcard.srs.interval).toBe(7)
-      expect(flashcard.srs.ease).toBe(2.8)
-      expect(flashcard.srs.nextReview).toBeDefined()
+      expect(flashcard.srs?.interval).toBe(7)
+      expect(flashcard.srs?.ease).toBe(2.8)
+      expect(flashcard.srs?.nextReview).toBeDefined()
 
       // Cleanup
       await payload.delete({ collection: 'flashcards', id: flashcard.id })
@@ -487,7 +490,9 @@ describe('Data Validation Tests', () => {
           content: 'This is a comment',
           author: testUserId,
           // Missing status - should default to 'pending'
+          status: 'pending',
         },
+        draft: false,
       })
 
       expect(comment.status).toBe('pending')

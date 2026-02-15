@@ -40,7 +40,16 @@ describe('Editor Integration Tests', () => {
     mockUseEditorStore.mockImplementation((selector) => {
       const state = {
         ui: { selectedNodeId: null },
+        setSaveCallback: vi.fn(),
+        isSyncing: false,
+        lastSyncedAt: null,
+        syncError: null,
       }
+      // If no selector provided, return entire state (for destructuring)
+      if (!selector) {
+        return state
+      }
+      // Otherwise call selector with state
       return selector(state)
     })
 
@@ -527,6 +536,14 @@ describe('Editor Integration Tests', () => {
       mockUseEditorStore.mockImplementation((selector) => {
         const state = {
           ui: { selectedNodeId: 'node-selected-123' },
+          setSaveCallback: vi.fn(),
+          isSyncing: false,
+          lastSyncedAt: null,
+          syncError: null,
+        }
+        // If no selector provided, return entire state
+        if (!selector) {
+          return state
         }
         return selector(state)
       })
@@ -562,6 +579,14 @@ describe('Editor Integration Tests', () => {
       mockUseEditorStore.mockImplementation((selector) => {
         const state = {
           ui: { selectedNodeId },
+          setSaveCallback: vi.fn(),
+          isSyncing: false,
+          lastSyncedAt: null,
+          syncError: null,
+        }
+        // If no selector provided, return entire state
+        if (!selector) {
+          return state
         }
         return selector(state)
       })
@@ -589,6 +614,14 @@ describe('Editor Integration Tests', () => {
       mockUseEditorStore.mockImplementation((selector) => {
         const state = {
           ui: { selectedNodeId },
+          setSaveCallback: vi.fn(),
+          isSyncing: false,
+          lastSyncedAt: null,
+          syncError: null,
+        }
+        // If no selector provided, return entire state
+        if (!selector) {
+          return state
         }
         return selector(state)
       })
