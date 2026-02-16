@@ -41,3 +41,9 @@ export type { WeeklyTarget, DailyPlan } from './types/schedule'
 
 // Community Domain Types
 export type { Comment, ModerationStatus } from './types/community'
+
+// Skill Progress Tracking Types
+export type { SkillStatus, SkillMetadata } from './types/skill'
+
+// Mastery Calculation Utilities
+export { calculateMastery, shouldAutoComplete } from './utils/mastery'

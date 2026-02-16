@@ -85,6 +85,50 @@ export const MindmapNodes: CollectionConfig = {
           type: 'richText',
           label: 'Rich Text',
         },
+        {
+          name: 'skill',
+          type: 'group',
+          label: 'Skill Progress',
+          admin: {
+            description: 'Track learning progress for skill nodes',
+          },
+          fields: [
+            {
+              name: 'status',
+              type: 'select',
+              label: 'Status',
+              options: [
+                { label: 'Not Started', value: 'not-started' },
+                { label: 'In Progress', value: 'in-progress' },
+                { label: 'Completed', value: 'completed' },
+              ],
+              admin: {
+                description: 'Current learning status of this skill',
+              },
+            },
+            {
+              name: 'masteryPercentage',
+              type: 'number',
+              label: 'Mastery Percentage',
+              min: 0,
+              max: 100,
+              admin: {
+                description: 'Calculated from flashcard performance (0-100%)',
+              },
+            },
+            {
+              name: 'lastPracticed',
+              type: 'date',
+              label: 'Last Practiced',
+              admin: {
+                description: 'Last time this skill was practiced',
+                date: {
+                  displayFormat: 'yyyy-MM-dd',
+                },
+              },
+            },
+          ],
+        },
       ],
     },
     {

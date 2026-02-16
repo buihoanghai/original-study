@@ -45,6 +45,13 @@ export interface NodeContent {
   /** Rich text content (HTML or other format) */
   richText?: string
 
+  /** Skill-specific metadata (optional, for skill nodes only) */
+  skill?: {
+    status: 'not-started' | 'in-progress' | 'completed'
+    masteryPercentage: number
+    lastPracticed?: Date
+  }
+
   /** Additional metadata or attachments */
   [key: string]: unknown
 }
