@@ -150,10 +150,17 @@ export const useSyncMindmap = (cmsUrl: string, authToken?: string) => {
 
         console.log('[useSyncMindmap] Final nodes to load into store:', loadedNodes)
 
-        // Build edges from node relationships
-        // TODO: This assumes edges are stored separately or derived from node structure
-        // For now, we'll use an empty array and let the tree operations rebuild them
-        const loadedEdges: NodeEdge[] = []
+        // Load edges from CMS
+        console.log('[useSyncMindmap] Loading edges...')
+        const edgesResult = await syncClient.loadEdges(mindmapId)
+        if (!edgesResult.success) {
+          console.warn('[useSyncMindmap] Failed to load edges:', edgesResult.error)
+          // Don't fail the whole load if edges fail - use empty array
+        }
+
+        const loadedEdges = edgesResult.success ? edgesResult.data! : []
+        console.log('[useSyncMindmap] Loaded edges:', loadedEdges)
+        console.log('[useSyncMindmap] Edges count:', loadedEdges.length)
 
         // Load into store
         loadMindmap(loadedMindmap, loadedNodes, loadedEdges)

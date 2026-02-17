@@ -144,9 +144,11 @@ export const useEditorStore = create<EditorState & EditorActions>()(
 
     // Selection and editing
     selectNode: (nodeId: string | null) => {
+      console.log('[editorStore] selectNode called with:', nodeId)
       set((state) => {
         state.ui.selectedNodeId = nodeId
         state.ui.focusMode = nodeId ? 'canvas' : 'none'
+        console.log('[editorStore] selectedNodeId updated to:', state.ui.selectedNodeId)
       })
     },
 
@@ -249,6 +251,11 @@ export const useEditorStore = create<EditorState & EditorActions>()(
     },
 
     loadMindmap: (mindmap: Mindmap, nodes: MindmapNode[], edges: NodeEdge[]) => {
+      console.log('[editorStore] loadMindmap called')
+      console.log('[editorStore] - Mindmap:', mindmap.title)
+      console.log('[editorStore] - Nodes count:', nodes.length)
+      console.log('[editorStore] - Edges count:', edges.length)
+      console.log('[editorStore] - Edges:', edges)
       set((state) => {
         state.mindmap = mindmap
         state.nodes = nodes
@@ -256,6 +263,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         state.ui.selectedNodeId = nodes[0]?.nodeId || null
         state.history = []
         state.historyIndex = -1
+        console.log('[editorStore] - Initial selectedNodeId:', state.ui.selectedNodeId)
       })
       get().saveHistory()
     },

@@ -32,6 +32,11 @@ export function EditorWrapper({ mindmapId }: EditorWrapperProps) {
     process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
   )
 
+  // Log selectedNodeId changes
+  useEffect(() => {
+    console.log('[EditorWrapper] selectedNodeId changed to:', selectedNodeId)
+  }, [selectedNodeId])
+
   // Wrap save function to show toast notifications and handle conflicts
   const handleSave = useCallback(async (skipConflictCheck = false) => {
     const result = await save(skipConflictCheck)

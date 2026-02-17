@@ -47,9 +47,16 @@ export const MindmapEditor: React.FC = () => {
     hidden: edge.type === 'reference', // Hide reference edges by default
   }))
 
+  console.log('[MindmapEditor] Rendering with:')
+  console.log('[MindmapEditor] - Nodes:', reactFlowNodes.length)
+  console.log('[MindmapEditor] - Edges:', reactFlowEdges.length)
+  console.log('[MindmapEditor] - Selected node:', ui.selectedNodeId)
+
   // Handle node click
   const onNodeClick = useCallback(
     (_event: React.MouseEvent, node: Node) => {
+      console.log('[MindmapEditor] Node clicked:', node.id)
+      console.log('[MindmapEditor] Node data:', node.data)
       selectNode(node.id)
     },
     [selectNode]

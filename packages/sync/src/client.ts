@@ -1,4 +1,4 @@
-import type { Mindmap, MindmapNode } from '@mindmap/domain'
+import type { Mindmap, MindmapNode, NodeEdge } from '@mindmap/domain'
 import {
   SyncConfig,
   SaveResult,
@@ -418,6 +418,69 @@ export class SyncClient {
       return {
         success: true,
         data: domainNodes,
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      }
+    }
+  }
+
+  /**
+   * Load all edges for a mindmap from CMS
+   *
+   * Fetches edges by first getting all nodes for the mindmap,
+   * then querying edges where 'from' matches those nodeIds.
+   */
+  async loadEdges(mindmapId: string): Promise<LoadResult<NodeEdge[]>> {
+    // Check if online
+    if (!isOnline()) {
+      return {
+        success: false,
+        error: 'No network connection. Please check your internet and try again.',
+      }
+    }
+
+    try {
+      // First, get all nodes for this mindmap to get their nodeIds
+      const nodesResult = await this.loadNodes(mindmapId)
+      if (!nodesResult.success || !nodesResult.data) {
+        return {
+          success: false,
+          error: nodesResult.error || 'Failed to fetch nodes for edge query',
+        }
+      }
+
+      const nodeIds = nodesResult.data.map(node => node.nodeId)
+
+      if (nodeIds.length === 0) {
+        // No nodes means no edges
+        return {
+          success: true,
+          data: [],
+        }
+      }
+
+      // Query edges where 'from' is in nodeIds
+      const data = await withRetry(
+        async () =>
+          this.request<{ docs: any[] }>(
+            `/api/node-edges?where[from][in]=${nodeIds.join(',')}&limit=1000`
+          ),
+        this.retryOptions
+      )
+
+      // Transform to domain NodeEdge type
+      const edges: NodeEdge[] = data.docs.map((doc: any) => ({
+        from: doc.from,
+        to: doc.to,
+        type: doc.type,
+      }))
+
+      return {
+        success: true,
+        data: edges,
       }
     } catch (error) {
       return {

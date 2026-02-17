@@ -37,7 +37,12 @@ export function FlashcardPanel({
 
   // Load flashcards when nodeId changes
   useEffect(() => {
+    console.log('[FlashcardPanel] useEffect triggered')
+    console.log('[FlashcardPanel] - nodeId:', nodeId)
+    console.log('[FlashcardPanel] - isVisible:', isVisible)
+
     if (!nodeId || !isVisible) {
+      console.log('[FlashcardPanel] Clearing flashcards (no nodeId or not visible)')
       setFlashcards([])
       return
     }
@@ -45,14 +50,18 @@ export function FlashcardPanel({
     async function loadFlashcards() {
       if (!nodeId) return
 
+      console.log('[FlashcardPanel] Loading flashcards for node:', nodeId)
       setIsLoading(true)
       setError(null)
 
       const result = await getFlashcardsByNode(nodeId)
+      console.log('[FlashcardPanel] Flashcards result:', result)
 
       if (result.success) {
+        console.log('[FlashcardPanel] Loaded flashcards count:', result.data?.length)
         setFlashcards(result.data || [])
       } else {
+        console.error('[FlashcardPanel] Failed to load flashcards:', result.error)
         setError(result.error || 'Failed to load flashcards')
       }
 

@@ -1,4 +1,4 @@
-import type { Mindmap, MindmapNode } from '@mindmap/domain'
+import type { Mindmap, MindmapNode, NodeEdge } from '@mindmap/domain'
 
 /**
  * Mindmap API Client
@@ -308,6 +308,79 @@ export async function deleteMindmap(id: string): Promise<ApiResult<void>> {
     return {
       success: false,
       error: `Failed to delete mindmap: ${error instanceof Error ? error.message : 'Network error'}`,
+    }
+  }
+}
+
+/**
+ * Get edges for a mindmap
+ *
+ * Since NodeEdges collection doesn't have a mindmap field, we need to:
+ * 1. Get all nodes for the mindmap
+ * 2. Extract their nodeIds
+ * 3. Query edges where from/to match those nodeIds
+ */
+export async function getMindmapEdges(
+  mindmapId: string
+): Promise<ApiResult<NodeEdge[]>> {
+  try {
+    // First, get all nodes for this mindmap to get their nodeIds
+    const nodesResult = await getMindmapNodes(mindmapId)
+    if (!nodesResult.success || !nodesResult.data) {
+      return {
+        success: false,
+        error: nodesResult.error || 'Failed to fetch nodes for edge query',
+      }
+    }
+
+    const nodeIds = nodesResult.data.map(node => node.nodeId)
+
+    if (nodeIds.length === 0) {
+      // No nodes means no edges
+      return {
+        success: true,
+        data: [],
+      }
+    }
+
+    // Query edges where 'from' is in nodeIds
+    // This will get all edges originating from nodes in this mindmap
+    const response = await fetch(
+      `${CMS_URL}/api/node-edges?where[from][in]=${nodeIds.join(',')}&limit=1000`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      }
+    )
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      return {
+        success: false,
+        error: errorData.errors?.[0]?.message || `Failed to fetch edges: ${response.statusText}`,
+      }
+    }
+
+    const data = await response.json()
+
+    // Transform to domain NodeEdge type
+    const edges: NodeEdge[] = (data.docs || []).map((doc: any) => ({
+      from: doc.from,
+      to: doc.to,
+      type: doc.type,
+    }))
+
+    return {
+      success: true,
+      data: edges,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: `Failed to fetch edges: ${error instanceof Error ? error.message : 'Network error'}`,
     }
   }
 }

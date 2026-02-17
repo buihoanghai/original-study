@@ -9,6 +9,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Mindmaps } from './collections/Mindmaps'
 import { MindmapNodes } from './collections/MindmapNodes'
+import { NodeEdges } from './collections/NodeEdges'
 import { Flashcards } from './collections/Flashcards'
 import { Comments } from './collections/Comments'
 import { NodeMastery } from './collections/NodeMastery'
@@ -31,6 +32,7 @@ export default buildConfig({
     Media,
     Mindmaps,
     MindmapNodes,
+    NodeEdges,
     Flashcards,
     Comments,
     NodeMastery,
