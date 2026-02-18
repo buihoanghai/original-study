@@ -42,10 +42,10 @@ test.describe('Flashcard Panel - Node Selection Bug', () => {
   })
 
   test('should show flashcards when clicking on a node', async ({ page }) => {
-    // Navigate to the Fullstack Developer Skill Tree mindmap
+    // Navigate to the Fullstack Developer Skill Tree mindmap using slug
     // (This should exist from seed data)
-    // ID: 6993f480d83b03ebaafc23f8
-    await page.goto('/editor/6993f480d83b03ebaafc23f8')
+    // Slug: fullstack-developer-skill-tree (auto-generated from title)
+    await page.goto('/editor/fullstack-developer-skill-tree')
 
     // Wait for editor to load and nodes to render
     await page.waitForTimeout(2000)

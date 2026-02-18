@@ -260,7 +260,7 @@ export function EditorWrapper({ mindmapId, focusNodeSlug }: EditorWrapperProps) 
 
         {/* Floating Node Detail Panel - Overlays on left */}
         {showNodeDetailPanel && (
-          <div className="absolute top-0 left-0 h-full w-[500px] max-w-[90vw] z-20 shadow-2xl">
+          <div className="absolute top-0 left-0 h-full w-[800px] max-w-[90vw] z-20 shadow-2xl">
             <NodeDetailPanel
               nodeId={selectedNodeId}
               isVisible={showNodeDetailPanel}

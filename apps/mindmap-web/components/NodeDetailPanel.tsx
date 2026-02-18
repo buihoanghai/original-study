@@ -10,6 +10,7 @@ import { CodeBlock } from './CodeBlock'
 import { SearchBar } from './SearchBar'
 import { HighlightText } from './HighlightText'
 import { DynamicContentSection } from './DynamicContentSection'
+import { OutlineContent } from './OutlineContent'
 import { useNodeProgress } from '@/hooks/useNodeProgress'
 
 interface NodeDetailPanelProps {
@@ -37,6 +38,7 @@ export function NodeDetailPanel({
   const [nodeData, setNodeData] = useState<any>(null)
   const [breadcrumbPath, setBreadcrumbPath] = useState<any[]>([])
   const [children, setChildren] = useState<any[]>([])
+  const [childrenData, setChildrenData] = useState<any[]>([]) // Full data for children from database
   const [viewingNodeId, setViewingNodeId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -48,6 +50,122 @@ export function NodeDetailPanel({
   const nodes = useEditorStore((state) => state.nodes)
   const edges = useEditorStore((state) => state.edges)
   const selectNode = useEditorStore((state) => state.selectNode)
+
+  // Helper function to convert content to outline format
+  const convertToOutline = (content: any) => {
+    const items: any[] = []
+
+    // NEW SCHEMA: Handle sections array (preferred)
+    if (content.sections && content.sections.length > 0) {
+      content.sections.forEach((section: any) => {
+        const sectionItem: any = {
+          level: 1,
+          title: section.name || 'Untitled Section',
+        }
+
+        // Handle different section content types
+        if (section.content) {
+          if (section.content.type === 'text') {
+            sectionItem.content = section.content.text
+          } else if (section.content.type === 'list') {
+            sectionItem.list = section.content.items || []
+            sectionItem.listStyle = section.content.listStyle || 'bullet'
+          } else if (section.content.type === 'code') {
+            // Handle both single code and examples array
+            if (section.content.examples && section.content.examples.length > 0) {
+              sectionItem.codeExamples = section.content.examples
+            } else if (section.content.code) {
+              sectionItem.codeExamples = [
+                {
+                  language: section.content.language || 'javascript',
+                  code: section.content.code,
+                  title: section.content.title,
+                },
+              ]
+            }
+          }
+        }
+
+        items.push(sectionItem)
+      })
+      return items
+    }
+
+    // LEGACY SCHEMA: Fallback to old structure
+    if (content.definition) {
+      items.push({
+        level: 1,
+        title: 'Definition',
+        content: content.definition,
+      })
+    }
+
+    if (content.codeExamples && content.codeExamples.length > 0) {
+      items.push({
+        level: 1,
+        title: 'Code Examples',
+        codeExamples: content.codeExamples,
+      })
+    }
+
+    if (content.pitfalls && content.pitfalls.length > 0) {
+      items.push({
+        level: 1,
+        title: 'Pitfalls',
+        content: content.pitfalls,
+      })
+    }
+
+    if (content.commonMistakes && content.commonMistakes.length > 0) {
+      items.push({
+        level: 1,
+        title: 'Common Mistakes',
+        content: content.commonMistakes,
+      })
+    }
+
+    if (content.bestPractices && content.bestPractices.length > 0) {
+      items.push({
+        level: 1,
+        title: 'Best Practices',
+        content: content.bestPractices,
+      })
+    }
+
+    if (content.realWorldUseCases && content.realWorldUseCases.length > 0) {
+      items.push({
+        level: 1,
+        title: 'Real-World Use Cases',
+        content: content.realWorldUseCases,
+      })
+    }
+
+    if (content.practiceTasks && content.practiceTasks.length > 0) {
+      items.push({
+        level: 1,
+        title: 'Practice Tasks',
+        content: content.practiceTasks,
+      })
+    }
+
+    if (content.assessment) {
+      items.push({
+        level: 1,
+        title: 'Assessment',
+        content: content.assessment,
+      })
+    }
+
+    if (content.signalsOfMastery && content.signalsOfMastery.length > 0) {
+      items.push({
+        level: 1,
+        title: 'Signals of Mastery',
+        content: content.signalsOfMastery,
+      })
+    }
+
+    return items
+  }
 
   const {
     toggleBookmark,
@@ -86,6 +204,34 @@ export function NodeDetailPanel({
           .map((id) => nodes.find((n) => n.nodeId === id))
           .filter(Boolean)
         setChildren(childNodes)
+
+        // Fetch full children data from database (not from editor store)
+        // Editor store may have incomplete data, database has full content
+        const childrenDataPromises = childIds.map((childId) => getNodeByNodeId(childId))
+        const childrenResults = await Promise.all(childrenDataPromises)
+        const fullChildrenData = childrenResults
+          .filter((result) => result.success && result.data)
+          .map((result) => result.data!)
+
+        // Also fetch grandchildren data for each child
+        const childrenWithGrandchildren = await Promise.all(
+          fullChildrenData.map(async (child) => {
+            const grandchildIds = getChildren(edges, child.nodeId)
+            if (grandchildIds.length === 0) {
+              return { ...child, grandchildren: [] }
+            }
+
+            const grandchildrenPromises = grandchildIds.map((id) => getNodeByNodeId(id))
+            const grandchildrenResults = await Promise.all(grandchildrenPromises)
+            const grandchildren = grandchildrenResults
+              .filter((result) => result.success && result.data)
+              .map((result) => result.data!)
+
+            return { ...child, grandchildren }
+          })
+        )
+
+        setChildrenData(childrenWithGrandchildren)
       } else {
         setError(result.error || 'Failed to load node')
       }
@@ -285,119 +431,15 @@ export function NodeDetailPanel({
               </div>
             )}
 
-            {/* NEW SCHEMA: Dynamic Sections */}
-            {nodeData.content.sections && nodeData.content.sections.length > 0 ? (
-              <div className="space-y-4">
-                {nodeData.content.sections
-                  .sort((a: any, b: any) => a.order - b.order)
-                  .map((section: any) => (
-                    <DynamicContentSection
-                      key={section.id}
-                      section={section}
-                      searchQuery={searchQuery}
-                    />
-                  ))}
-              </div>
-            ) : (
-              /* OLD SCHEMA: Legacy hardcoded sections (backward compatibility) */
-              <>
-                {/* Definition */}
-                {nodeData.content.definition && (
-                  <ContentSection title="Definition" icon="📖">
-                    <p className="whitespace-pre-wrap">{renderText(nodeData.content.definition)}</p>
-                  </ContentSection>
-                )}
-
-                {/* Code Examples */}
-                {nodeData.content.codeExamples && nodeData.content.codeExamples.length > 0 && (
-                  <ContentSection title="Code Examples" icon="💻">
-                    <div className="space-y-4">
-                      {nodeData.content.codeExamples.map((example: any, i: number) => (
-                        <CodeBlock
-                          key={i}
-                          code={example.code}
-                          language={example.language || 'javascript'}
-                          title={example.title}
-                        />
-                      ))}
-                    </div>
-                  </ContentSection>
-                )}
-
-                {/* Pitfalls */}
-                {nodeData.content.pitfalls && nodeData.content.pitfalls.length > 0 && (
-                  <ContentSection title="Pitfalls" icon="⚠️">
-                    <ul className="list-disc list-inside space-y-1">
-                      {nodeData.content.pitfalls.map((pitfall: string, i: number) => (
-                        <li key={i}>{renderText(pitfall)}</li>
-                      ))}
-                    </ul>
-                  </ContentSection>
-                )}
-
-                {/* Common Mistakes */}
-                {nodeData.content.commonMistakes && nodeData.content.commonMistakes.length > 0 && (
-                  <ContentSection title="Common Mistakes" icon="❌">
-                    <ul className="list-disc list-inside space-y-1">
-                      {nodeData.content.commonMistakes.map((mistake: string, i: number) => (
-                        <li key={i}>{renderText(mistake)}</li>
-                      ))}
-                    </ul>
-                  </ContentSection>
-                )}
-
-                {/* Best Practices */}
-                {nodeData.content.bestPractices && nodeData.content.bestPractices.length > 0 && (
-                  <ContentSection title="Best Practices" icon="✅">
-                    <ul className="list-disc list-inside space-y-1">
-                      {nodeData.content.bestPractices.map((practice: string, i: number) => (
-                        <li key={i}>{renderText(practice)}</li>
-                      ))}
-                    </ul>
-                  </ContentSection>
-                )}
-
-                {/* Real-World Use Cases */}
-                {nodeData.content.realWorldUseCases && nodeData.content.realWorldUseCases.length > 0 && (
-                  <ContentSection title="Real-World Use Cases" icon="💡">
-                    <ul className="list-disc list-inside space-y-1">
-                      {nodeData.content.realWorldUseCases.map((useCase: string, i: number) => (
-                        <li key={i}>{renderText(useCase)}</li>
-                      ))}
-                    </ul>
-                  </ContentSection>
-                )}
-
-                {/* Practice Tasks */}
-                {nodeData.content.practiceTasks && nodeData.content.practiceTasks.length > 0 && (
-                  <ContentSection title="Practice Tasks" icon="🎯">
-                    <ul className="list-disc list-inside space-y-1">
-                      {nodeData.content.practiceTasks.map((task: string, i: number) => (
-                        <li key={i}>{renderText(task)}</li>
-                      ))}
-                    </ul>
-                  </ContentSection>
-                )}
-
-                {/* Assessment */}
-                {nodeData.content.assessment && (
-                  <ContentSection title="Assessment" icon="📊">
-                    <p className="whitespace-pre-wrap">{renderText(nodeData.content.assessment)}</p>
-                  </ContentSection>
-                )}
-
-                {/* Signals of Mastery */}
-                {nodeData.content.signalsOfMastery && nodeData.content.signalsOfMastery.length > 0 && (
-                  <ContentSection title="Signals of Mastery" icon="🎓">
-                    <ul className="list-disc list-inside space-y-1">
-                      {nodeData.content.signalsOfMastery.map((signal: string, i: number) => (
-                        <li key={i}>{renderText(signal)}</li>
-                      ))}
-                    </ul>
-                  </ContentSection>
-                )}
-              </>
-            )}
+            {/* Content in Outline Format */}
+            {(() => {
+              const outlineItems = convertToOutline(nodeData.content)
+              return outlineItems.length > 0 ? (
+                <div className="mb-6">
+                  <OutlineContent items={outlineItems} searchQuery={searchQuery} />
+                </div>
+              ) : null
+            })()}
 
             {/* Personal Notes */}
             <ContentSection title="Personal Notes" icon="📝" defaultExpanded={true}>
@@ -423,36 +465,65 @@ export function NodeDetailPanel({
             </ContentSection>
 
             {/* Children */}
-            {children.length > 0 && (
-              <ContentSection title="Children" icon="👶" defaultExpanded={true}>
-                <div className="space-y-4">
-                  {children.map((child: any) => (
-                    <div key={child.nodeId} className="border-l-2 border-blue-500 dark:border-blue-400 pl-4">
-                      <button
-                        onClick={() => handleChildClick(child.nodeId)}
-                        className="text-lg font-semibold text-blue-600 dark:text-blue-400 hover:underline mb-2 block"
-                      >
-                        {child.content.text || 'Untitled'}
-                      </button>
-                      {child.content.definition && (
-                        <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                          <span className="font-medium">Definition:</span> {child.content.definition}
-                        </p>
-                      )}
-                      {child.content.commonMistakes && child.content.commonMistakes.length > 0 && (
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          <span className="font-medium">Common Mistakes:</span>
-                          <ul className="list-disc list-inside ml-2 mt-1">
-                            {child.content.commonMistakes.slice(0, 2).map((mistake: string, i: number) => (
-                              <li key={i}>{mistake}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+            {childrenData.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
+                  <span>👶</span>
+                  <span>Children Topics</span>
+                </h3>
+                <div className="space-y-8">
+                  {childrenData.map((child: any) => {
+                    const childOutline = convertToOutline(child.content)
+                    const grandchildren = child.grandchildren || []
+
+                    return (
+                      <div key={child.nodeId} className="border-l-4 border-blue-500 dark:border-blue-400 pl-6 pb-4">
+                        <button
+                          onClick={() => handleChildClick(child.nodeId)}
+                          className="text-2xl font-bold text-blue-600 dark:text-blue-400 hover:underline mb-4 block"
+                        >
+                          {child.content.text || 'Untitled'}
+                        </button>
+
+                        {/* Child content in outline format */}
+                        {childOutline.length > 0 ? (
+                          <div className="text-sm mb-4">
+                            <OutlineContent items={childOutline} searchQuery={searchQuery} />
+                          </div>
+                        ) : (
+                          <p className="text-sm text-zinc-500 dark:text-zinc-400 ml-2 mb-4">No content available</p>
+                        )}
+
+                        {/* Grandchildren (sub-topics) with full content */}
+                        {grandchildren.length > 0 && (
+                          <div className="mt-4 space-y-6">
+                            {grandchildren.map((grandchild: any) => {
+                              const grandchildOutline = convertToOutline(grandchild.content)
+                              return (
+                                <div key={grandchild.nodeId} className="border-l-2 border-zinc-300 dark:border-zinc-600 pl-4">
+                                  <button
+                                    onClick={() => handleChildClick(grandchild.nodeId)}
+                                    className="text-lg font-semibold text-blue-600 dark:text-blue-400 hover:underline mb-2 block"
+                                  >
+                                    {grandchild.content.text || 'Untitled'}
+                                  </button>
+
+                                  {/* Grandchild content */}
+                                  {grandchildOutline.length > 0 ? (
+                                    <div className="text-sm">
+                                      <OutlineContent items={grandchildOutline} searchQuery={searchQuery} />
+                                    </div>
+                                  ) : null}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
-              </ContentSection>
+              </div>
             )}
           </>
         )}
