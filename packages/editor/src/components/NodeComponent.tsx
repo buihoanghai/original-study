@@ -87,13 +87,15 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
     <div
       data-testid={`node-${node.nodeId}`}
       style={{
-        padding: '10px 15px',
-        borderRadius: '8px',
-        border: isSelected ? '2px solid #3b82f6' : '1px solid #d1d5db',
+        padding: '12px 18px',
+        borderRadius: '12px',
+        border: isSelected ? '2px solid #3b82f6' : 'none',
         background: isEditing ? '#fff' : isSelected ? '#eff6ff' : '#f9fafb',
         minWidth: '120px',
         maxWidth: '300px',
-        boxShadow: isSelected ? '0 4px 6px rgba(0, 0, 0, 0.1)' : '0 1px 3px rgba(0, 0, 0, 0.1)',
+        boxShadow: isSelected
+          ? '0 8px 16px rgba(0, 0, 0, 0.12)'
+          : '0 2px 8px rgba(0, 0, 0, 0.06)',
         transition: 'all 0.2s',
       }}
     >

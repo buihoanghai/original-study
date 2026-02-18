@@ -1,16 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 
 /**
- * Login Page
- *
- * User login form with authentication.
+ * Login Page Content (wrapped in Suspense)
  */
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, login } = useAuth()
@@ -159,3 +157,15 @@ export default function LoginPage() {
   )
 }
 
+/**
+ * Login Page
+ *
+ * User login form with authentication.
+ */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">Loading...</div>}>
+      <LoginPageContent />
+    </Suspense>
+  )
+}

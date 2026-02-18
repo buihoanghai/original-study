@@ -1,4 +1,4 @@
-.PHONY: help install dev dev-all dev-web dev-cms dev-db stop-db status build test test-watch test-e2e lint format clean doctor
+.PHONY: help install dev dev-all dev-web dev-cms dev-db stop-db status build test test-watch test-e2e test-e2e-prod lint format clean doctor
 
 # Default target
 help:
@@ -23,6 +23,7 @@ help:
 	@echo "  make test          Run unit tests"
 	@echo "  make test-watch    Run unit tests in watch mode"
 	@echo "  make test-e2e      Run E2E tests (requires dev servers)"
+	@echo "  make test-e2e-prod Run E2E tests in production mode (faster)"
 	@echo "  make doctor        Run health check"
 	@echo ""
 	@echo "🔍 Code Quality:"
@@ -94,7 +95,21 @@ test-watch:
 test-e2e:
 	@echo "🧪 Running E2E tests..."
 	@echo "⚠️  Make sure dev servers are running (make dev-all)"
-	npm run test:e2e
+	@if [ -n "$(FILE)" ]; then \
+		echo "📄 Running specific test file: $(FILE)"; \
+		npx playwright test $(FILE); \
+	else \
+		echo "📦 Running all E2E tests"; \
+		npm run test:e2e; \
+	fi
+
+test-e2e-prod:
+	@echo "🧪 Running E2E tests in production mode..."
+	@echo "⚠️  Make sure MongoDB is running (make dev-db)"
+	@echo "📦 Building web app..."
+	@npm run build --workspace=apps/mindmap-web
+	@echo "🚀 Running E2E tests..."
+	npm run test:e2e:prod
 
 doctor:
 	@echo "🏥 Running health check..."

@@ -177,5 +177,96 @@ describe('Editor Store', () => {
       expect(useEditorStore.getState().nodes[0].content.text).toBe('Updated')
     })
   })
+
+  describe('Sticky Notes', () => {
+    it('should add a sticky note at canvas center', () => {
+      const { addStickyNote, setCenter } = useEditorStore.getState()
+
+      // Set canvas center
+      setCenter(100, 200)
+
+      addStickyNote()
+
+      const state = useEditorStore.getState()
+      expect(state.nodes).toHaveLength(1)
+
+      const stickyNote = state.nodes[0]
+      expect(stickyNote.content.text).toBe('Double-click to edit')
+      expect(stickyNote.content.nodeType).toBe('stickyNote')
+      expect(stickyNote.position.x).toBe(100)
+      expect(stickyNote.position.y).toBe(200)
+    })
+
+    it('should select the newly created sticky note', () => {
+      const { addStickyNote } = useEditorStore.getState()
+
+      addStickyNote()
+
+      const state = useEditorStore.getState()
+      const stickyNote = state.nodes[0]
+      expect(state.ui.selectedNodeId).toBe(stickyNote.nodeId)
+    })
+
+    it('should not create edges for sticky notes', () => {
+      const { addStickyNote } = useEditorStore.getState()
+
+      addStickyNote()
+
+      const state = useEditorStore.getState()
+      expect(state.edges).toHaveLength(0)
+    })
+
+    it('should add sticky note to history', () => {
+      const { addStickyNote } = useEditorStore.getState()
+
+      addStickyNote()
+
+      const state = useEditorStore.getState()
+      expect(state.history.length).toBeGreaterThan(0)
+    })
+
+    it('should create multiple sticky notes independently', () => {
+      const { addStickyNote, setCenter } = useEditorStore.getState()
+
+      setCenter(0, 0)
+      addStickyNote()
+
+      setCenter(100, 100)
+      addStickyNote()
+
+      const state = useEditorStore.getState()
+      expect(state.nodes).toHaveLength(2)
+      expect(state.edges).toHaveLength(0)
+
+      // Both should be sticky notes
+      expect(state.nodes[0].content.nodeType).toBe('stickyNote')
+      expect(state.nodes[1].content.nodeType).toBe('stickyNote')
+
+      // Different positions
+      expect(state.nodes[0].position).toEqual({ x: 0, y: 0 })
+      expect(state.nodes[1].position).toEqual({ x: 100, y: 100 })
+    })
+
+    it('should not interfere with regular mindmap nodes', () => {
+      const { createMindmap, addChild, addStickyNote } = useEditorStore.getState()
+
+      // Create mindmap with nodes
+      createMindmap('Test')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+      addChild(rootId)
+
+      // Add sticky note
+      addStickyNote()
+
+      const state = useEditorStore.getState()
+      expect(state.nodes).toHaveLength(3) // root + child + sticky
+      expect(state.edges).toHaveLength(1) // only parent-child edge
+
+      // Verify sticky note is separate
+      const stickyNote = state.nodes.find((n) => n.content.nodeType === 'stickyNote')
+      expect(stickyNote).toBeDefined()
+      expect(state.edges.some((e) => e.from === stickyNote?.nodeId || e.to === stickyNote?.nodeId)).toBe(false)
+    })
+  })
 })
 

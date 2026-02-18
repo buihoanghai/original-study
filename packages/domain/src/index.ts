@@ -18,6 +18,17 @@ export type {
   NodeContent,
   NodePosition,
   NodeMetadata,
+  // Generic Content Section Types
+  ContentSection,
+  ContentData,
+  TextContent,
+  ListContent,
+  CodeContent,
+  TableContent,
+  VideoContent,
+  QuizContent,
+  DiagramContent,
+  CustomContent,
 } from './types/node'
 
 // Tree Structure Types

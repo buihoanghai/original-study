@@ -119,9 +119,12 @@ export function FlashcardPanel({
   if (!isVisible) return null
 
   return (
-    <div className="fixed right-0 top-16 bottom-0 w-96 bg-white border-l border-zinc-200 shadow-lg overflow-y-auto z-50">
-      <div className="p-4 border-b border-zinc-200 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-zinc-900">
+    <div
+      data-testid="flashcard-panel"
+      className="h-full w-full bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-700 overflow-y-auto flex flex-col"
+    >
+      <div className="p-4 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           Flashcards {flashcards.length > 0 && `(${flashcards.length})`}
         </h2>
         <button
@@ -145,7 +148,7 @@ export function FlashcardPanel({
         </button>
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-4 flex-1 overflow-y-auto">
         {!nodeId && (
           <div className="text-sm text-zinc-500 text-center py-8">
             Select a node to manage flashcards
@@ -199,10 +202,11 @@ export function FlashcardPanel({
             )}
 
             {flashcards.length > 0 && !isCreating && !editingFlashcard && (
-              <div className="space-y-3">
+              <div data-testid="flashcard-list" className="space-y-3">
                 {flashcards.map((flashcard) => (
                   <div
                     key={flashcard.id}
+                    data-testid="flashcard-item"
                     className="p-3 border border-zinc-200 rounded-lg bg-zinc-50 hover:bg-zinc-100"
                   >
                     <div className="text-sm font-medium text-zinc-900 mb-1">

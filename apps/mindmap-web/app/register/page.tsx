@@ -1,16 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 
 /**
- * Register Page
- *
- * User registration form with authentication.
+ * Register Page Content (wrapped in Suspense)
  */
-export default function RegisterPage() {
+function RegisterPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, register } = useAuth()
@@ -184,3 +182,15 @@ export default function RegisterPage() {
   )
 }
 
+/**
+ * Register Page
+ *
+ * User registration form with authentication.
+ */
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">Loading...</div>}>
+      <RegisterPageContent />
+    </Suspense>
+  )
+}

@@ -47,15 +47,15 @@ test.describe('Learning System E2E', () => {
   test('AC1 & Scenario 1.1, 1.2: Creating a node auto-generates mastery and session', async ({ page }) => {
     // Navigate to new mindmap page
     await page.goto('/new')
-    
+
     // Create a new mindmap
     await page.fill('input[id="title"]', 'Learning Test Mindmap')
     await page.fill('textarea[id="description"]', 'Testing auto-generation of learning data')
     await page.click('button:has-text("Create Mindmap")')
-    
-    // Wait for editor to load
-    await page.waitForURL(/\/editor\/.*/)
-    
+
+    // Wait for editor to load (with or without node slug)
+    await page.waitForURL(/\/editor\/[^/]+(?:\/[^/]+)?/)
+
     // Wait a moment for the page to fully load
     await page.waitForTimeout(1000)
     

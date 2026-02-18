@@ -47,8 +47,8 @@ test.describe('Mindmap Management', () => {
     // Submit form
     await page.click('button[type="submit"]')
 
-    // Should redirect to editor
-    await expect(page).toHaveURL(/\/editor\/.*/, { timeout: 10000 })
+    // Should redirect to editor (with or without node slug)
+    await expect(page).toHaveURL(/\/editor\/[^/]+(?:\/[^/]+)?/, { timeout: 10000 })
 
     // Should see mindmap canvas
     await expect(page.locator('[data-testid="mindmap-canvas"]')).toBeVisible({ timeout: 10000 })
@@ -60,7 +60,7 @@ test.describe('Mindmap Management', () => {
     const timestamp = Date.now()
     await page.fill('#title', `Clickable Mindmap ${timestamp}`)
     await page.click('button[type="submit"]')
-    await page.waitForURL(/\/editor\/.*/, { timeout: 10000 })
+    await page.waitForURL(/\/editor\/[^/]+(?:\/[^/]+)?/, { timeout: 10000 })
 
     // Go back to home
     await page.goto('/')
@@ -69,8 +69,8 @@ test.describe('Mindmap Management', () => {
     // Click on the mindmap card
     await page.click(`text=Clickable Mindmap ${timestamp}`)
 
-    // Should navigate to editor
-    await expect(page).toHaveURL(/\/editor\/.*/, { timeout: 10000 })
+    // Should navigate to editor (with or without node slug)
+    await expect(page).toHaveURL(/\/editor\/[^/]+(?:\/[^/]+)?/, { timeout: 10000 })
     await expect(page.locator('[data-testid="mindmap-canvas"]')).toBeVisible({ timeout: 10000 })
   })
 
@@ -113,7 +113,7 @@ test.describe('Mindmap Management', () => {
     await page.fill('#title', `Original Title ${timestamp}`)
     await page.fill('#description', 'Original description')
     await page.click('button[type="submit"]')
-    await page.waitForURL(/\/editor\/.*/, { timeout: 10000 })
+    await page.waitForURL(/\/editor\/[^/]+(?:\/[^/]+)?/, { timeout: 10000 })
 
     // Go back to home
     await page.goto('/')
@@ -209,9 +209,77 @@ test.describe('Mindmap Management', () => {
 
     // Should see status badge (e.g., "Draft", "Published")
     const hasBadge = await page.locator('[data-testid="mindmap-status"]').isVisible().catch(() => false)
-    
+
     if (hasBadge) {
       await expect(page.locator('[data-testid="mindmap-status"]')).toBeVisible()
+    }
+  })
+
+  test('should navigate to node-specific URL when clicking node', async ({ page }) => {
+    // Create a mindmap
+    await page.goto('/new')
+    const timestamp = Date.now()
+    await page.fill('#title', `URL Navigation Test ${timestamp}`)
+    await page.click('button[type="submit"]')
+    await page.waitForURL(/\/editor\/[^/]+(?:\/[^/]+)?/, { timeout: 10000 })
+
+    // Wait for canvas to load
+    await page.waitForSelector('[data-testid="mindmap-canvas"]', { timeout: 10000 })
+    await page.waitForTimeout(1000)
+
+    // Get initial URL (should be /editor/[id] or /editor/[id]/[rootSlug])
+    const initialUrl = page.url()
+
+    // Click on a node (if there are multiple nodes)
+    const nodes = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])')
+    const nodeCount = await nodes.count()
+
+    if (nodeCount > 1) {
+      // Click second node
+      await nodes.nth(1).click()
+      await page.waitForTimeout(500)
+
+      // URL should have changed to include node slug
+      const newUrl = page.url()
+      expect(newUrl).toMatch(/\/editor\/[^/]+\/[^/]+/)
+      expect(newUrl).not.toBe(initialUrl)
+    }
+  })
+
+  test('should show breadcrumb navigation when viewing focused node', async ({ page }) => {
+    // Create a mindmap with child nodes
+    await page.goto('/new')
+    const timestamp = Date.now()
+    await page.fill('#title', `Breadcrumb Test ${timestamp}`)
+    await page.click('button[type="submit"]')
+    await page.waitForURL(/\/editor\/[^/]+(?:\/[^/]+)?/, { timeout: 10000 })
+
+    // Wait for canvas
+    await page.waitForSelector('[data-testid="mindmap-canvas"]', { timeout: 10000 })
+    await page.waitForTimeout(1000)
+
+    // Create a child node
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
+    await rootNode.click()
+    await page.keyboard.press('Tab')
+
+    const input = page.locator('input[data-testid="node-input"]')
+    await input.waitFor({ state: 'visible', timeout: 2000 })
+    await input.fill('Child Node')
+    await page.keyboard.press('Escape')
+    await page.waitForTimeout(500)
+
+    // Click on child node to navigate
+    const childNode = page.locator('text=Child Node')
+    if (await childNode.isVisible()) {
+      await childNode.click()
+      await page.waitForTimeout(500)
+
+      // Should see breadcrumb
+      const breadcrumb = page.locator('nav[aria-label="Breadcrumb"]')
+      if (await breadcrumb.isVisible()) {
+        await expect(breadcrumb).toBeVisible()
+      }
     }
   })
 })

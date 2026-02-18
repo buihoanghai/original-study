@@ -55,6 +55,12 @@ export interface EditorState {
   // UI state
   ui: EditorUIState
 
+  // Focus state (for URL-based navigation)
+  /** Node to focus on (from URL) */
+  focusedNodeId: string | null
+  /** null = show all nodes, Set = show only these nodes */
+  visibleNodeIds: Set<string> | null
+
   // History for undo/redo
   history: HistoryEntry[]
   historyIndex: number

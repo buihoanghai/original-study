@@ -19,10 +19,13 @@ export type { EditorState, EditorUIState, FocusMode, HistoryEntry, OperationResu
 
 // Operations
 export * from './operations/tree'
+export * from './operations/layout'
+export * from './operations/navigation'
 
 // Components
 export { MindmapEditor } from './components/MindmapEditor'
 export { NodeComponent } from './components/NodeComponent'
+export { StickyNoteComponent } from './components/StickyNoteComponent'
 
 // Hooks
 export { useHotkeys } from './hooks/useHotkeys'

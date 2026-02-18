@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { getPayload } from 'payload'
 import config from '../../src/payload.config.js'
-import foundationData from './data/fullstack-foundation.json' assert { type: 'json' }
+import foundationData from './data/programming-fundamentals.json' assert { type: 'json' }
 
 /**
  * Seed Foundation Skills for Fullstack Developer Skill Tree
@@ -23,16 +23,7 @@ interface SeedNode {
   difficultyScore: number
   tags: string[]
   reviewTTL: number
-  content: {
-    definition: string
-    commonMistakes: string[]
-    pitfalls: string[]
-    bestPractices: string[]
-    realWorldUseCases: string[]
-    practiceTasks: string[]
-    assessment: string
-    signalsOfMastery: string[]
-  }
+  content: any // Generic schema - can have sections array or legacy fields
   flashcards: Array<{
     type: 'definition' | 'pitfall' | 'scenario'
     question: string
@@ -78,24 +69,53 @@ export async function seedFoundation(userId: string) {
   // Create nodes
   const nodes = foundationData as SeedNode[]
   let createdCount = 0
+  let updatedCount = 0
   let skippedCount = 0
 
   for (const node of nodes) {
-    // Check if node already exists
+    // Check if node already exists by nodeId
     const existing = await payload.find({
       collection: 'mindmap-nodes',
       where: {
         and: [
           { mindmap: { equals: mindmap.id } },
-          { 'content.text': { equals: node.title } },
+          { nodeId: { equals: node.id } },
         ],
       },
       limit: 1,
     })
 
-    if (existing.totalDocs > 0) {
-      nodeIdMap.set(node.id, existing.docs[0].nodeId)
-      skippedCount++
+    if (existing.totalDocs > 0 && existing.docs[0].nodeId) {
+      // Update existing node with new content
+      const existingNode = existing.docs[0]
+      const nodeId = existingNode.nodeId
+      if (!nodeId) continue // Type guard
+      nodeIdMap.set(node.id, nodeId)
+
+      try {
+        await payload.update({
+          collection: 'mindmap-nodes',
+          id: existingNode.id,
+          data: {
+            content: {
+              title: node.title,
+              text: node.title,
+              ...node.content,
+              // Store learning metadata in content (JSON field allows any structure)
+              level: node.level,
+              estimatedHours: node.estimatedHours,
+              difficultyScore: node.difficultyScore,
+              tags: node.tags,
+              reviewTTL: node.reviewTTL,
+            },
+          },
+        })
+        updatedCount++
+        console.log(`  ✓ Updated node: ${node.title}`)
+      } catch (error) {
+        console.error(`  ✗ Failed to update node: ${node.title}`, error)
+        skippedCount++
+      }
       continue
     }
 
@@ -111,30 +131,18 @@ export async function seedFoundation(userId: string) {
     const createdNode = await payload.create({
       collection: 'mindmap-nodes',
       data: {
+        nodeId: node.id, // Use the human-readable ID from JSON
         mindmap: mindmap.id,
         content: {
+          title: node.title,
           text: node.title,
-          // Store all additional metadata in content
+          ...node.content, // Include all content fields (sections, displayMode, etc.)
+          // Store learning metadata in content (JSON field allows any structure)
           level: node.level,
-          parentId: node.parentId,
-          prerequisites: node.prerequisites,
           estimatedHours: node.estimatedHours,
           difficultyScore: node.difficultyScore,
           tags: node.tags,
           reviewTTL: node.reviewTTL,
-          definition: node.content.definition,
-          commonMistakes: node.content.commonMistakes,
-          pitfalls: node.content.pitfalls,
-          bestPractices: node.content.bestPractices,
-          realWorldUseCases: node.content.realWorldUseCases,
-          practiceTasks: node.content.practiceTasks,
-          assessment: node.content.assessment,
-          signalsOfMastery: node.content.signalsOfMastery,
-          // Skill tracking fields
-          skill: {
-            status: 'not-started' as const,
-            masteryPercentage: 0,
-          },
         },
         position,
         metadata: {
@@ -143,13 +151,16 @@ export async function seedFoundation(userId: string) {
       },
     })
 
-    nodeIdMap.set(node.id, createdNode.nodeId)
-    createdCount++
-
-    console.log(`  ✓ Created node: ${node.title} (${node.level})`)
+    if (createdNode.nodeId) {
+      nodeIdMap.set(node.id, createdNode.nodeId)
+      createdCount++
+      console.log(`  ✓ Created node: ${node.title} (${node.level})`)
+    } else {
+      console.error(`  ✗ Failed to create node: ${node.title} - no nodeId returned`)
+    }
   }
 
-  console.log(`\n📊 Nodes: ${createdCount} created, ${skippedCount} skipped`)
+  console.log(`\n📊 Nodes: ${createdCount} created, ${updatedCount} updated, ${skippedCount} skipped`)
 
   // Create flashcards
   console.log('\n🃏 Creating flashcards...')
@@ -234,6 +245,7 @@ export async function seedFoundation(userId: string) {
   return {
     mindmap,
     nodesCreated: createdCount,
+    nodesUpdated: updatedCount,
     nodesSkipped: skippedCount,
     flashcardsCreated: flashcardCount,
     edgesCreated: edgeCount,

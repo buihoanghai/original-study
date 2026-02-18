@@ -13,6 +13,7 @@ import { useEditorStore } from '../store/editorStore'
  * - Arrow keys: Navigate tree
  * - F: Collapse/expand node
  * - Esc: Exit edit mode → center root
+ * - Shift + N: Add sticky note
  * - Ctrl/Cmd + Z: Undo
  * - Ctrl/Cmd + Shift + Z: Redo
  * - Ctrl/Cmd + S: Save to CMS
@@ -23,6 +24,7 @@ export const useHotkeys = () => {
     ui,
     addChild,
     addSibling,
+    addStickyNote,
     toggleCollapse,
     stopEditing,
     undo,
@@ -59,6 +61,13 @@ export const useHotkeys = () => {
       if (e.key === 'f' && selectedNodeId && !editingNodeId) {
         e.preventDefault()
         toggleCollapse(selectedNodeId)
+        return
+      }
+
+      // Shift + N: Add sticky note
+      if (e.shiftKey && e.key === 'N') {
+        e.preventDefault()
+        addStickyNote()
         return
       }
 
@@ -116,12 +125,14 @@ export const useHotkeys = () => {
     ui,
     addChild,
     addSibling,
+    addStickyNote,
     toggleCollapse,
     stopEditing,
     undo,
     redo,
     setZoom,
     setCenter,
+    triggerSave,
   ])
 }
 

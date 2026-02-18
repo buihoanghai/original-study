@@ -404,7 +404,7 @@ export class SyncClient {
       const data = await withRetry(
         async () =>
           this.request<{ docs: any[] }>(
-            `/api/mindmap-nodes?where[mindmap][equals]=${mindmapId}`
+            `/api/mindmap-nodes?where[mindmap][equals]=${mindmapId}&limit=1000`
           ),
         this.retryOptions
       )

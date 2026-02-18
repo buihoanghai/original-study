@@ -1,0 +1,690 @@
+[
+  {
+    "id": "equality-coercion",
+    "title": "Equality: == vs === (Coercion traps)",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["equality", "coercion", "comparison"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "What Matters",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "== performs type coercion before comparison.\n=== compares without coercion (strict equality).\n\nSenior developers use === almost always to avoid unexpected type coercion bugs."
+          }
+        },
+        {
+          "id": "pitfalls",
+          "type": "code",
+          "name": "Pitfall Examples",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Type Coercion Traps",
+                "code": "// ❌ Unexpected coercion with ==\n0 == false        // true\n\"\" == false       // true\nnull == undefined // true\n'0' == 0          // true\n[] == false       // true\n\n// ✅ Strict equality with ===\n0 === false        // false\n\"\" === false       // false\nnull === undefined // false\n'0' === 0          // false\n[] === false       // false"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "text",
+          "name": "Best Practice",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "text",
+            "text": "Use === and !== almost always.\n\nException: If you intentionally want 'nullish' check, use value == null to check for both null and undefined."
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Auth checks (userId == 0 type bugs)",
+              "Feature flags that can be false legitimately",
+              "API parameter parsing",
+              "Form validation where 0 or empty string are valid values"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why does 0 == false return true?",
+        "answer": "The == operator performs type coercion. 0 is coerced to boolean false. Use === to avoid this."
+      }
+    ]
+  },
+  {
+    "id": "truthy-falsy",
+    "title": "Truthy / Falsy (Validation bug factory)",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["truthy", "falsy", "validation"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "falsy-list",
+          "type": "list",
+          "name": "Falsy Values (Must Memorize)",
+          "icon": "📋",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "false",
+              "0 (and -0)",
+              "\"\" (empty string)",
+              "null",
+              "undefined",
+              "NaN"
+            ]
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Treating 0/\"\" as Missing",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Wrong: Using !x for Missing Check",
+                "code": "// ❌ WRONG: treats 0 and \"\" as missing\nfunction isMissing(x) {\n  return !x; // 0 and \"\" are considered missing!\n}\n\nisMissing(0)   // true (WRONG - 0 is a valid value)\nisMissing(\"\")  // true (WRONG - empty string might be valid)\nisMissing(null) // true (correct)\n\n// ✅ CORRECT patterns:\n// For \"not provided\":\nfunction isNotProvided(x) {\n  return x == null; // checks for null or undefined\n}\n\n// For empty string:\nfunction isEmpty(x) {\n  return typeof x === 'string' && x.trim() === '';\n}\n\n// For number validation:\nfunction isValidNumber(x) {\n  return Number.isFinite(x);\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "amount=0 (free tier pricing)",
+              "discount=0 (no discount)",
+              "Form fields where empty string is meaningful",
+              "Pagination: page=0 vs missing page parameter"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why is !value a bad 'missing check' in many systems?",
+        "answer": "Because !value treats 0, empty string, and false as 'missing', which are often valid values. Use value == null instead to check for null/undefined only."
+      }
+    ]
+  },
+  {
+    "id": "null-vs-undefined",
+    "title": "null vs undefined (API contracts)",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["null", "undefined", "api"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "mental-model",
+          "type": "text",
+          "name": "Senior Mental Model",
+          "icon": "🧠",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "undefined often means 'not provided'\nnull means 'provided and intentionally empty'\n\nThis distinction is critical for API contracts and database persistence."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "text",
+          "name": "Pitfall: Mixing Them Randomly",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "text",
+            "text": "Mixing null and undefined randomly breaks:\n\n• JSON serialization (undefined often disappears)\n• API contracts (client vs server misunderstanding)\n• DB persistence (null meaning unknown vs empty)"
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: PATCH Semantics",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "PATCH API Pattern",
+                "code": "// PATCH /api/users/:id\n// undefined → do not change\n// null → clear value\n\nconst updates = {\n  name: 'Alice',      // update to 'Alice'\n  email: null,        // clear email\n  phone: undefined    // don't change phone\n}\n\n// Backend handler:\nfunction applyPatch(existing, updates) {\n  const result = { ...existing }\n  \n  for (const [key, value] of Object.entries(updates)) {\n    if (value === undefined) {\n      // Skip - don't change\n      continue\n    }\n    if (value === null) {\n      // Clear the field\n      result[key] = null\n    } else {\n      // Update the field\n      result[key] = value\n    }\n  }\n  \n  return result\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "PATCH semantics: undefined = don't change, null = clear",
+              "Optional function parameters (undefined = use default)",
+              "Database nullable fields (null = explicitly empty)",
+              "JSON APIs (undefined gets stripped, null is preserved)"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What's the difference between null and undefined in API contracts?",
+        "answer": "undefined = 'not provided', null = 'provided and intentionally empty'. In PATCH requests: undefined means don't change, null means clear the value."
+      }
+    ]
+  },
+  {
+    "id": "typeof-weird-js",
+    "title": "typeof, arrays, and 'weird JS'",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["typeof", "arrays", "quirks"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfalls",
+          "type": "code",
+          "name": "Interview Favorites",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Weird JavaScript Behaviors",
+                "code": "// ❌ typeof pitfalls\ntypeof null           // 'object' (legacy bug!)\ntypeof []             // 'object'\ntypeof function(){}   // 'function'\n\n// ❌ NaN weirdness\nNaN === NaN           // false (only value not equal to itself)\ntypeof NaN            // 'number' (yes, really)\n\n// ❌ Array detection\nconst arr = []\ntypeof arr === 'object'  // true (not helpful!)\narr instanceof Array     // true (but fails across iframes)\nArray.isArray(arr)       // true ✅ CORRECT WAY"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice Checks",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Safe Type Checking",
+                "code": "// ✅ Check for array\nArray.isArray(x)\n\n// ✅ Check for NaN\nNumber.isNaN(x)\n\n// ✅ Check for null or undefined\nx == null\n\n// ✅ Check for real number\nNumber.isFinite(x)\n\n// ✅ Check for plain object\nfunction isPlainObject(x) {\n  return x !== null && \n         typeof x === 'object' && \n         !Array.isArray(x)\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Runtime validation for API payloads",
+              "Guard checks before DB writes",
+              "Preventing 'cannot read property of undefined' crashes",
+              "Type narrowing in TypeScript"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why is typeof null === 'object'?",
+        "answer": "It's a legacy bug in JavaScript that can't be fixed without breaking the web. Use x === null to check for null specifically."
+      },
+      {
+        "type": "pitfall",
+        "question": "Why does NaN === NaN return false?",
+        "answer": "NaN is the only value in JavaScript not equal to itself. Use Number.isNaN(x) to check for NaN."
+      }
+    ]
+  },
+  {
+    "id": "numbers-nan-infinity",
+    "title": "Numbers: NaN, Infinity, floating precision",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["numbers", "nan", "infinity", "precision"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfalls",
+          "type": "code",
+          "name": "Common Senior Pitfalls",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Number Pitfalls",
+                "code": "// ❌ Floating point precision\n0.1 + 0.2 === 0.3  // false! (0.30000000000000004)\n\n// ❌ Division by zero\n1 / 0              // Infinity (not an error!)\n-1 / 0             // -Infinity\n0 / 0              // NaN\n\n// ❌ String to number coercion\nparseInt('10px')   // 10 (silently ignores 'px')\nNumber('10px')     // NaN\n+'10px'            // NaN\n\n// ❌ NaN comparison\nconst x = NaN\nx === NaN          // false\nx == NaN           // false\nisNaN(x)           // true (but also true for 'hello')\nNumber.isNaN(x)    // true ✅ CORRECT"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practices",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Safe Number Handling",
+                "code": "// ✅ Check for valid number\nfunction isValidNumber(n) {\n  return Number.isFinite(n)\n}\n\n// ✅ For money: store as integer cents\nconst priceInCents = 1099  // $10.99\nconst priceInDollars = priceInCents / 100\n\n// ✅ Or use decimal library\nimport Decimal from 'decimal.js'\nconst price = new Decimal('10.99')\n\n// ✅ Safe parsing\nfunction parseNumber(str) {\n  const num = Number(str)\n  return Number.isFinite(num) ? num : null\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Payment systems (use integer cents)",
+              "Exchange rates (use decimal library)",
+              "Analytics aggregation (check for NaN/Infinity)",
+              "Scientific calculations (be aware of precision limits)"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why does 0.1 + 0.2 !== 0.3 in JavaScript?",
+        "answer": "Floating point precision. Binary representation can't exactly represent 0.1 and 0.2. For money, use integer cents or a decimal library."
+      }
+    ]
+  },
+  {
+    "id": "strings-unicode",
+    "title": "Strings: normalization and Unicode",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["strings", "unicode", "normalization"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Direct Comparison",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "String Comparison Issues",
+                "code": "// ❌ Comparing without trimming/normalizing\nconst input1 = 'abc '\nconst input2 = 'abc'\ninput1 === input2  // false\n\n// ❌ Case sensitivity\n'Alice' === 'alice'  // false\n\n// ❌ Unicode look-alikes\nconst a = 'café'  // é as single character\nconst b = 'café'  // é as e + combining accent\na === b  // might be false!\na.length !== b.length  // different lengths!"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Normalize at Boundary",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Safe String Handling",
+                "code": "// ✅ Normalize input at boundary\nfunction normalizeInput(str) {\n  return str\n    .trim()                    // remove whitespace\n    .toLowerCase()             // consistent casing\n    .normalize('NFC')          // Unicode normalization\n}\n\n// ✅ Email uniqueness\nfunction normalizeEmail(email) {\n  return email.trim().toLowerCase()\n}\n\n// ✅ Search keys\nfunction normalizeSearchKey(str) {\n  return str\n    .trim()\n    .toLowerCase()\n    .replace(/\\s+/g, ' ')      // normalize whitespace\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Login/email uniqueness",
+              "Search keys and indexing",
+              "Slug generation for URLs",
+              "User input validation"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why should you normalize strings at API boundaries?",
+        "answer": "To avoid bugs from whitespace, case differences, and Unicode variations. Use trim(), toLowerCase(), and normalize('NFC') for consistent comparison."
+      }
+    ]
+  },
+  {
+    "id": "immutability-strategy",
+    "title": "Immutability strategy",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types", "value-vs-reference"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["immutability", "mutation", "best-practices"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "rule-of-thumb",
+          "type": "text",
+          "name": "Senior-Level Practical Rule",
+          "icon": "📏",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Domain logic: prefer immutable transformations.\nPrivate local data: mutation is acceptable if it does not escape.\nShared objects: avoid mutation.\n\nThis balance prevents bugs while maintaining performance."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Mutating Shared State",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Mutation Bug",
+                "code": "// ❌ Mutating request DTO, then logging it later\nfunction processRequest(req) {\n  logger.info('Request received', { req })\n  \n  // Enrich request\n  req.userId = extractUserId(req)\n  req.timestamp = Date.now()\n  \n  // Later logging shows mutated data!\n  // Logs lie about what was actually received\n  \n  return handleRequest(req)\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Clone Before Mutate",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Immutable Transformation",
+                "code": "// ✅ Clone before mutate, or compute derived object\nfunction processRequest(req) {\n  logger.info('Request received', { req })\n  \n  // Create enriched version\n  const enrichedReq = {\n    ...req,\n    userId: extractUserId(req),\n    timestamp: Date.now()\n  }\n  \n  return handleRequest(enrichedReq)\n}\n\n// ✅ Private mutation is OK if it doesn't escape\nfunction buildConfig() {\n  const config = {}  // local, doesn't escape\n  \n  config.env = process.env.NODE_ENV\n  config.port = parseInt(process.env.PORT)\n  \n  return Object.freeze(config)  // freeze before returning\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Middleware pipelines (each step returns new object)",
+              "Validation + enrichment flows",
+              "Caching layers (prevent cache pollution)",
+              "React state updates (immutability required)"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "When is mutation safe in JavaScript?",
+        "answer": "Mutation is safe for private local data that doesn't escape the function. For shared objects and domain logic, prefer immutable transformations."
+      }
+    ]
+  },
+  {
+    "id": "typescript-angle",
+    "title": "TypeScript angle",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["typescript", "types", "validation"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "senior-expectation",
+          "type": "text",
+          "name": "Senior Expectation",
+          "icon": "🎯",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "TypeScript reduces runtime bugs but does not eliminate them.\n\nYou still need runtime validation at API boundaries.\n\nTypeScript only validates at compile time - it disappears at runtime."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Trusting TypeScript Too Much",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "typescript",
+                "title": "TypeScript Can't Validate Runtime Data",
+                "code": "// ❌ TypeScript can't validate external data\ninterface User {\n  id: number\n  email: string\n}\n\n// This compiles fine but crashes at runtime!\nconst response = await fetch('/api/user')\nconst user: User = await response.json()\n// What if API returns { id: '123', email: null }?\n// TypeScript won't catch this!\n\nconsole.log(user.email.toLowerCase())  // 💥 Runtime error!"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Runtime Validation",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "typescript",
+                "title": "Validate at Boundaries",
+                "code": "// ✅ Use runtime validation library\nimport { z } from 'zod'\n\nconst UserSchema = z.object({\n  id: z.number(),\n  email: z.string().email()\n})\n\ntype User = z.infer<typeof UserSchema>\n\n// Validate at API boundary\nconst response = await fetch('/api/user')\nconst data = await response.json()\nconst user = UserSchema.parse(data)  // throws if invalid\n\n// Now TypeScript AND runtime are aligned\nconsole.log(user.email.toLowerCase())  // ✅ Safe!"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "External API payloads (always validate)",
+              "Database results that can be null",
+              "User input from forms",
+              "Migrations and backfills",
+              "Environment variables"
+            ]
+          }
+        },
+        {
+          "id": "interview-drill",
+          "type": "list",
+          "name": "Senior Interview Quick Drill",
+          "icon": "💡",
+          "color": "green",
+          "order": 5,
+          "content": {
+            "type": "list",
+            "listStyle": "numbered",
+            "items": [
+              "Why can a const object be mutated?",
+              "When is mutation safe?",
+              "When do you use value == null intentionally?",
+              "Why is !value a bad 'missing check' in many systems?",
+              "How do you avoid shared config mutation across requests?",
+              "What's the difference between undefined and null in PATCH semantics?",
+              "How do you validate that a value is a real number safely?",
+              "Why does JSON drop undefined?"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why do you still need runtime validation even with TypeScript?",
+        "answer": "TypeScript only validates at compile time. External data (APIs, DB, user input) can violate type contracts at runtime. Always validate at boundaries."
+      },
+      {
+        "type": "definition",
+        "question": "What's the difference between compile-time and runtime type safety?",
+        "answer": "Compile-time (TypeScript) catches errors during development. Runtime validation (Zod, Joi) catches errors from external data that TypeScript can't verify."
+      }
+    ]
+  }
+]
+

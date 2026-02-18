@@ -22,6 +22,9 @@ This directory contains workspace rules that are automatically loaded by Augment
 - **05-debug-workflow.md** - Debug workflow for bug fixes (Repro → Trace → Fix → Verify)
   - Type: `always` - Automatically loaded in every session
 
+- **06-e2e-testing.md** - E2E testing workflow (Run all → List errors → Fix one by one)
+  - Type: `always` - Automatically loaded in every session
+
 ## Rule Types
 
 - **always**: Automatically included in every AI prompt

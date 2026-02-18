@@ -4,6 +4,7 @@ import '@xyflow/react/dist/style.css'
 import { useEditorStore } from '../store/editorStore'
 import { MindmapNode as DomainNode } from '@mindmap/domain'
 import { NodeComponent, NodeData } from './NodeComponent'
+import { StickyNoteComponent } from './StickyNoteComponent'
 import { useHotkeys } from '../hooks/useHotkeys'
 import { useNavigation } from '../hooks/useNavigation'
 
@@ -18,6 +19,7 @@ export const MindmapEditor: React.FC = () => {
     nodes: domainNodes,
     edges: domainEdges,
     ui,
+    visibleNodeIds,
     selectNode,
     startEditing,
     stopEditing,
@@ -25,10 +27,15 @@ export const MindmapEditor: React.FC = () => {
     setCenter,
   } = useEditorStore()
 
+  // Filter nodes if focused view is active
+  const filteredNodes = visibleNodeIds
+    ? domainNodes.filter((n) => visibleNodeIds.has(n.nodeId))
+    : domainNodes
+
   // Convert domain nodes to React Flow nodes
-  const reactFlowNodes: Node<NodeData>[] = domainNodes.map((node) => ({
+  const reactFlowNodes: Node<NodeData>[] = filteredNodes.map((node) => ({
     id: node.nodeId,
-    type: 'mindmapNode',
+    type: node.content.nodeType === 'stickyNote' ? 'stickyNote' : 'mindmapNode',
     position: node.position,
     data: {
       node,
@@ -38,12 +45,17 @@ export const MindmapEditor: React.FC = () => {
     },
   }))
 
+  // Filter edges to only show edges between visible nodes
+  const filteredEdges = visibleNodeIds
+    ? domainEdges.filter((e) => visibleNodeIds.has(e.from) && visibleNodeIds.has(e.to))
+    : domainEdges
+
   // Convert domain edges to React Flow edges
-  const reactFlowEdges: Edge[] = domainEdges.map((edge, index) => ({
+  const reactFlowEdges: Edge[] = filteredEdges.map((edge, index) => ({
     id: `${edge.from}-${edge.to}-${index}`,
     source: edge.from,
     target: edge.to,
-    type: edge.type === 'reference' ? 'straight' : 'smoothstep',
+    type: edge.type === 'reference' ? 'straight' : 'default', // Use bezier curves for smoother look
     hidden: edge.type === 'reference', // Hide reference edges by default
   }))
 
@@ -51,6 +63,39 @@ export const MindmapEditor: React.FC = () => {
   console.log('[MindmapEditor] - Nodes:', reactFlowNodes.length)
   console.log('[MindmapEditor] - Edges:', reactFlowEdges.length)
   console.log('[MindmapEditor] - Selected node:', ui.selectedNodeId)
+  console.log('[MindmapEditor] - Collapsed nodes:', Array.from(ui.collapsedNodeIds))
+
+  // Debug: List all node IDs and titles
+  console.log('[MindmapEditor] - All nodes:')
+  domainNodes.forEach(node => {
+    console.log(`    ${node.nodeId} | ${node.content.title || node.content.text || 'No title'}`)
+  })
+
+  // Debug: Find foundation-root node
+  const foundationRoot = domainNodes.find(n => n.nodeId === 'foundation-root')
+  if (foundationRoot) {
+    console.log('[MindmapEditor] ✅ foundation-root found:', foundationRoot.content.title || foundationRoot.content.text)
+    const childEdges = domainEdges.filter(e => e.from === foundationRoot.nodeId)
+    console.log('[MindmapEditor] - foundation-root has', childEdges.length, 'child edges')
+  } else {
+    console.log('[MindmapEditor] ❌ foundation-root NOT FOUND in domainNodes!')
+  }
+
+  // Debug: Find Variables & Types node
+  const variablesNode = domainNodes.find(n => n.nodeId === 'variables-and-types')
+  if (variablesNode) {
+    console.log('[MindmapEditor] ✅ variables-and-types found:', variablesNode.content.title || variablesNode.content.text)
+    const childEdges = domainEdges.filter(e => e.from === variablesNode.nodeId)
+    console.log('[MindmapEditor] Variables & Types node:', {
+      nodeId: variablesNode.nodeId,
+      isCollapsed: ui.collapsedNodeIds.has(variablesNode.nodeId),
+      childEdges: childEdges.length,
+      children: childEdges.map(e => {
+        const child = domainNodes.find(n => n.nodeId === e.to)
+        return child?.content.text || 'Unknown'
+      })
+    })
+  }
 
   // Handle node click
   const onNodeClick = useCallback(
@@ -92,6 +137,7 @@ export const MindmapEditor: React.FC = () => {
   const nodeTypes = useMemo(
     () => ({
       mindmapNode: NodeComponent,
+      stickyNote: StickyNoteComponent,
     }),
     []
   )

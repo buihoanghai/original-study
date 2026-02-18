@@ -18,8 +18,8 @@ test.describe('Editor - Advanced Features', () => {
     await page.fill('#title', 'Test Mindmap - Advanced Features')
     await page.click('button[type="submit"]')
 
-    // Wait for editor to load
-    await page.waitForURL(/\/editor\/.*/, { timeout: 10000 })
+    // Wait for editor to load (with or without node slug)
+    await page.waitForURL(/\/editor\/[^/]+(?:\/[^/]+)?/, { timeout: 10000 })
     await page.waitForSelector('[data-testid="mindmap-canvas"]', { timeout: 10000 })
     await page.waitForTimeout(1000)
   })
@@ -184,6 +184,42 @@ test.describe('Editor - Advanced Features', () => {
 
     const nodesAfter = await page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').count()
     expect(nodesAfter).toBe(1)
+  })
+
+  test('Arrow keys - should update URL when navigating between nodes', async ({ page }) => {
+    const rootNode = page.locator('div[data-testid^="node-"]:not([data-testid="node-input"])').first()
+    await rootNode.click()
+
+    // Create two child nodes
+    await page.keyboard.press('Tab')
+    const input = page.locator('input[data-testid="node-input"]')
+    await expect(input).toBeVisible({ timeout: 2000 })
+    await input.fill('Child 1')
+    await page.keyboard.press('Escape')
+    await page.waitForTimeout(200)
+
+    await page.keyboard.press('Enter')
+    await expect(input).toBeVisible({ timeout: 2000 })
+    await input.fill('Child 2')
+    await page.keyboard.press('Escape')
+    await page.waitForTimeout(500)
+
+    // Get initial URL
+    const initialUrl = page.url()
+
+    // Navigate with arrow key
+    await page.keyboard.press('ArrowDown')
+    await page.waitForTimeout(500)
+
+    // URL should have changed
+    const newUrl = page.url()
+
+    // Both URLs should match the pattern /editor/[id]/[nodeSlug]
+    expect(initialUrl).toMatch(/\/editor\/[^/]+\/[^/]+/)
+    expect(newUrl).toMatch(/\/editor\/[^/]+\/[^/]+/)
+
+    // URLs should be different (different node slugs)
+    expect(newUrl).not.toBe(initialUrl)
   })
 })
 

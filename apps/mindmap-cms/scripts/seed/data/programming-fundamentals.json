@@ -1,0 +1,2379 @@
+[
+  {
+    "id": "foundation-root",
+    "title": "Programming Fundamentals",
+    "level": "L1",
+    "parentId": null,
+    "prerequisites": [],
+    "estimatedHours": 120,
+    "difficultyScore": 2,
+    "tags": ["foundation", "programming", "core"],
+    "reviewTTL": 30,
+    "content": {
+      "displayMode": "aggregate-children",
+      "aggregateIntro": "Master the core programming concepts that form the foundation of all software development. This comprehensive guide covers 10 essential topics with real-world examples, code demonstrations, and interactive quizzes.",
+      "sections": [
+        {
+          "id": "overview",
+          "type": "text",
+          "name": "Overview",
+          "icon": "📚",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Programming fundamentals are the building blocks of all software development. Understanding these concepts deeply will enable you to write better code, debug faster, and learn new technologies more easily.\n\nThis learning path covers 10 critical topics that every developer must master."
+          }
+        },
+        {
+          "id": "learning-path",
+          "type": "list",
+          "name": "Learning Path",
+          "icon": "🗺️",
+          "color": "purple",
+          "order": 2,
+          "content": {
+            "type": "list",
+            "listStyle": "numbered",
+            "items": [
+              "Variables & Types - Understanding data storage and type systems",
+              "Functions & Scope - Mastering code organization and variable visibility",
+              "Control Flow - Conditional logic and loops",
+              "Data Structures - Arrays, objects, and collections",
+              "Error Handling - Managing exceptions and edge cases",
+              "Asynchronous Programming - Promises, async/await, callbacks",
+              "Object-Oriented Programming - Classes, inheritance, polymorphism",
+              "Functional Programming - Pure functions, immutability, composition",
+              "Testing Fundamentals - Unit tests, integration tests, TDD",
+              "Debugging Techniques - Tools, strategies, and best practices"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What are the three main programming paradigms?",
+        "answer": "1) Procedural (step-by-step instructions), 2) Object-Oriented (organizing code around objects), 3) Functional (treating computation as evaluation of mathematical functions)"
+      }
+    ]
+  },
+  {
+    "id": "variables-and-types",
+    "title": "Variables & Types",
+    "level": "L2",
+    "parentId": "foundation-root",
+    "prerequisites": [],
+    "estimatedHours": 12,
+    "difficultyScore": 2,
+    "tags": ["variables", "types", "fundamentals"],
+    "reviewTTL": 14,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Definition",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Variables are named containers that store data values. Types define what kind of data can be stored and what operations can be performed on that data.\n\nUnderstanding variables and types is fundamental to programming because they determine how data is stored in memory, how it can be manipulated, and how errors are caught."
+          }
+        },
+        {
+          "id": "core-concepts",
+          "type": "list",
+          "name": "Core Concepts",
+          "icon": "🎯",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Primitive types: number, string, boolean, null, undefined, symbol, bigint",
+              "Reference types: objects, arrays, functions",
+              "Type coercion: implicit vs explicit conversion",
+              "Variable declaration: var, let, const",
+              "Scope: global, function, block",
+              "Hoisting: variable and function declarations",
+              "Mutability: mutable vs immutable data"
+            ]
+          }
+        },
+        {
+          "id": "code-examples",
+          "type": "code",
+          "name": "Code Examples",
+          "icon": "💻",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Variable Declaration & Types",
+                "code": "// Primitive types\nconst name = 'Alice'        // string\nconst age = 30              // number\nconst isActive = true       // boolean\nconst nothing = null        // null\nlet undefined_var           // undefined\n\n// Reference types\nconst person = { name: 'Bob', age: 25 }  // object\nconst numbers = [1, 2, 3, 4, 5]          // array\nconst greet = () => 'Hello'              // function\n\n// Type checking\nconsole.log(typeof name)      // 'string'\nconsole.log(typeof person)    // 'object'\nconsole.log(Array.isArray(numbers))  // true"
+              },
+              {
+                "language": "javascript",
+                "title": "const vs let vs var",
+                "code": "// const - cannot be reassigned\nconst PI = 3.14159\n// PI = 3.14  // ❌ Error: Assignment to constant variable\n\n// let - block-scoped, can be reassigned\nlet count = 0\ncount = 1  // ✅ OK\n\nif (true) {\n  let blockScoped = 'only here'\n}\n// console.log(blockScoped)  // ❌ Error: not defined\n\n// var - function-scoped, hoisted (avoid!)\nvar oldStyle = 'legacy'\nif (true) {\n  var leaks = 'escapes block'\n}\nconsole.log(leaks)  // ✅ 'escapes block' (unexpected!)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "pitfalls",
+          "type": "list",
+          "name": "Common Pitfalls",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Using var instead of let/const (hoisting issues, function scope leaks)",
+              "Mutating const objects/arrays (const prevents reassignment, not mutation)",
+              "Type coercion bugs (== vs ===, truthy/falsy confusion)",
+              "Reference vs value comparison (comparing objects with ==)",
+              "Undefined vs null confusion (both mean 'no value' but used differently)",
+              "Not handling NaN (NaN !== NaN, use Number.isNaN())",
+              "Global variable pollution (declaring without let/const/var)"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": []
+  },
+  {
+    "id": "value-vs-reference",
+    "title": "Value vs Reference",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 3,
+    "difficultyScore": 3,
+    "tags": ["memory", "reference", "value"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "What's the Difference?",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "content": {
+            "type": "text",
+            "text": "Primitive types (number, string, boolean, null, undefined) are passed by VALUE - a copy is made.\n\nReference types (objects, arrays, functions) are passed by REFERENCE - the memory address is shared.\n\nThis fundamental difference affects how data is copied, compared, and mutated."
+          }
+        },
+        {
+          "id": "video-tutorial",
+          "type": "video",
+          "name": "Video Tutorial",
+          "icon": "🎥",
+          "color": "purple",
+          "order": 2,
+          "content": {
+            "type": "video",
+            "videos": [
+              {
+                "url": "https://www.youtube.com/embed/9ooYYRLdg_g",
+                "title": "JavaScript Value vs Reference",
+                "description": "Visual explanation of how JavaScript handles primitive and reference types in memory",
+                "duration": "8:32",
+                "platform": "youtube"
+              }
+            ]
+          }
+        },
+        {
+          "id": "code-examples",
+          "type": "code",
+          "name": "Code Examples",
+          "icon": "💻",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Primitives - Passed by Value",
+                "code": "// Primitives are copied\nlet a = 10\nlet b = a  // b gets a COPY of a's value\n\nb = 20\n\nconsole.log(a)  // 10 (unchanged)\nconsole.log(b)  // 20\n\n// Strings are also primitives\nlet str1 = 'hello'\nlet str2 = str1\nstr2 = 'world'\n\nconsole.log(str1)  // 'hello' (unchanged)\nconsole.log(str2)  // 'world'"
+              },
+              {
+                "language": "javascript",
+                "title": "Objects - Passed by Reference",
+                "code": "// Objects share the same reference\nconst obj1 = { name: 'Alice' }\nconst obj2 = obj1  // obj2 points to SAME object\n\nobj2.name = 'Bob'\n\nconsole.log(obj1.name)  // 'Bob' (changed!)\nconsole.log(obj2.name)  // 'Bob'\nconsole.log(obj1 === obj2)  // true (same reference)\n\n// Arrays are also reference types\nconst arr1 = [1, 2, 3]\nconst arr2 = arr1\narr2.push(4)\n\nconsole.log(arr1)  // [1, 2, 3, 4] (changed!)\nconsole.log(arr2)  // [1, 2, 3, 4]"
+              },
+              {
+                "language": "javascript",
+                "title": "How to Copy Objects/Arrays",
+                "code": "// Shallow copy with spread operator\nconst original = { name: 'Alice', age: 30 }\nconst copy = { ...original }\n\ncopy.name = 'Bob'\nconsole.log(original.name)  // 'Alice' (unchanged)\n\n// Array shallow copy\nconst arr1 = [1, 2, 3]\nconst arr2 = [...arr1]\narr2.push(4)\nconsole.log(arr1)  // [1, 2, 3] (unchanged)\n\n// Deep copy (for nested objects)\nconst nested = { user: { name: 'Alice' } }\nconst deepCopy = JSON.parse(JSON.stringify(nested))\ndeepCopy.user.name = 'Bob'\nconsole.log(nested.user.name)  // 'Alice' (unchanged)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "diagram",
+          "type": "diagram",
+          "name": "Memory Diagram",
+          "icon": "📊",
+          "color": "orange",
+          "order": 4,
+          "content": {
+            "type": "diagram",
+            "diagrams": [
+              {
+                "title": "Value vs Reference in Memory",
+                "description": "Visual representation of how primitives and objects are stored in memory",
+                "mermaidCode": "graph LR\n    subgraph \"Primitives (Value)\"\n        A[let a = 10] --> M1[Memory: 10]\n        B[let b = a] --> M2[Memory: 10]\n    end\n    \n    subgraph \"Objects (Reference)\"\n        C[const obj1 = {...}] --> M3[Memory Address: 0x001]\n        D[const obj2 = obj1] --> M3\n        M3 --> O[Object: {name: 'Alice'}]\n    end\n    \n    style M1 fill:#90EE90\n    style M2 fill:#90EE90\n    style M3 fill:#FFB6C1\n    style O fill:#FFB6C1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "quiz",
+          "type": "quiz",
+          "name": "Test Your Understanding",
+          "icon": "✅",
+          "color": "green",
+          "order": 5,
+          "content": {
+            "type": "quiz",
+            "questions": [
+              {
+                "id": "q1",
+                "question": "What will be logged to the console?\n\nlet x = 5;\nlet y = x;\ny = 10;\nconsole.log(x);",
+                "options": [
+                  "5",
+                  "10",
+                  "undefined",
+                  "Error"
+                ],
+                "correctAnswer": 0,
+                "explanation": "Primitives are passed by value. When y = x, y gets a COPY of x's value. Changing y doesn't affect x."
+              },
+              {
+                "id": "q2",
+                "question": "What will be logged to the console?\n\nconst arr1 = [1, 2];\nconst arr2 = arr1;\narr2.push(3);\nconsole.log(arr1.length);",
+                "options": [
+                  "2",
+                  "3",
+                  "undefined",
+                  "Error"
+                ],
+                "correctAnswer": 1,
+                "explanation": "Arrays are reference types. arr1 and arr2 point to the SAME array in memory. Modifying arr2 also modifies arr1."
+              },
+              {
+                "id": "q3",
+                "question": "How do you create a true copy of an object?",
+                "options": [
+                  "const copy = original",
+                  "const copy = { ...original }",
+                  "const copy = original.clone()",
+                  "const copy = new Object(original)"
+                ],
+                "correctAnswer": 1,
+                "explanation": "The spread operator {...original} creates a shallow copy. For nested objects, use JSON.parse(JSON.stringify(obj)) or a deep clone library."
+              }
+            ]
+          }
+        },
+        {
+          "id": "pitfalls",
+          "type": "list",
+          "name": "Common Pitfalls",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 6,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Expecting object assignment to create a copy (it doesn't - it creates a reference)",
+              "Comparing objects with === (compares references, not values)",
+              "Mutating function parameters (changes original object)",
+              "Shallow copy issues with nested objects (spread only copies first level)",
+              "Using JSON.parse(JSON.stringify()) on objects with functions or dates (they get lost)"
+            ]
+          }
+        },
+        {
+          "id": "best-practices",
+          "type": "list",
+          "name": "Best Practices",
+          "icon": "✨",
+          "color": "green",
+          "order": 7,
+          "content": {
+            "type": "list",
+            "listStyle": "checklist",
+            "items": [
+              "Use spread operator for shallow copies: {...obj} or [...arr]",
+              "Use libraries like lodash.cloneDeep for deep copies",
+              "Avoid mutating function parameters - return new objects instead",
+              "Use Object.freeze() to prevent mutations",
+              "Compare objects with deep equality libraries (lodash.isEqual)",
+              "Document whether functions mutate parameters or return new values"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What's the difference between pass-by-value and pass-by-reference?",
+        "answer": "Pass-by-value creates a copy of the data (primitives). Pass-by-reference shares the memory address (objects/arrays). Modifying a reference affects the original, modifying a value does not."
+      },
+      {
+        "type": "pitfall",
+        "question": "Why does const obj = {...original}; obj.nested.value = 'new' also change original.nested.value?",
+        "answer": "Spread operator only creates a SHALLOW copy. Nested objects are still references. Use JSON.parse(JSON.stringify()) or lodash.cloneDeep for deep copies."
+      }
+    ]
+  },
+  {
+    "id": "const-let-var",
+    "title": "const vs let vs var",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 2,
+    "tags": ["variables", "scope", "hoisting"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "comparison-table",
+          "type": "table",
+          "name": "Comparison Table",
+          "icon": "📊",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "table",
+            "headers": ["Feature", "const", "let", "var"],
+            "rows": [
+              ["Scope", "Block", "Block", "Function"],
+              ["Reassignment", "❌ No", "✅ Yes", "✅ Yes"],
+              ["Hoisting", "⚠️ TDZ", "⚠️ TDZ", "✅ Hoisted"],
+              ["Global Property", "❌ No", "❌ No", "✅ Yes"],
+              ["Redeclaration", "❌ No", "❌ No", "✅ Yes"],
+              ["Best Practice", "✅ Default", "✅ When needed", "❌ Avoid"]
+            ]
+          }
+        },
+        {
+          "id": "recommendation",
+          "type": "text",
+          "name": "Recommendation",
+          "icon": "💡",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "text",
+            "text": "**Rule of thumb:**\n\n1. Use `const` by default - prevents accidental reassignment\n2. Use `let` when you need to reassign (counters, loops)\n3. Never use `var` - it has confusing scoping rules and hoisting behavior\n\nNote: `const` prevents reassignment, NOT mutation. You can still modify object properties and array elements."
+          }
+        },
+        {
+          "id": "code-examples",
+          "type": "code",
+          "name": "Code Examples",
+          "icon": "💻",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "const - Immutable Binding",
+                "code": "// const prevents reassignment\nconst PI = 3.14159\n// PI = 3.14  // ❌ TypeError: Assignment to constant variable\n\n// BUT const allows mutation of objects/arrays\nconst user = { name: 'Alice' }\nuser.name = 'Bob'  // ✅ OK - mutating property\nuser.age = 30      // ✅ OK - adding property\n// user = {}       // ❌ Error - reassignment not allowed\n\nconst numbers = [1, 2, 3]\nnumbers.push(4)    // ✅ OK - mutating array\n// numbers = []    // ❌ Error - reassignment not allowed"
+              },
+              {
+                "language": "javascript",
+                "title": "let - Block Scoped",
+                "code": "// let is block-scoped\nlet count = 0\n\nif (true) {\n  let count = 10  // Different variable!\n  console.log(count)  // 10\n}\n\nconsole.log(count)  // 0\n\n// let in loops\nfor (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 100)\n}\n// Logs: 0, 1, 2 (each iteration has its own i)"
+              },
+              {
+                "language": "javascript",
+                "title": "var - Function Scoped (Avoid!)",
+                "code": "// var is function-scoped, NOT block-scoped\nif (true) {\n  var leaks = 'I escape the block!'\n}\nconsole.log(leaks)  // 'I escape the block!' (unexpected!)\n\n// var is hoisted\nconsole.log(hoisted)  // undefined (not an error!)\nvar hoisted = 'value'\n\n// var in loops (common bug)\nfor (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 100)\n}\n// Logs: 3, 3, 3 (all closures share same i!)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "quiz",
+          "type": "quiz",
+          "name": "Quick Quiz",
+          "icon": "✅",
+          "color": "green",
+          "order": 4,
+          "content": {
+            "type": "quiz",
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which keyword should you use by default?",
+                "options": [
+                  "var",
+                  "let",
+                  "const",
+                  "It doesn't matter"
+                ],
+                "correctAnswer": 2,
+                "explanation": "Use const by default. It prevents accidental reassignment and makes code more predictable. Only use let when you need to reassign."
+              },
+              {
+                "id": "q2",
+                "question": "What happens with this code?\n\nconst arr = [1, 2];\narr.push(3);",
+                "options": [
+                  "Error - can't modify const",
+                  "Works fine - arr is now [1, 2, 3]",
+                  "arr becomes undefined",
+                  "arr is reassigned to [3]"
+                ],
+                "correctAnswer": 1,
+                "explanation": "const prevents reassignment, NOT mutation. You can still modify array elements and object properties."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What's the difference between const, let, and var?",
+        "answer": "const: block-scoped, no reassignment. let: block-scoped, allows reassignment. var: function-scoped, hoisted, allows reassignment (avoid!)."
+      }
+    ]
+  },
+  {
+    "id": "equality-coercion",
+    "title": "Equality: == vs === (Coercion traps)",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["equality", "coercion", "comparison"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "What Matters",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "== performs type coercion before comparison.\n=== compares without coercion (strict equality).\n\nSenior developers use === almost always to avoid unexpected type coercion bugs."
+          }
+        },
+        {
+          "id": "pitfalls",
+          "type": "code",
+          "name": "Pitfall Examples",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Type Coercion Traps",
+                "code": "// ❌ Unexpected coercion with ==\n0 == false        // true\n\"\" == false       // true\nnull == undefined // true\n'0' == 0          // true\n[] == false       // true\n\n// ✅ Strict equality with ===\n0 === false        // false\n\"\" === false       // false\nnull === undefined // false\n'0' === 0          // false\n[] === false       // false"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "text",
+          "name": "Best Practice",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "text",
+            "text": "Use === and !== almost always.\n\nException: If you intentionally want 'nullish' check, use value == null to check for both null and undefined."
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Auth checks (userId == 0 type bugs)",
+              "Feature flags that can be false legitimately",
+              "API parameter parsing",
+              "Form validation where 0 or empty string are valid values"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why does 0 == false return true?",
+        "answer": "The == operator performs type coercion. 0 is coerced to boolean false. Use === to avoid this."
+      }
+    ]
+  },
+  {
+    "id": "truthy-falsy",
+    "title": "Truthy / Falsy (Validation bug factory)",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["truthy", "falsy", "validation"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "falsy-list",
+          "type": "list",
+          "name": "Falsy Values (Must Memorize)",
+          "icon": "📋",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "false",
+              "0 (and -0)",
+              "\"\" (empty string)",
+              "null",
+              "undefined",
+              "NaN"
+            ]
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Treating 0/\"\" as Missing",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Wrong: Using !x for Missing Check",
+                "code": "// ❌ WRONG: treats 0 and \"\" as missing\nfunction isMissing(x) {\n  return !x; // 0 and \"\" are considered missing!\n}\n\nisMissing(0)   // true (WRONG - 0 is a valid value)\nisMissing(\"\")  // true (WRONG - empty string might be valid)\nisMissing(null) // true (correct)\n\n// ✅ CORRECT patterns:\n// For \"not provided\":\nfunction isNotProvided(x) {\n  return x == null; // checks for null or undefined\n}\n\n// For empty string:\nfunction isEmpty(x) {\n  return typeof x === 'string' && x.trim() === '';\n}\n\n// For number validation:\nfunction isValidNumber(x) {\n  return Number.isFinite(x);\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "amount=0 (free tier pricing)",
+              "discount=0 (no discount)",
+              "Form fields where empty string is meaningful",
+              "Pagination: page=0 vs missing page parameter"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why is !value a bad 'missing check' in many systems?",
+        "answer": "Because !value treats 0, empty string, and false as 'missing', which are often valid values. Use value == null instead to check for null/undefined only."
+      }
+    ]
+  },
+  {
+    "id": "null-vs-undefined",
+    "title": "null vs undefined (API contracts)",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["null", "undefined", "api"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "mental-model",
+          "type": "text",
+          "name": "Senior Mental Model",
+          "icon": "🧠",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "undefined often means 'not provided'\nnull means 'provided and intentionally empty'\n\nThis distinction is critical for API contracts and database persistence."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "text",
+          "name": "Pitfall: Mixing Them Randomly",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "text",
+            "text": "Mixing null and undefined randomly breaks:\n\n• JSON serialization (undefined often disappears)\n• API contracts (client vs server misunderstanding)\n• DB persistence (null meaning unknown vs empty)"
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: PATCH Semantics",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "PATCH API Pattern",
+                "code": "// PATCH /api/users/:id\n// undefined → do not change\n// null → clear value\n\nconst updates = {\n  name: 'Alice',      // update to 'Alice'\n  email: null,        // clear email\n  phone: undefined    // don't change phone\n}\n\n// Backend handler:\nfunction applyPatch(existing, updates) {\n  const result = { ...existing }\n  \n  for (const [key, value] of Object.entries(updates)) {\n    if (value === undefined) {\n      // Skip - don't change\n      continue\n    }\n    if (value === null) {\n      // Clear the field\n      result[key] = null\n    } else {\n      // Update the field\n      result[key] = value\n    }\n  }\n  \n  return result\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "PATCH semantics: undefined = don't change, null = clear",
+              "Optional function parameters (undefined = use default)",
+              "Database nullable fields (null = explicitly empty)",
+              "JSON APIs (undefined gets stripped, null is preserved)"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What's the difference between null and undefined in API contracts?",
+        "answer": "undefined = 'not provided', null = 'provided and intentionally empty'. In PATCH requests: undefined means don't change, null means clear the value."
+      }
+    ]
+  },
+  {
+    "id": "typeof-weird-js",
+    "title": "typeof, arrays, and 'weird JS'",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["typeof", "arrays", "quirks"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfalls",
+          "type": "code",
+          "name": "Interview Favorites",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Weird JavaScript Behaviors",
+                "code": "// ❌ typeof pitfalls\ntypeof null           // 'object' (legacy bug!)\ntypeof []             // 'object'\ntypeof function(){}   // 'function'\n\n// ❌ NaN weirdness\nNaN === NaN           // false (only value not equal to itself)\ntypeof NaN            // 'number' (yes, really)\n\n// ❌ Array detection\nconst arr = []\ntypeof arr === 'object'  // true (not helpful!)\narr instanceof Array     // true (but fails across iframes)\nArray.isArray(arr)       // true ✅ CORRECT WAY"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice Checks",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Safe Type Checking",
+                "code": "// ✅ Check for array\nArray.isArray(x)\n\n// ✅ Check for NaN\nNumber.isNaN(x)\n\n// ✅ Check for null or undefined\nx == null\n\n// ✅ Check for real number\nNumber.isFinite(x)\n\n// ✅ Check for plain object\nfunction isPlainObject(x) {\n  return x !== null && \n         typeof x === 'object' && \n         !Array.isArray(x)\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Runtime validation for API payloads",
+              "Guard checks before DB writes",
+              "Preventing 'cannot read property of undefined' crashes",
+              "Type narrowing in TypeScript"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why is typeof null === 'object'?",
+        "answer": "It's a legacy bug in JavaScript that can't be fixed without breaking the web. Use x === null to check for null specifically."
+      },
+      {
+        "type": "pitfall",
+        "question": "Why does NaN === NaN return false?",
+        "answer": "NaN is the only value in JavaScript not equal to itself. Use Number.isNaN(x) to check for NaN."
+      }
+    ]
+  },
+  {
+    "id": "numbers-nan-infinity",
+    "title": "Numbers: NaN, Infinity, floating precision",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["numbers", "nan", "infinity", "precision"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfalls",
+          "type": "code",
+          "name": "Common Senior Pitfalls",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Number Pitfalls",
+                "code": "// ❌ Floating point precision\n0.1 + 0.2 === 0.3  // false! (0.30000000000000004)\n\n// ❌ Division by zero\n1 / 0              // Infinity (not an error!)\n-1 / 0             // -Infinity\n0 / 0              // NaN\n\n// ❌ String to number coercion\nparseInt('10px')   // 10 (silently ignores 'px')\nNumber('10px')     // NaN\n+'10px'            // NaN\n\n// ❌ NaN comparison\nconst x = NaN\nx === NaN          // false\nx == NaN           // false\nisNaN(x)           // true (but also true for 'hello')\nNumber.isNaN(x)    // true ✅ CORRECT"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practices",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Safe Number Handling",
+                "code": "// ✅ Check for valid number\nfunction isValidNumber(n) {\n  return Number.isFinite(n)\n}\n\n// ✅ For money: store as integer cents\nconst priceInCents = 1099  // $10.99\nconst priceInDollars = priceInCents / 100\n\n// ✅ Or use decimal library\nimport Decimal from 'decimal.js'\nconst price = new Decimal('10.99')\n\n// ✅ Safe parsing\nfunction parseNumber(str) {\n  const num = Number(str)\n  return Number.isFinite(num) ? num : null\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Payment systems (use integer cents)",
+              "Exchange rates (use decimal library)",
+              "Analytics aggregation (check for NaN/Infinity)",
+              "Scientific calculations (be aware of precision limits)"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why does 0.1 + 0.2 !== 0.3 in JavaScript?",
+        "answer": "Floating point precision. Binary representation can't exactly represent 0.1 and 0.2. For money, use integer cents or a decimal library."
+      }
+    ]
+  },
+  {
+    "id": "strings-unicode",
+    "title": "Strings: normalization and Unicode",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["strings", "unicode", "normalization"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Direct Comparison",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "String Comparison Issues",
+                "code": "// ❌ Comparing without trimming/normalizing\nconst input1 = 'abc '\nconst input2 = 'abc'\ninput1 === input2  // false\n\n// ❌ Case sensitivity\n'Alice' === 'alice'  // false\n\n// ❌ Unicode look-alikes\nconst a = 'café'  // é as single character\nconst b = 'café'  // é as e + combining accent\na === b  // might be false!\na.length !== b.length  // different lengths!"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Normalize at Boundary",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Safe String Handling",
+                "code": "// ✅ Normalize input at boundary\nfunction normalizeInput(str) {\n  return str\n    .trim()                    // remove whitespace\n    .toLowerCase()             // consistent casing\n    .normalize('NFC')          // Unicode normalization\n}\n\n// ✅ Email uniqueness\nfunction normalizeEmail(email) {\n  return email.trim().toLowerCase()\n}\n\n// ✅ Search keys\nfunction normalizeSearchKey(str) {\n  return str\n    .trim()\n    .toLowerCase()\n    .replace(/\\s+/g, ' ')      // normalize whitespace\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Login/email uniqueness",
+              "Search keys and indexing",
+              "Slug generation for URLs",
+              "User input validation"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why should you normalize strings at API boundaries?",
+        "answer": "To avoid bugs from whitespace, case differences, and Unicode variations. Use trim(), toLowerCase(), and normalize('NFC') for consistent comparison."
+      }
+    ]
+  },
+  {
+    "id": "immutability-strategy",
+    "title": "Immutability strategy",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types", "value-vs-reference"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["immutability", "mutation", "best-practices"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "rule-of-thumb",
+          "type": "text",
+          "name": "Senior-Level Practical Rule",
+          "icon": "📏",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Domain logic: prefer immutable transformations.\nPrivate local data: mutation is acceptable if it does not escape.\nShared objects: avoid mutation.\n\nThis balance prevents bugs while maintaining performance."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Mutating Shared State",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Mutation Bug",
+                "code": "// ❌ Mutating request DTO, then logging it later\nfunction processRequest(req) {\n  logger.info('Request received', { req })\n  \n  // Enrich request\n  req.userId = extractUserId(req)\n  req.timestamp = Date.now()\n  \n  // Later logging shows mutated data!\n  // Logs lie about what was actually received\n  \n  return handleRequest(req)\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Clone Before Mutate",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Immutable Transformation",
+                "code": "// ✅ Clone before mutate, or compute derived object\nfunction processRequest(req) {\n  logger.info('Request received', { req })\n  \n  // Create enriched version\n  const enrichedReq = {\n    ...req,\n    userId: extractUserId(req),\n    timestamp: Date.now()\n  }\n  \n  return handleRequest(enrichedReq)\n}\n\n// ✅ Private mutation is OK if it doesn't escape\nfunction buildConfig() {\n  const config = {}  // local, doesn't escape\n  \n  config.env = process.env.NODE_ENV\n  config.port = parseInt(process.env.PORT)\n  \n  return Object.freeze(config)  // freeze before returning\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Middleware pipelines (each step returns new object)",
+              "Validation + enrichment flows",
+              "Caching layers (prevent cache pollution)",
+              "React state updates (immutability required)"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "When is mutation safe in JavaScript?",
+        "answer": "Mutation is safe for private local data that doesn't escape the function. For shared objects and domain logic, prefer immutable transformations."
+      }
+    ]
+  },
+  {
+    "id": "typescript-angle",
+    "title": "TypeScript angle",
+    "level": "L3",
+    "parentId": "variables-and-types",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["typescript", "types", "validation"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "senior-expectation",
+          "type": "text",
+          "name": "Senior Expectation",
+          "icon": "🎯",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "TypeScript reduces runtime bugs but does not eliminate them.\n\nYou still need runtime validation at API boundaries.\n\nTypeScript only validates at compile time - it disappears at runtime."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Trusting TypeScript Too Much",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "typescript",
+                "title": "TypeScript Can't Validate Runtime Data",
+                "code": "// ❌ TypeScript can't validate external data\ninterface User {\n  id: number\n  email: string\n}\n\n// This compiles fine but crashes at runtime!\nconst response = await fetch('/api/user')\nconst user: User = await response.json()\n// What if API returns { id: '123', email: null }?\n// TypeScript won't catch this!\n\nconsole.log(user.email.toLowerCase())  // 💥 Runtime error!"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Runtime Validation",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "typescript",
+                "title": "Validate at Boundaries",
+                "code": "// ✅ Use runtime validation library\nimport { z } from 'zod'\n\nconst UserSchema = z.object({\n  id: z.number(),\n  email: z.string().email()\n})\n\ntype User = z.infer<typeof UserSchema>\n\n// Validate at API boundary\nconst response = await fetch('/api/user')\nconst data = await response.json()\nconst user = UserSchema.parse(data)  // throws if invalid\n\n// Now TypeScript AND runtime are aligned\nconsole.log(user.email.toLowerCase())  // ✅ Safe!"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "External API payloads (always validate)",
+              "Database results that can be null",
+              "User input from forms",
+              "Migrations and backfills",
+              "Environment variables"
+            ]
+          }
+        },
+        {
+          "id": "interview-drill",
+          "type": "list",
+          "name": "Senior Interview Quick Drill",
+          "icon": "💡",
+          "color": "green",
+          "order": 5,
+          "content": {
+            "type": "list",
+            "listStyle": "numbered",
+            "items": [
+              "Why can a const object be mutated?",
+              "When is mutation safe?",
+              "When do you use value == null intentionally?",
+              "Why is !value a bad 'missing check' in many systems?",
+              "How do you avoid shared config mutation across requests?",
+              "What's the difference between undefined and null in PATCH semantics?",
+              "How do you validate that a value is a real number safely?",
+              "Why does JSON drop undefined?"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why do you still need runtime validation even with TypeScript?",
+        "answer": "TypeScript only validates at compile time. External data (APIs, DB, user input) can violate type contracts at runtime. Always validate at boundaries."
+      },
+      {
+        "type": "definition",
+        "question": "What's the difference between compile-time and runtime type safety?",
+        "answer": "Compile-time (TypeScript) catches errors during development. Runtime validation (Zod, Joi) catches errors from external data that TypeScript can't verify."
+      }
+    ]
+  },
+  {
+    "id": "functions-and-scope",
+    "title": "Functions & Scope",
+    "level": "L2",
+    "parentId": "foundation-root",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 15,
+    "difficultyScore": 3,
+    "tags": ["functions", "scope", "closures"],
+    "reviewTTL": 14,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Definition",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Functions are reusable blocks of code that perform specific tasks. Scope determines where variables are accessible in your code.\n\nMastering functions and scope is critical for writing modular, maintainable code and avoiding common bugs like variable shadowing and closure issues."
+          }
+        },
+        {
+          "id": "core-concepts",
+          "type": "list",
+          "name": "Core Concepts",
+          "icon": "🎯",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Function declarations vs expressions vs arrow functions",
+              "Lexical scope and scope chain",
+              "Closures and data privacy",
+              "this binding and context",
+              "Higher-order functions",
+              "Pure functions vs side effects",
+              "Function composition and currying",
+              "Recursion and tail call optimization"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": []
+  },
+  {
+    "id": "closures-deep-dive",
+    "title": "Closures (Data privacy & memory)",
+    "level": "L3",
+    "parentId": "functions-and-scope",
+    "prerequisites": ["functions-and-scope"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["closures", "scope", "memory"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "What is a Closure?",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "A closure is a function that remembers variables from its outer scope, even after the outer function has returned.\n\nClosures enable data privacy, factory patterns, and functional programming techniques."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Loop Closures",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Classic Loop Closure Bug",
+                "code": "// ❌ WRONG: All callbacks share same i\nfor (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 100)\n}\n// Logs: 3, 3, 3 (not 0, 1, 2)\n\n// ✅ FIX 1: Use let (block scope)\nfor (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 100)\n}\n// Logs: 0, 1, 2\n\n// ✅ FIX 2: IIFE to capture value\nfor (var i = 0; i < 3; i++) {\n  (function(j) {\n    setTimeout(() => console.log(j), 100)\n  })(i)\n}\n// Logs: 0, 1, 2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Data Privacy",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Module Pattern with Closures",
+                "code": "// ✅ Private variables with closures\nfunction createCounter() {\n  let count = 0 // private variable\n  \n  return {\n    increment() { return ++count },\n    decrement() { return --count },\n    getCount() { return count }\n  }\n}\n\nconst counter = createCounter()\ncounter.increment() // 1\ncounter.increment() // 2\ncounter.count // undefined (private!)\n\n// ✅ Factory pattern\nfunction createUser(name) {\n  let _name = name // private\n  \n  return {\n    getName: () => _name,\n    setName: (newName) => {\n      if (newName.trim()) _name = newName\n    }\n  }\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Event handlers that need access to component state",
+              "Debounce/throttle functions",
+              "Module pattern for data privacy",
+              "React hooks (useState, useEffect use closures)",
+              "Memoization and caching"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What is a closure?",
+        "answer": "A function that remembers variables from its outer scope, even after the outer function has returned. Enables data privacy and functional patterns."
+      },
+      {
+        "type": "pitfall",
+        "question": "Why does setTimeout in a var loop log the same value?",
+        "answer": "var is function-scoped, so all callbacks share the same i variable. Use let (block-scoped) or IIFE to capture each iteration's value."
+      }
+    ]
+  },
+  {
+    "id": "this-binding",
+    "title": "this binding (call, apply, bind)",
+    "level": "L3",
+    "parentId": "functions-and-scope",
+    "prerequisites": ["functions-and-scope"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["this", "context", "binding"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "rules",
+          "type": "list",
+          "name": "this Binding Rules",
+          "icon": "📋",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "list",
+            "listStyle": "numbered",
+            "items": [
+              "Default binding: this = global object (or undefined in strict mode)",
+              "Implicit binding: this = object before the dot",
+              "Explicit binding: call/apply/bind set this explicitly",
+              "new binding: this = newly created object",
+              "Arrow functions: this = lexical scope (inherited from parent)"
+            ]
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Losing this Context",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Common this Bugs",
+                "code": "// ❌ Losing context when passing method\nconst user = {\n  name: 'Alice',\n  greet() { console.log(`Hi, ${this.name}`) }\n}\n\nconst greet = user.greet\ngreet() // undefined (this is global)\n\n// ❌ Callback loses context\nsetTimeout(user.greet, 100) // undefined\n\n// ✅ FIX 1: Arrow function\nsetTimeout(() => user.greet(), 100)\n\n// ✅ FIX 2: bind\nsetTimeout(user.greet.bind(user), 100)\n\n// ✅ FIX 3: Arrow method (class fields)\nconst user2 = {\n  name: 'Bob',\n  greet: () => console.log(`Hi, ${this.name}`) // ❌ Still wrong!\n}\n// Arrow functions inherit this from parent scope"
+              }
+            ]
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Explicit Binding",
+          "icon": "✨",
+          "color": "green",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "call, apply, bind",
+                "code": "function greet(greeting, punctuation) {\n  console.log(`${greeting}, ${this.name}${punctuation}`)\n}\n\nconst user = { name: 'Alice' }\n\n// call: invoke immediately with args\ngreet.call(user, 'Hello', '!') // Hello, Alice!\n\n// apply: invoke immediately with array\ngreet.apply(user, ['Hi', '?']) // Hi, Alice?\n\n// bind: return new function with bound this\nconst boundGreet = greet.bind(user, 'Hey')\nboundGreet('!!!') // Hey, Alice!!!\n\n// ✅ React class components\nclass Button {\n  constructor() {\n    this.count = 0\n    // Bind in constructor\n    this.handleClick = this.handleClick.bind(this)\n  }\n  \n  handleClick() {\n    this.count++\n  }\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 4,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Event handlers in classes",
+              "Callback functions that need context",
+              "Method borrowing between objects",
+              "Partial application with bind",
+              "React class component methods"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why does passing user.greet to setTimeout lose this?",
+        "answer": "When you pass a method reference, it loses its object context. The function is called without an object, so this becomes global/undefined. Use bind or arrow function."
+      }
+    ]
+  },
+  {
+    "id": "arrow-functions",
+    "title": "Arrow functions (Lexical this)",
+    "level": "L3",
+    "parentId": "functions-and-scope",
+    "prerequisites": ["functions-and-scope", "this-binding"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["arrow-functions", "this", "syntax"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Key Difference",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Arrow functions inherit this from their parent scope (lexical this). They cannot be used as constructors and don't have their own arguments object.\n\nUse arrow functions for callbacks and short functions. Avoid for methods that need dynamic this."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: When NOT to Use Arrows",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Arrow Function Pitfalls",
+                "code": "// ❌ WRONG: Object methods\nconst user = {\n  name: 'Alice',\n  greet: () => console.log(this.name) // this is NOT user!\n}\nuser.greet() // undefined\n\n// ✅ CORRECT: Regular function\nconst user2 = {\n  name: 'Bob',\n  greet() { console.log(this.name) }\n}\n\n// ❌ WRONG: Prototype methods\nfunction Person(name) {\n  this.name = name\n}\nPerson.prototype.greet = () => console.log(this.name) // Wrong!\n\n// ✅ CORRECT: Regular function\nPerson.prototype.greet = function() {\n  console.log(this.name)\n}\n\n// ❌ WRONG: Event handlers needing this\nbutton.addEventListener('click', () => {\n  this.classList.toggle('active') // this is NOT button!\n})"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why shouldn't you use arrow functions for object methods?",
+        "answer": "Arrow functions inherit this from parent scope, not the object. For methods, use regular functions so this refers to the object."
+      }
+    ]
+  },
+  {
+    "id": "higher-order-functions",
+    "title": "Higher-order functions (map, filter, reduce)",
+    "level": "L3",
+    "parentId": "functions-and-scope",
+    "prerequisites": ["functions-and-scope"],
+    "estimatedHours": 3,
+    "difficultyScore": 3,
+    "tags": ["hof", "functional", "arrays"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "What are Higher-Order Functions?",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Functions that take other functions as arguments or return functions.\n\nmap, filter, reduce are the foundation of functional programming in JavaScript. They enable declarative, immutable data transformations."
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Declarative Transformations",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "map, filter, reduce",
+                "code": "const users = [\n  { name: 'Alice', age: 25, active: true },\n  { name: 'Bob', age: 30, active: false },\n  { name: 'Charlie', age: 35, active: true }\n]\n\n// ✅ map: transform each item\nconst names = users.map(u => u.name)\n// ['Alice', 'Bob', 'Charlie']\n\n// ✅ filter: select items\nconst activeUsers = users.filter(u => u.active)\n// [Alice, Charlie]\n\n// ✅ reduce: aggregate\nconst totalAge = users.reduce((sum, u) => sum + u.age, 0)\n// 90\n\n// ✅ Chaining\nconst activeNames = users\n  .filter(u => u.active)\n  .map(u => u.name)\n  .join(', ')\n// 'Alice, Charlie'"
+              }
+            ]
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Misusing reduce",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 3,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "When reduce is WRONG",
+                "code": "// ❌ WRONG: Using reduce when map/filter is clearer\nconst doubled = arr.reduce((acc, n) => {\n  acc.push(n * 2)\n  return acc\n}, [])\n\n// ✅ CORRECT: Use map\nconst doubled = arr.map(n => n * 2)\n\n// ❌ WRONG: Complex reduce that's hard to read\nconst result = users.reduce((acc, user) => {\n  if (user.active) {\n    if (!acc[user.role]) acc[user.role] = []\n    acc[user.role].push(user.name)\n  }\n  return acc\n}, {})\n\n// ✅ BETTER: Break into steps\nconst result = users\n  .filter(u => u.active)\n  .reduce((acc, u) => {\n    (acc[u.role] ||= []).push(u.name)\n    return acc\n  }, {})"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What's the difference between map, filter, and reduce?",
+        "answer": "map transforms each item (same length), filter selects items (shorter/same length), reduce aggregates to single value (any type)."
+      }
+    ]
+  },
+  {
+    "id": "pure-functions",
+    "title": "Pure functions vs side effects",
+    "level": "L3",
+    "parentId": "functions-and-scope",
+    "prerequisites": ["functions-and-scope"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["pure-functions", "side-effects", "functional"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Pure Function Rules",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "A pure function:\n1. Always returns the same output for the same input\n2. Has no side effects (doesn't modify external state)\n\nPure functions are easier to test, debug, and reason about."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Hidden Side Effects",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Impure vs Pure",
+                "code": "// ❌ IMPURE: Mutates input\nfunction addItem(arr, item) {\n  arr.push(item)\n  return arr\n}\n\n// ✅ PURE: Returns new array\nfunction addItem(arr, item) {\n  return [...arr, item]\n}\n\n// ❌ IMPURE: Depends on external state\nlet tax = 0.1\nfunction calculateTotal(price) {\n  return price * (1 + tax)\n}\n\n// ✅ PURE: All inputs explicit\nfunction calculateTotal(price, taxRate) {\n  return price * (1 + taxRate)\n}\n\n// ❌ IMPURE: Side effect (logging)\nfunction processUser(user) {\n  console.log('Processing:', user.name)\n  return { ...user, processed: true }\n}\n\n// ✅ PURE: No side effects\nfunction processUser(user) {\n  return { ...user, processed: true }\n}\n// Log at call site instead"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Balance",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Core business logic: prefer pure functions",
+              "I/O operations: inherently impure (API calls, DB)",
+              "UI updates: side effects are necessary",
+              "Logging/analytics: acceptable side effects",
+              "Isolate impure code at boundaries"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What makes a function pure?",
+        "answer": "1) Same input always gives same output, 2) No side effects (doesn't modify external state or perform I/O)."
+      }
+    ]
+  },
+  {
+    "id": "function-composition",
+    "title": "Function composition & currying",
+    "level": "L3",
+    "parentId": "functions-and-scope",
+    "prerequisites": ["functions-and-scope", "higher-order-functions"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["composition", "currying", "functional"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Composition & Currying",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Composition: Combining simple functions to build complex ones.\nCurrying: Transforming f(a, b, c) into f(a)(b)(c).\n\nThese patterns enable reusable, testable code pipelines."
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Pipelines",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Composition & Currying",
+                "code": "// ✅ Function composition\nconst compose = (...fns) => x => \n  fns.reduceRight((acc, fn) => fn(acc), x)\n\nconst addTax = price => price * 1.1\nconst addShipping = price => price + 5\nconst formatPrice = price => `$${price.toFixed(2)}`\n\nconst calculateTotal = compose(\n  formatPrice,\n  addShipping,\n  addTax\n)\n\ncalculateTotal(100) // '$115.00'\n\n// ✅ Currying for reusability\nconst multiply = a => b => a * b\nconst double = multiply(2)\nconst triple = multiply(3)\n\ndouble(5) // 10\ntriple(5) // 15\n\n// ✅ Practical currying\nconst filter = predicate => arr => arr.filter(predicate)\nconst map = fn => arr => arr.map(fn)\n\nconst getActiveUsers = filter(u => u.active)\nconst getNames = map(u => u.name)\n\nconst activeNames = compose(getNames, getActiveUsers)\nactiveNames(users)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What is function composition?",
+        "answer": "Combining simple functions to build complex ones. compose(f, g, h)(x) = f(g(h(x))). Enables reusable pipelines."
+      }
+    ]
+  },
+  {
+    "id": "control-flow",
+    "title": "Control Flow",
+    "level": "L2",
+    "parentId": "foundation-root",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 10,
+    "difficultyScore": 2,
+    "tags": ["control-flow", "loops", "conditionals"],
+    "reviewTTL": 14,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Definition",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Control flow determines the order in which code executes. Mastering conditionals and loops is essential for writing efficient, readable code."
+          }
+        }
+      ]
+    },
+    "flashcards": []
+  },
+  {
+    "id": "guard-clauses",
+    "title": "Guard clauses & early returns",
+    "level": "L3",
+    "parentId": "control-flow",
+    "prerequisites": ["control-flow"],
+    "estimatedHours": 2,
+    "difficultyScore": 2,
+    "tags": ["guard-clauses", "early-return", "readability"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "What are Guard Clauses?",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Guard clauses check preconditions early and return/throw immediately if not met. This reduces nesting and improves readability."
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Reduce Nesting",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Guard Clauses",
+                "code": "// ❌ WRONG: Deep nesting\nfunction processUser(user) {\n  if (user) {\n    if (user.active) {\n      if (user.email) {\n        return sendEmail(user.email)\n      } else {\n        throw new Error('No email')\n      }\n    } else {\n      throw new Error('Inactive')\n    }\n  } else {\n    throw new Error('No user')\n  }\n}\n\n// ✅ CORRECT: Guard clauses\nfunction processUser(user) {\n  if (!user) throw new Error('No user')\n  if (!user.active) throw new Error('Inactive')\n  if (!user.email) throw new Error('No email')\n  \n  return sendEmail(user.email)\n}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What is a guard clause?",
+        "answer": "An early return/throw that checks preconditions at the start of a function. Reduces nesting and improves readability."
+      }
+    ]
+  },
+  {
+    "id": "loop-performance",
+    "title": "Loop performance & iteration patterns",
+    "level": "L3",
+    "parentId": "control-flow",
+    "prerequisites": ["control-flow"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["loops", "performance", "iteration"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Inefficient Loops",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Loop Performance",
+                "code": "// ❌ WRONG: Recalculating length each iteration\nfor (let i = 0; i < arr.length; i++) {\n  // arr.length is evaluated every iteration\n}\n\n// ✅ BETTER: Cache length\nconst len = arr.length\nfor (let i = 0; i < len; i++) {\n  // ...\n}\n\n// ✅ BEST: Use for...of for readability\nfor (const item of arr) {\n  // ...\n}\n\n// ❌ WRONG: Nested loops without break\nfor (const user of users) {\n  for (const role of roles) {\n    if (user.role === role.id) {\n      // Found match but keeps looping!\n    }\n  }\n}\n\n// ✅ CORRECT: Use find/some\nconst match = roles.find(r => r.id === user.role)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": []
+  },
+  {
+    "id": "data-structures",
+    "title": "Data Structures",
+    "level": "L2",
+    "parentId": "foundation-root",
+    "prerequisites": ["variables-and-types"],
+    "estimatedHours": 12,
+    "difficultyScore": 3,
+    "tags": ["data-structures", "arrays", "objects"],
+    "reviewTTL": 14,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Definition",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Data structures organize and store data efficiently. Choosing the right structure impacts performance and code clarity."
+          }
+        }
+      ]
+    },
+    "flashcards": []
+  },
+  {
+    "id": "array-methods",
+    "title": "Array methods (map, filter, reduce, find)",
+    "level": "L3",
+    "parentId": "data-structures",
+    "prerequisites": ["data-structures"],
+    "estimatedHours": 3,
+    "difficultyScore": 3,
+    "tags": ["arrays", "methods", "functional"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Declarative Operations",
+          "icon": "✨",
+          "color": "green",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Array Methods",
+                "code": "const users = [\n  { id: 1, name: 'Alice', age: 25, active: true },\n  { id: 2, name: 'Bob', age: 30, active: false },\n  { id: 3, name: 'Charlie', age: 35, active: true }\n]\n\n// ✅ find: Get first match\nconst user = users.find(u => u.id === 2)\n\n// ✅ some: Check if any match\nconst hasActive = users.some(u => u.active)\n\n// ✅ every: Check if all match\nconst allAdults = users.every(u => u.age >= 18)\n\n// ✅ filter + map chain\nconst activeNames = users\n  .filter(u => u.active)\n  .map(u => u.name)\n\n// ✅ reduce: Group by property\nconst byAge = users.reduce((acc, u) => {\n  (acc[u.age] ||= []).push(u)\n  return acc\n}, {})"
+              }
+            ]
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Mutating Methods",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Mutating vs Non-Mutating",
+                "code": "const arr = [1, 2, 3]\n\n// ❌ MUTATING (change original)\narr.push(4)      // [1, 2, 3, 4]\narr.pop()        // [1, 2, 3]\narr.shift()      // [2, 3]\narr.unshift(0)   // [0, 2, 3]\narr.splice(1, 1) // [0, 3]\narr.sort()       // sorts in place\narr.reverse()    // reverses in place\n\n// ✅ NON-MUTATING (return new array)\nconst added = [...arr, 4]\nconst sliced = arr.slice(1, 3)\nconst mapped = arr.map(x => x * 2)\nconst filtered = arr.filter(x => x > 1)\nconst sorted = [...arr].sort()\nconst reversed = [...arr].reverse()"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Which array methods mutate the original array?",
+        "answer": "push, pop, shift, unshift, splice, sort, reverse. Use spread [...arr] to copy before mutating, or use non-mutating alternatives."
+      }
+    ]
+  },
+  {
+    "id": "destructuring-spread",
+    "title": "Destructuring & spread/rest operators",
+    "level": "L3",
+    "parentId": "data-structures",
+    "prerequisites": ["data-structures"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["destructuring", "spread", "rest"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Clean Syntax",
+          "icon": "✨",
+          "color": "green",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Destructuring & Spread",
+                "code": "// ✅ Object destructuring\nconst user = { name: 'Alice', age: 25, email: 'a@example.com' }\nconst { name, age } = user\n\n// ✅ Rename while destructuring\nconst { name: userName, age: userAge } = user\n\n// ✅ Default values\nconst { role = 'user' } = user\n\n// ✅ Rest operator\nconst { name, ...rest } = user\n// rest = { age: 25, email: 'a@example.com' }\n\n// ✅ Array destructuring\nconst [first, second, ...others] = [1, 2, 3, 4, 5]\n// first=1, second=2, others=[3,4,5]\n\n// ✅ Spread for copying\nconst userCopy = { ...user, age: 26 }\n\n// ✅ Spread for merging\nconst merged = { ...defaults, ...userSettings }\n\n// ✅ Function parameters\nfunction greet({ name, age }) {\n  console.log(`${name} is ${age}`)\n}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What's the difference between spread and rest operators?",
+        "answer": "Spread (...) expands an array/object. Rest (...) collects remaining items into an array. Same syntax, opposite purposes."
+      }
+    ]
+  },
+  {
+    "id": "maps-sets",
+    "title": "Map & Set (vs objects/arrays)",
+    "level": "L3",
+    "parentId": "data-structures",
+    "prerequisites": ["data-structures"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["map", "set", "collections"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "When to Use Map/Set",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Map: Key-value pairs with any key type (not just strings).\nSet: Unique values collection.\n\nUse Map when keys aren't strings. Use Set for uniqueness."
+          }
+        },
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Right Tool for Job",
+          "icon": "✨",
+          "color": "green",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Map & Set",
+                "code": "// ✅ Map: Object keys, better performance\nconst userCache = new Map()\nconst userObj = { id: 1 }\nuserCache.set(userObj, { name: 'Alice' })\nuserCache.get(userObj) // { name: 'Alice' }\n\n// ✅ Set: Unique values\nconst uniqueIds = new Set([1, 2, 2, 3, 3, 3])\n// Set { 1, 2, 3 }\n\n// ✅ Remove duplicates from array\nconst unique = [...new Set(arr)]\n\n// ✅ Set operations\nconst setA = new Set([1, 2, 3])\nconst setB = new Set([2, 3, 4])\n\n// Union\nconst union = new Set([...setA, ...setB])\n\n// Intersection\nconst intersection = new Set(\n  [...setA].filter(x => setB.has(x))\n)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "When should you use Map instead of an object?",
+        "answer": "When keys aren't strings, when you need frequent additions/deletions, or when you need to iterate in insertion order."
+      }
+    ]
+  },
+  {
+    "id": "error-handling",
+    "title": "Error Handling",
+    "level": "L2",
+    "parentId": "foundation-root",
+    "prerequisites": ["variables-and-types", "functions-and-scope"],
+    "estimatedHours": 10,
+    "difficultyScore": 3,
+    "tags": ["errors", "exceptions", "debugging"],
+    "reviewTTL": 14,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Definition",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Error handling manages unexpected situations gracefully. Proper error handling prevents crashes and provides meaningful feedback."
+          }
+        }
+      ]
+    },
+    "flashcards": []
+  },
+  {
+    "id": "try-catch-patterns",
+    "title": "try/catch patterns & error types",
+    "level": "L3",
+    "parentId": "error-handling",
+    "prerequisites": ["error-handling"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["try-catch", "errors", "exceptions"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Specific Error Handling",
+          "icon": "✨",
+          "color": "green",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "try/catch Patterns",
+                "code": "// ✅ Specific error handling\ntry {\n  const data = JSON.parse(input)\n  await processData(data)\n} catch (error) {\n  if (error instanceof SyntaxError) {\n    console.error('Invalid JSON:', error.message)\n  } else if (error instanceof ValidationError) {\n    console.error('Validation failed:', error.details)\n  } else {\n    console.error('Unexpected error:', error)\n    throw error // Re-throw unknown errors\n  }\n}\n\n// ✅ Custom error types\nclass ValidationError extends Error {\n  constructor(message, details) {\n    super(message)\n    this.name = 'ValidationError'\n    this.details = details\n  }\n}\n\n// ✅ Error factory\nfunction validateUser(user) {\n  if (!user.email) {\n    throw new ValidationError(\n      'Invalid user',\n      { field: 'email', reason: 'required' }\n    )\n  }\n}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Swallowing Errors",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Error Handling Anti-Patterns",
+                "code": "// ❌ WRONG: Silent failure\ntry {\n  await criticalOperation()\n} catch (error) {\n  // Empty catch - error disappears!\n}\n\n// ❌ WRONG: Generic error message\ntry {\n  await processPayment()\n} catch (error) {\n  console.log('Something went wrong')\n  // No context, no stack trace\n}\n\n// ✅ CORRECT: Log and handle\ntry {\n  await processPayment()\n} catch (error) {\n  logger.error('Payment failed', {\n    error: error.message,\n    stack: error.stack,\n    userId: user.id\n  })\n  throw new PaymentError('Payment processing failed', { cause: error })\n}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why is an empty catch block dangerous?",
+        "answer": "It silently swallows errors, making bugs invisible. Always log errors or re-throw them. Silent failures are the hardest bugs to debug."
+      }
+    ]
+  },
+  {
+    "id": "async-error-handling",
+    "title": "Async error handling (promises, async/await)",
+    "level": "L3",
+    "parentId": "error-handling",
+    "prerequisites": ["error-handling"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["async", "promises", "errors"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Unhandled Promise Rejections",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Async Error Handling",
+                "code": "// ❌ WRONG: Unhandled rejection\nasync function loadUser(id) {\n  const user = await fetchUser(id) // If this fails, unhandled rejection!\n  return user\n}\n\n// ✅ CORRECT: Handle errors\nasync function loadUser(id) {\n  try {\n    const user = await fetchUser(id)\n    return user\n  } catch (error) {\n    logger.error('Failed to load user', { id, error })\n    throw new UserLoadError(`User ${id} not found`, { cause: error })\n  }\n}\n\n// ❌ WRONG: Missing await\nasync function processUsers(ids) {\n  ids.forEach(id => {\n    loadUser(id) // Fire and forget - errors lost!\n  })\n}\n\n// ✅ CORRECT: Await all\nasync function processUsers(ids) {\n  await Promise.all(\n    ids.map(id => loadUser(id).catch(err => {\n      logger.error('Failed to load user', { id, err })\n      return null // Handle individually\n    }))\n  )\n}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "What happens if you don't await a promise that rejects?",
+        "answer": "Unhandled promise rejection - the error is lost. Always await promises or attach .catch() handlers."
+      }
+    ]
+  },
+  {
+    "id": "defensive-programming",
+    "title": "Defensive programming & validation",
+    "level": "L3",
+    "parentId": "error-handling",
+    "prerequisites": ["error-handling"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["validation", "defensive", "safety"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Validate Early",
+          "icon": "✨",
+          "color": "green",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Defensive Programming",
+                "code": "// ✅ Validate at boundaries\nfunction processPayment(amount, currency) {\n  // Guard clauses\n  if (typeof amount !== 'number' || amount <= 0) {\n    throw new ValidationError('Invalid amount')\n  }\n  if (!['USD', 'EUR', 'GBP'].includes(currency)) {\n    throw new ValidationError('Invalid currency')\n  }\n  \n  // Safe to proceed\n  return chargeCard(amount, currency)\n}\n\n// ✅ Runtime validation with Zod\nimport { z } from 'zod'\n\nconst UserSchema = z.object({\n  email: z.string().email(),\n  age: z.number().min(0).max(150),\n  role: z.enum(['user', 'admin'])\n})\n\nfunction createUser(data) {\n  const validated = UserSchema.parse(data) // Throws if invalid\n  return saveUser(validated)\n}\n\n// ✅ Null safety\nfunction getUserName(user) {\n  return user?.profile?.name ?? 'Anonymous'\n}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What is defensive programming?",
+        "answer": "Writing code that validates inputs, handles edge cases, and fails gracefully. Assume inputs are invalid until proven otherwise."
+      }
+    ]
+  },
+  {
+    "id": "async-programming",
+    "title": "Async Programming",
+    "level": "L2",
+    "parentId": "foundation-root",
+    "prerequisites": ["functions-and-scope", "error-handling"],
+    "estimatedHours": 15,
+    "difficultyScore": 4,
+    "tags": ["async", "promises", "concurrency"],
+    "reviewTTL": 14,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Definition",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "Asynchronous programming handles operations that take time (API calls, file I/O) without blocking execution. Critical for responsive applications."
+          }
+        }
+      ]
+    },
+    "flashcards": []
+  },
+  {
+    "id": "promises-vs-callbacks",
+    "title": "Promises vs callbacks (Callback hell)",
+    "level": "L3",
+    "parentId": "async-programming",
+    "prerequisites": ["async-programming"],
+    "estimatedHours": 3,
+    "difficultyScore": 3,
+    "tags": ["promises", "callbacks", "async"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Callback Hell",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Callbacks vs Promises",
+                "code": "// ❌ CALLBACK HELL: Pyramid of doom\ngetUser(userId, (err, user) => {\n  if (err) return handleError(err)\n  \n  getProfile(user.id, (err, profile) => {\n    if (err) return handleError(err)\n    \n    getPosts(profile.id, (err, posts) => {\n      if (err) return handleError(err)\n      \n      render(user, profile, posts)\n    })\n  })\n})\n\n// ✅ PROMISES: Flat chain\ngetUser(userId)\n  .then(user => getProfile(user.id))\n  .then(profile => getPosts(profile.id))\n  .then(posts => render(posts))\n  .catch(handleError)\n\n// ✅ ASYNC/AWAIT: Even cleaner\nasync function loadUserData(userId) {\n  try {\n    const user = await getUser(userId)\n    const profile = await getProfile(user.id)\n    const posts = await getPosts(profile.id)\n    render(user, profile, posts)\n  } catch (error) {\n    handleError(error)\n  }\n}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What is callback hell and how do promises solve it?",
+        "answer": "Callback hell is deeply nested callbacks that are hard to read. Promises flatten the structure with .then() chains, and async/await makes it look synchronous."
+      }
+    ]
+  },
+  {
+    "id": "async-await-patterns",
+    "title": "async/await patterns & best practices",
+    "level": "L3",
+    "parentId": "async-programming",
+    "prerequisites": ["async-programming", "promises-vs-callbacks"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["async-await", "patterns", "best-practices"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "best-practice",
+          "type": "code",
+          "name": "Best Practice: Parallel vs Sequential",
+          "icon": "✨",
+          "color": "green",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "async/await Patterns",
+                "code": "// ❌ WRONG: Sequential when parallel is possible\nasync function loadData() {\n  const users = await fetchUsers()     // Wait 100ms\n  const posts = await fetchPosts()     // Wait 100ms\n  const comments = await fetchComments() // Wait 100ms\n  // Total: 300ms\n}\n\n// ✅ CORRECT: Parallel execution\nasync function loadData() {\n  const [users, posts, comments] = await Promise.all([\n    fetchUsers(),\n    fetchPosts(),\n    fetchComments()\n  ])\n  // Total: 100ms (parallel)\n}\n\n// ✅ Sequential when needed (dependency)\nasync function loadUserPosts(userId) {\n  const user = await fetchUser(userId)  // Must wait\n  const posts = await fetchPosts(user.id) // Depends on user\n  return { user, posts }\n}\n\n// ✅ Error handling in parallel\nconst results = await Promise.allSettled([\n  fetchUsers(),\n  fetchPosts(),\n  fetchComments()\n])\n\nresults.forEach((result, i) => {\n  if (result.status === 'rejected') {\n    console.error(`Request ${i} failed:`, result.reason)\n  }\n})"
+              }
+            ]
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Forgetting await",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Common async/await Mistakes",
+                "code": "// ❌ WRONG: Forgot await\nasync function getUser(id) {\n  const user = fetchUser(id) // Returns Promise, not user!\n  return user.name // undefined or error\n}\n\n// ✅ CORRECT: await the promise\nasync function getUser(id) {\n  const user = await fetchUser(id)\n  return user.name\n}\n\n// ❌ WRONG: await in forEach\nasync function processUsers(ids) {\n  ids.forEach(async (id) => {\n    await processUser(id) // Doesn't wait!\n  })\n  console.log('Done') // Logs before processing finishes\n}\n\n// ✅ CORRECT: Use for...of or Promise.all\nasync function processUsers(ids) {\n  for (const id of ids) {\n    await processUser(id) // Sequential\n  }\n  // OR parallel:\n  await Promise.all(ids.map(id => processUser(id)))\n}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "pitfall",
+        "question": "Why doesn't await work in forEach?",
+        "answer": "forEach doesn't wait for async callbacks. Use for...of for sequential or Promise.all for parallel execution."
+      }
+    ]
+  },
+  {
+    "id": "promise-combinators",
+    "title": "Promise.all/race/allSettled/any",
+    "level": "L3",
+    "parentId": "async-programming",
+    "prerequisites": ["async-programming", "async-await-patterns"],
+    "estimatedHours": 2,
+    "difficultyScore": 3,
+    "tags": ["promises", "combinators", "concurrency"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "code",
+          "name": "Promise Combinators",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Promise Combinators",
+                "code": "// ✅ Promise.all: Wait for all (fails fast)\nconst [users, posts] = await Promise.all([\n  fetchUsers(),\n  fetchPosts()\n])\n// Rejects if ANY promise rejects\n\n// ✅ Promise.allSettled: Wait for all (never rejects)\nconst results = await Promise.allSettled([\n  fetchUsers(),\n  fetchPosts(),\n  fetchComments()\n])\n// Always resolves with status for each\nresults.forEach(r => {\n  if (r.status === 'fulfilled') {\n    console.log('Success:', r.value)\n  } else {\n    console.log('Failed:', r.reason)\n  }\n})\n\n// ✅ Promise.race: First to complete\nconst result = await Promise.race([\n  fetchFromPrimaryDB(),\n  fetchFromBackupDB()\n])\n// Returns first resolved/rejected\n\n// ✅ Promise.any: First to succeed\nconst result = await Promise.any([\n  fetchFromServer1(),\n  fetchFromServer2(),\n  fetchFromServer3()\n])\n// Returns first fulfilled, rejects if ALL reject"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Use Cases",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 2,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Promise.all: Load multiple resources in parallel",
+              "Promise.allSettled: Batch operations where some can fail",
+              "Promise.race: Timeout implementation, fastest server wins",
+              "Promise.any: Fallback to multiple servers/CDNs"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What's the difference between Promise.all and Promise.allSettled?",
+        "answer": "Promise.all rejects if ANY promise rejects (fail fast). Promise.allSettled waits for all and returns status for each (never rejects)."
+      }
+    ]
+  },
+  {
+    "id": "event-loop",
+    "title": "Event loop & microtasks/macrotasks",
+    "level": "L3",
+    "parentId": "async-programming",
+    "prerequisites": ["async-programming"],
+    "estimatedHours": 3,
+    "difficultyScore": 4,
+    "tags": ["event-loop", "microtasks", "internals"],
+    "reviewTTL": 7,
+    "content": {
+      "sections": [
+        {
+          "id": "definition",
+          "type": "text",
+          "name": "Event Loop Basics",
+          "icon": "📖",
+          "color": "blue",
+          "order": 1,
+          "defaultExpanded": true,
+          "content": {
+            "type": "text",
+            "text": "The event loop processes tasks from queues:\n1. Call stack executes synchronous code\n2. Microtasks (promises, queueMicrotask) run after current task\n3. Macrotasks (setTimeout, setInterval) run in next loop iteration\n\nMicrotasks have priority over macrotasks."
+          }
+        },
+        {
+          "id": "pitfall",
+          "type": "code",
+          "name": "Pitfall: Execution Order",
+          "icon": "⚠️",
+          "color": "red",
+          "order": 2,
+          "content": {
+            "type": "code",
+            "examples": [
+              {
+                "language": "javascript",
+                "title": "Event Loop Order",
+                "code": "console.log('1: sync')\n\nsetTimeout(() => console.log('2: setTimeout'), 0)\n\nPromise.resolve().then(() => console.log('3: promise'))\n\nqueueMicrotask(() => console.log('4: microtask'))\n\nconsole.log('5: sync')\n\n// Output:\n// 1: sync\n// 5: sync\n// 3: promise\n// 4: microtask\n// 2: setTimeout\n\n// Explanation:\n// 1. Sync code runs first (1, 5)\n// 2. Microtasks run (promises, queueMicrotask)\n// 3. Macrotasks run (setTimeout)\n\n// ❌ PITFALL: Blocking microtask queue\nfunction blockEventLoop() {\n  Promise.resolve().then(() => {\n    blockEventLoop() // Infinite microtasks!\n  })\n}\n// setTimeout never runs - microtasks have priority"
+              }
+            ]
+          }
+        },
+        {
+          "id": "real-world",
+          "type": "list",
+          "name": "Real-World Implications",
+          "icon": "🌍",
+          "color": "purple",
+          "order": 3,
+          "content": {
+            "type": "list",
+            "listStyle": "bullet",
+            "items": [
+              "Promises resolve before setTimeout(fn, 0)",
+              "Long-running sync code blocks everything",
+              "Use Web Workers for CPU-intensive tasks",
+              "requestAnimationFrame for smooth animations",
+              "Infinite microtasks can starve macrotasks"
+            ]
+          }
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "type": "definition",
+        "question": "What's the difference between microtasks and macrotasks?",
+        "answer": "Microtasks (promises) run after current task, before next macrotask. Macrotasks (setTimeout) run in next event loop iteration. Microtasks have priority."
+      }
+    ]
+  }
+]
+

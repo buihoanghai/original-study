@@ -8,6 +8,7 @@ import type { Flashcard } from '@mindmap/domain'
 const mockUseEditorStore = vi.fn()
 const mockUseSyncMindmap = vi.fn()
 const mockMindmapEditor = vi.fn(() => <div data-testid="mindmap-editor">Editor Canvas</div>)
+const mockFocusOnNode = vi.fn()
 
 vi.mock('@mindmap/editor', () => ({
   useEditorStore: (selector: any) => mockUseEditorStore(selector),
@@ -40,10 +41,15 @@ describe('Editor Integration Tests', () => {
     mockUseEditorStore.mockImplementation((selector) => {
       const state = {
         ui: { selectedNodeId: null },
+        focusedNodeId: null,
         setSaveCallback: vi.fn(),
+        focusOnNode: mockFocusOnNode,
+        selectNode: vi.fn(),
         isSyncing: false,
         lastSyncedAt: null,
         syncError: null,
+        nodes: [],
+        edges: [],
       }
       // If no selector provided, return entire state (for destructuring)
       if (!selector) {
@@ -536,10 +542,15 @@ describe('Editor Integration Tests', () => {
       mockUseEditorStore.mockImplementation((selector) => {
         const state = {
           ui: { selectedNodeId: 'node-selected-123' },
+          focusedNodeId: null,
           setSaveCallback: vi.fn(),
+          focusOnNode: mockFocusOnNode,
+          selectNode: vi.fn(),
           isSyncing: false,
           lastSyncedAt: null,
           syncError: null,
+          nodes: [],
+          edges: [],
         }
         // If no selector provided, return entire state
         if (!selector) {
@@ -579,10 +590,15 @@ describe('Editor Integration Tests', () => {
       mockUseEditorStore.mockImplementation((selector) => {
         const state = {
           ui: { selectedNodeId },
+          focusedNodeId: null,
           setSaveCallback: vi.fn(),
+          focusOnNode: mockFocusOnNode,
+          selectNode: vi.fn(),
           isSyncing: false,
           lastSyncedAt: null,
           syncError: null,
+          nodes: [],
+          edges: [],
         }
         // If no selector provided, return entire state
         if (!selector) {
@@ -614,10 +630,15 @@ describe('Editor Integration Tests', () => {
       mockUseEditorStore.mockImplementation((selector) => {
         const state = {
           ui: { selectedNodeId },
+          focusedNodeId: null,
           setSaveCallback: vi.fn(),
+          focusOnNode: mockFocusOnNode,
+          selectNode: vi.fn(),
           isSyncing: false,
           lastSyncedAt: null,
           syncError: null,
+          nodes: [],
+          edges: [],
         }
         // If no selector provided, return entire state
         if (!selector) {
@@ -630,6 +651,48 @@ describe('Editor Integration Tests', () => {
 
       await waitFor(() => {
         expect(mockGetFlashcardsByNode).toHaveBeenCalledWith('node-2')
+      })
+    })
+  })
+
+  describe('EditorWrapper - Node Focus (URL Navigation)', () => {
+    it('should focus on node when focusNodeSlug is provided', async () => {
+      const mockLoad = vi.fn().mockResolvedValue(undefined)
+      mockUseSyncMindmap.mockReturnValue({
+        save: vi.fn(),
+        load: mockLoad,
+      })
+
+      mockFocusOnNode.mockClear()
+
+      render(<EditorWrapper mindmapId="test-mindmap-123" focusNodeSlug="test-node-slug" />)
+
+      await waitFor(() => {
+        expect(mockLoad).toHaveBeenCalledWith('test-mindmap-123')
+      })
+
+      await waitFor(() => {
+        expect(mockFocusOnNode).toHaveBeenCalledWith('test-node-slug')
+      })
+    })
+
+    it('should clear focus when focusNodeSlug is not provided', async () => {
+      const mockLoad = vi.fn().mockResolvedValue(undefined)
+      mockUseSyncMindmap.mockReturnValue({
+        save: vi.fn(),
+        load: mockLoad,
+      })
+
+      mockFocusOnNode.mockClear()
+
+      render(<EditorWrapper mindmapId="test-mindmap-123" />)
+
+      await waitFor(() => {
+        expect(mockLoad).toHaveBeenCalledWith('test-mindmap-123')
+      })
+
+      await waitFor(() => {
+        expect(mockFocusOnNode).toHaveBeenCalledWith(null)
       })
     })
   })

@@ -4,6 +4,7 @@ import { enableMapSet } from 'immer'
 import type { EditorState, HistoryEntry } from '../types'
 import type { MindmapNode, NodeEdge, NodeContent, Mindmap } from '@mindmap/domain'
 import { addChildNode, addSiblingNode, updateNodeContent, deleteNode, createNode } from '../operations/tree'
+import { applyTreeLayout } from '../operations/layout'
 
 // Enable Map/Set support in Immer
 enableMapSet()
@@ -18,6 +19,9 @@ interface EditorActions {
   updateNode: (nodeId: string, content: NodeContent) => void
   removeNode: (nodeId: string) => void
 
+  // Sticky notes (annotations)
+  addStickyNote: () => void
+
   // Selection and editing
   selectNode: (nodeId: string | null) => void
   startEditing: (nodeId: string) => void
@@ -25,6 +29,9 @@ interface EditorActions {
 
   // Collapse/expand
   toggleCollapse: (nodeId: string) => void
+
+  // Focus (URL-based navigation)
+  focusOnNode: (nodeId: string | null) => void
 
   // History
   undo: () => void
@@ -66,6 +73,8 @@ const initialState: EditorState = {
     zoom: 1,
     center: { x: 0, y: 0 },
   },
+  focusedNodeId: null,
+  visibleNodeIds: null,
   history: [],
   historyIndex: -1,
   isSyncing: false,
@@ -142,6 +151,22 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       }
     },
 
+    // Sticky notes (annotations)
+    addStickyNote: () => {
+      const { ui } = get()
+      // Create sticky note at canvas center with special nodeType marker
+      const stickyNote = createNode(
+        { text: 'Double-click to edit', nodeType: 'stickyNote' },
+        { x: ui.center.x, y: ui.center.y }
+      )
+
+      set((state) => {
+        state.nodes = [...state.nodes, stickyNote]
+        state.ui.selectedNodeId = stickyNote.nodeId
+      })
+      get().saveHistory()
+    },
+
     // Selection and editing
     selectNode: (nodeId: string | null) => {
       console.log('[editorStore] selectNode called with:', nodeId)
@@ -175,6 +200,41 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         } else {
           state.ui.collapsedNodeIds.add(nodeId)
         }
+      })
+    },
+
+    // Focus (URL-based navigation)
+    focusOnNode: (nodeId: string | null) => {
+      const { nodes, edges } = get()
+
+      if (!nodeId) {
+        // Show all nodes
+        set((state) => {
+          state.focusedNodeId = null
+          state.visibleNodeIds = null
+        })
+        return
+      }
+
+      // Calculate visible nodes: current + children + parent
+      const visibleIds = new Set<string>([nodeId])
+
+      // Add children
+      const children = edges
+        .filter((e) => e.from === nodeId && e.type === 'parent-child')
+        .map((e) => e.to)
+      children.forEach((id) => visibleIds.add(id))
+
+      // Add parent
+      const parentEdge = edges.find((e) => e.to === nodeId && e.type === 'parent-child')
+      if (parentEdge) {
+        visibleIds.add(parentEdge.from)
+      }
+
+      set((state) => {
+        state.focusedNodeId = nodeId
+        state.visibleNodeIds = visibleIds
+        state.ui.selectedNodeId = nodeId
       })
     },
 
@@ -252,15 +312,23 @@ export const useEditorStore = create<EditorState & EditorActions>()(
 
     loadMindmap: (mindmap: Mindmap, nodes: MindmapNode[], edges: NodeEdge[]) => {
       console.log('[editorStore] loadMindmap called')
-      console.log('[editorStore] - Mindmap:', mindmap.title)
+      console.log('[editorStore] - Mindmap:', mindmap.metadata.title)
       console.log('[editorStore] - Nodes count:', nodes.length)
       console.log('[editorStore] - Edges count:', edges.length)
       console.log('[editorStore] - Edges:', edges)
+
+      // Apply hierarchical tree layout
+      const layoutedNodes = applyTreeLayout(nodes, edges, {
+        direction: 'LR', // Left to right
+        nodeSpacing: 100,
+        rankSpacing: 250,
+      })
+
       set((state) => {
         state.mindmap = mindmap
-        state.nodes = nodes
+        state.nodes = layoutedNodes
         state.edges = edges
-        state.ui.selectedNodeId = nodes[0]?.nodeId || null
+        state.ui.selectedNodeId = layoutedNodes[0]?.nodeId || null
         state.history = []
         state.historyIndex = -1
         console.log('[editorStore] - Initial selectedNodeId:', state.ui.selectedNodeId)

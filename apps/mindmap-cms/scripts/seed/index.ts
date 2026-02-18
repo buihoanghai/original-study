@@ -1,4 +1,4 @@
-d .#!/usr/bin/env node
+#!/usr/bin/env node
 
 /**
  * Main Seed Script for Fullstack Developer Skill Tree
@@ -90,7 +90,7 @@ async function main() {
   for (const result of results) {
     console.log(`Phase ${result.phase}: ${result.name}`)
     console.log(`  Mindmap: ${result.mindmap.title}`)
-    console.log(`  Nodes: ${result.nodesCreated} created, ${result.nodesSkipped} skipped`)
+    console.log(`  Nodes: ${result.nodesCreated} created, ${result.nodesUpdated || 0} updated, ${result.nodesSkipped} skipped`)
     console.log(`  Edges: ${result.edgesCreated || 0} created`)
     console.log(`  Flashcards: ${result.flashcardsCreated} created`)
     console.log()

@@ -118,5 +118,100 @@ describe('Navigation', () => {
       expect(siblings).toHaveLength(2)
     })
   })
+
+  describe('Focus on Node (URL-based navigation)', () => {
+    it('should set visibleNodeIds to current + children + parent', () => {
+      const { createMindmap, addChild, focusOnNode } = useEditorStore.getState()
+
+      // Create tree: root -> child1 -> grandchild
+      createMindmap('Root')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+      addChild(rootId)
+      const child1Id = useEditorStore.getState().nodes[1].nodeId
+      addChild(child1Id)
+      const grandchildId = useEditorStore.getState().nodes[2].nodeId
+
+      // Focus on child1
+      focusOnNode(child1Id)
+
+      const { focusedNodeId, visibleNodeIds, ui } = useEditorStore.getState()
+
+      // Should focus on child1
+      expect(focusedNodeId).toBe(child1Id)
+      expect(ui.selectedNodeId).toBe(child1Id)
+
+      // Should show: child1 (current) + grandchild (child) + root (parent)
+      expect(visibleNodeIds).toBeDefined()
+      expect(visibleNodeIds?.has(child1Id)).toBe(true) // current
+      expect(visibleNodeIds?.has(grandchildId)).toBe(true) // child
+      expect(visibleNodeIds?.has(rootId)).toBe(true) // parent
+      expect(visibleNodeIds?.size).toBe(3)
+    })
+
+    it('should show all nodes when focusOnNode(null)', () => {
+      const { createMindmap, addChild, focusOnNode } = useEditorStore.getState()
+
+      // Create tree
+      createMindmap('Root')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+      addChild(rootId)
+      const childId = useEditorStore.getState().nodes[1].nodeId
+
+      // Focus on child first
+      focusOnNode(childId)
+      expect(useEditorStore.getState().focusedNodeId).toBe(childId)
+
+      // Clear focus
+      focusOnNode(null)
+
+      const { focusedNodeId, visibleNodeIds } = useEditorStore.getState()
+
+      expect(focusedNodeId).toBeNull()
+      expect(visibleNodeIds).toBeNull()
+    })
+
+    it('should handle root node focus (no parent)', () => {
+      const { createMindmap, addChild, focusOnNode } = useEditorStore.getState()
+
+      // Create tree: root -> child1, child2
+      createMindmap('Root')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+      addChild(rootId)
+      const child1Id = useEditorStore.getState().nodes[1].nodeId
+      addChild(rootId)
+      const child2Id = useEditorStore.getState().nodes[2].nodeId
+
+      // Focus on root
+      focusOnNode(rootId)
+
+      const { visibleNodeIds } = useEditorStore.getState()
+
+      // Should show: root (current) + child1 + child2 (no parent)
+      expect(visibleNodeIds?.has(rootId)).toBe(true)
+      expect(visibleNodeIds?.has(child1Id)).toBe(true)
+      expect(visibleNodeIds?.has(child2Id)).toBe(true)
+      expect(visibleNodeIds?.size).toBe(3)
+    })
+
+    it('should handle leaf node focus (no children)', () => {
+      const { createMindmap, addChild, focusOnNode } = useEditorStore.getState()
+
+      // Create tree: root -> child (leaf)
+      createMindmap('Root')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+      addChild(rootId)
+      const childId = useEditorStore.getState().nodes[1].nodeId
+
+      // Focus on leaf
+      focusOnNode(childId)
+
+      const { visibleNodeIds } = useEditorStore.getState()
+
+      // Should show: child (current) + root (parent, no children)
+      expect(visibleNodeIds?.has(childId)).toBe(true)
+      expect(visibleNodeIds?.has(rootId)).toBe(true)
+      expect(visibleNodeIds?.size).toBe(2)
+    })
+  })
 })
 

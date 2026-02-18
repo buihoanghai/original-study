@@ -46,8 +46,7 @@ export function updateMastery(
   // Determine new mastery level
   const newLevel = calculateMasteryLevel(
     newTotalSessions,
-    newConfidence,
-    current.level
+    newConfidence
   )
 
   return {
@@ -92,13 +91,11 @@ export function calculateConfidence(
  *
  * @param totalSessions - Total sessions completed
  * @param confidence - Current confidence score
- * @param currentLevel - Current mastery level
  * @returns New mastery level
  */
 function calculateMasteryLevel(
   totalSessions: number,
-  confidence: number,
-  currentLevel: MasteryLevel
+  confidence: number
 ): MasteryLevel {
   // Check for mastered (highest level)
   if (
