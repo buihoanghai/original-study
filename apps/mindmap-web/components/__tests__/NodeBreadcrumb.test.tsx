@@ -9,9 +9,6 @@ const mockBuildBreadcrumb = vi.fn()
 
 vi.mock('@mindmap/editor', () => ({
   useEditorStore: (selector?: any) => mockUseEditorStore(selector),
-}))
-
-vi.mock('@mindmap/editor/operations/navigation', () => ({
   buildBreadcrumb: (nodes: MindmapNode[], edges: NodeEdge[], nodeId: string) =>
     mockBuildBreadcrumb(nodes, edges, nodeId),
 }))
@@ -27,21 +24,21 @@ describe('NodeBreadcrumb', () => {
   const mockNodes: MindmapNode[] = [
     {
       nodeId: 'root',
-      mindmap: 'mindmap-1',
       content: { title: 'Root Node', nodeType: 'concept' },
       position: { x: 0, y: 0 },
+      metadata: { created: new Date(), updated: new Date(), author: 'test-user' },
     },
     {
       nodeId: 'child',
-      mindmap: 'mindmap-1',
       content: { title: 'Child Node', nodeType: 'concept' },
       position: { x: 100, y: 100 },
+      metadata: { created: new Date(), updated: new Date(), author: 'test-user' },
     },
     {
       nodeId: 'grandchild',
-      mindmap: 'mindmap-1',
       content: { title: 'Grandchild Node', nodeType: 'concept' },
       position: { x: 200, y: 200 },
+      metadata: { created: new Date(), updated: new Date(), author: 'test-user' },
     },
   ]
 

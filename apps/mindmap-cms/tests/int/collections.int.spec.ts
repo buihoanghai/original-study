@@ -1,6 +1,7 @@
 import { getPayload, Payload } from 'payload'
 import config from '@/payload.config'
 import { describe, it, beforeAll, afterAll, expect } from 'vitest'
+import type { NodeContent } from '@mindmap/domain'
 
 let payload: Payload
 let user1: any
@@ -364,7 +365,7 @@ describe('CMS Collections Integration Tests', () => {
       })
 
       expect(updated.nodeId).toBe(originalNodeId)
-      expect(updated.content?.text).toBe('Updated Text')
+      expect((updated.content as NodeContent)?.text).toBe('Updated Text')
       expect(updated.position.x).toBe(100)
       expect(updated.position.y).toBe(200)
     })
@@ -399,7 +400,7 @@ describe('CMS Collections Integration Tests', () => {
         user: user1,
       })
 
-      expect(updated.content?.text).toBe('Updated by User 1')
+      expect((updated.content as NodeContent)?.text).toBe('Updated by User 1')
 
       // User2 should NOT be able to update user1's node
       await expect(

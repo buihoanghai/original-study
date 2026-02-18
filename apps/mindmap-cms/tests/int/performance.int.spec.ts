@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import type { Payload } from 'payload'
+import type { NodeContent } from '@mindmap/domain'
 
 /**
  * Performance Integration Tests
@@ -361,7 +362,7 @@ describe('Performance Tests', () => {
           collection: 'mindmap-nodes',
           id: node.id,
           data: {
-            content: { text: `Updated ${node.content?.text}` },
+            content: { text: `Updated ${(node.content as NodeContent)?.text}` },
           },
         })
       )

@@ -10,12 +10,14 @@ When working with E2E tests, ALWAYS follow this workflow. No exceptions.
 
 ### The Mandatory Workflow
 
-1. **START SERVERS** - Ensure dev environment is running
-2. **RUN ALL TESTS** - Get complete picture of failures
+1. **START SERVERS** - Ensure production build is running
+2. **RUN ALL TESTS (PRODUCTION MODE)** - Get complete picture of failures with production build
 3. **LIST ALL ERRORS** - Document every failure with details
-4. **FIX ONE BY ONE** - Fix each error individually and verify
-5. **VERIFY FIX** - Re-run specific test to confirm fix works
-6. **REPEAT** - Continue until all tests pass
+4. **SWITCH TO DEV MODE** - Start dev servers for faster iteration
+5. **FIX ONE BY ONE** - Fix each error individually with specific file in dev mode
+6. **VERIFY FIX** - Re-run specific test to confirm fix works
+7. **REPEAT** - Continue until all tests pass
+8. **FINAL VERIFICATION** - Run all tests in production mode to confirm
 
 ---
 
@@ -33,20 +35,34 @@ lsof -i :27017
 
 **If MongoDB is not running, E2E tests WILL FAIL.**
 
-### 2. Dev Servers Must Be Running
+### 2. Production Build Must Be Running (for initial full run)
 
 ```bash
-# Start both CMS and Web in dev mode
+# Build and start production mode
+make build
+make start
+
+# Or build individually:
+make build-cms   # Build CMS
+make build-web   # Build Web
+make start-cms   # Start CMS on http://localhost:3001
+make start-web   # Start Web on http://localhost:3000
+```
+
+**E2E tests expect:**
+- CMS at `http://localhost:3001`
+- Web at `http://localhost:3333` (Playwright config)
+
+### 3. Dev Servers (for iterative fixing)
+
+```bash
+# After listing errors, switch to dev mode for faster iteration
 make dev-all
 
 # Or start individually:
 make dev-cms   # Runs on http://localhost:3001
 make dev-web   # Runs on http://localhost:3000
 ```
-
-**E2E tests expect:**
-- CMS at `http://localhost:3001`
-- Web at `http://localhost:3333` (Playwright config)
 
 ### 3. Check Server Health
 
@@ -60,12 +76,18 @@ curl http://localhost:3333
 
 ## Running E2E Tests
 
-### Strategy 1: Run All Tests First (RECOMMENDED)
+### Strategy 1: Run All Tests First in PRODUCTION MODE (MANDATORY FIRST STEP)
 
-**Purpose**: Get complete picture of all failures before fixing
+**Purpose**: Get complete picture of all failures with production build
 
 ```bash
-# Run all E2E tests
+# 1. Build production
+make build
+
+# 2. Start production servers
+make start
+
+# 3. Run all E2E tests
 make test-e2e
 ```
 
@@ -76,14 +98,18 @@ make test-e2e
 - Summary: X passed, Y failed
 
 **What to Do Next**:
-1. **Document all failures** - Copy error messages
+1. **Document all failures** - Copy error messages to a list
 2. **Categorize errors** - Group by type (timeout, assertion, navigation, etc.)
-3. **Prioritize fixes** - Fix blocking issues first
-4. **Fix one by one** - Use Strategy 2 for each failing test
+3. **Count total failures** - Know how many tests need fixing
+4. **Stop production servers** - Prepare to switch to dev mode
+5. **Start dev servers** - `make dev-all` for faster iteration
+6. **Fix one by one** - Use Strategy 2 for each failing test
 
-### Strategy 2: Run Specific Test File (FOR FIXING)
+### Strategy 2: Run Specific Test File in DEV MODE (FOR FIXING)
 
 **Purpose**: Quickly verify a single fix without running entire suite
+
+**Prerequisites**: Dev servers must be running (`make dev-all`)
 
 ```bash
 # Run specific test file
@@ -95,17 +121,48 @@ make test-e2e FILE=apps/mindmap-web/e2e/learning-system.spec.ts
 ```
 
 **When to Use**:
-- After fixing a specific test
-- When working on a specific feature
+- After documenting all failures from production run
+- When fixing a specific test
 - During iterative debugging
 
 **Workflow**:
-1. Run specific test
-2. Read error message carefully
-3. Make ONE focused fix
-4. Re-run same test
-5. Verify fix works
-6. Move to next failing test
+1. Pick ONE failing test from your list
+2. Run specific test in dev mode
+3. Read error message carefully
+4. Make ONE focused fix
+5. Re-run same test
+6. Verify fix works
+7. Mark test as fixed in your list
+8. Move to next failing test
+9. Repeat until all tests pass
+
+### Strategy 3: Final Verification in PRODUCTION MODE (MANDATORY LAST STEP)
+
+**Purpose**: Confirm all fixes work in production build
+
+```bash
+# 1. Stop dev servers
+# Ctrl+C or kill processes
+
+# 2. Build production
+make build
+
+# 3. Start production servers
+make start
+
+# 4. Run all E2E tests
+make test-e2e
+```
+
+**Expected Output**:
+- All tests should pass
+- Summary: X passed, 0 failed
+
+**If any tests fail**:
+- Document new failures
+- Switch back to dev mode
+- Fix remaining issues
+- Repeat final verification
 
 ---
 

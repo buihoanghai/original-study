@@ -162,7 +162,7 @@ describe('SyncClient - Node Operations', () => {
       expect(result.data?.[0].nodeId).toBe('node-1')
       expect(result.data?.[1].nodeId).toBe('node-2')
       expect(global.fetch).toHaveBeenCalledWith(
-        `${mockCmsUrl}/api/mindmap-nodes?where[mindmap][equals]=${mockMindmapId}`,
+        `${mockCmsUrl}/api/mindmap-nodes?where[mindmap][equals]=${mockMindmapId}&limit=1000`,
         expect.any(Object)
       )
     })

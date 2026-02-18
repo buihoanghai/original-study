@@ -1,10 +1,11 @@
+/// <reference types="@testing-library/jest-dom" />
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { StickyNoteComponent } from '../StickyNoteComponent'
-import type { NodeProps } from 'reactflow'
+import type { NodeProps } from '@xyflow/react'
 
 describe('StickyNoteComponent', () => {
-  const createMockProps = (id: string, text = 'Test note'): NodeProps => ({
+  const createMockProps = (id: string, text = 'Test note'): any => ({
     id,
     data: { text },
     selected: false,
@@ -14,6 +15,11 @@ describe('StickyNoteComponent', () => {
     zIndex: 0,
     isConnectable: false,
     dragging: false,
+    selectable: true,
+    deletable: true,
+    draggable: true,
+    positionAbsoluteX: 0,
+    positionAbsoluteY: 0,
   })
 
   describe('Rendering', () => {

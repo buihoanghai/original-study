@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import type { Payload } from 'payload'
+import type { NodeContent } from '@mindmap/domain'
 
 /**
  * Integration tests for MindmapNodes skill fields
@@ -76,10 +77,11 @@ describe('MindmapNodes Skill Fields', () => {
     })
 
     expect(node.content).toBeDefined()
-    expect(node.content?.skill).toBeDefined()
-    expect(node.content?.skill?.status).toBe('in-progress')
-    expect(node.content?.skill?.masteryPercentage).toBe(75)
-    expect(node.content?.skill?.lastPracticed).toBe('2026-02-15T00:00:00.000Z')
+    const content = node.content as NodeContent
+    expect(content?.skill).toBeDefined()
+    expect(content?.skill?.status).toBe('in-progress')
+    expect(content?.skill?.masteryPercentage).toBe(75)
+    expect(content?.skill?.lastPracticed).toBe('2026-02-15T00:00:00.000Z')
   })
 
   it('should read node with skill metadata', async () => {
@@ -104,9 +106,10 @@ describe('MindmapNodes Skill Fields', () => {
     })
 
     expect(node.content).toBeDefined()
-    expect(node.content?.skill?.status).toBe('completed')
-    expect(node.content?.skill?.masteryPercentage).toBe(100)
-    expect(node.content?.skill?.lastPracticed).toBeUndefined()
+    const content = node.content as NodeContent
+    expect(content?.skill?.status).toBe('completed')
+    expect(content?.skill?.masteryPercentage).toBe(100)
+    expect(content?.skill?.lastPracticed).toBeUndefined()
   })
 
   it('should update skill status', async () => {
@@ -132,7 +135,7 @@ describe('MindmapNodes Skill Fields', () => {
       id: node.id,
       data: {
         content: {
-          ...node.content,
+          ...(node.content as NodeContent),
           skill: {
             status: 'in-progress',
             masteryPercentage: 50,
@@ -144,9 +147,10 @@ describe('MindmapNodes Skill Fields', () => {
 
     // payload.update returns the updated document directly
     expect(updated.content).toBeDefined()
-    expect(updated.content?.skill?.status).toBe('in-progress')
-    expect(updated.content?.skill?.masteryPercentage).toBe(50)
-    expect(updated.content?.skill?.lastPracticed).toBe(testDate)
+    const updatedContent = updated.content as NodeContent
+    expect(updatedContent?.skill?.status).toBe('in-progress')
+    expect(updatedContent?.skill?.masteryPercentage).toBe(50)
+    expect(updatedContent?.skill?.lastPracticed).toBe(testDate)
   })
 
   it('should handle nodes without skill metadata (backward compatibility)', async () => {
@@ -162,13 +166,14 @@ describe('MindmapNodes Skill Fields', () => {
     })
 
     expect(node.content).toBeDefined()
+    const content = node.content as NodeContent
     // Payload creates an empty skill object even when not provided
     // This is acceptable for backward compatibility - empty object is falsy in checks
-    expect(node.content?.skill).toBeDefined()
-    expect(node.content?.skill?.status).toBeUndefined()
-    expect(node.content?.skill?.masteryPercentage).toBeUndefined()
-    expect(node.content?.skill?.lastPracticed).toBeUndefined()
-    expect(node.content?.text).toBe('Regular Node')
+    expect(content?.skill).toBeDefined()
+    expect(content?.skill?.status).toBeUndefined()
+    expect(content?.skill?.masteryPercentage).toBeUndefined()
+    expect(content?.skill?.lastPracticed).toBeUndefined()
+    expect(content?.text).toBe('Regular Node')
   })
 
   it('should validate status enum values', async () => {
@@ -207,8 +212,9 @@ describe('MindmapNodes Skill Fields', () => {
     })
 
     expect(node.content).toBeDefined()
-    expect(typeof node.content?.skill?.masteryPercentage).toBe('number')
-    expect(node.content?.skill?.masteryPercentage).toBe(85)
+    const content = node.content as NodeContent
+    expect(typeof content?.skill?.masteryPercentage).toBe('number')
+    expect(content?.skill?.masteryPercentage).toBe(85)
   })
 
   it('should store lastPracticed as ISO string', async () => {
@@ -231,7 +237,8 @@ describe('MindmapNodes Skill Fields', () => {
     })
 
     expect(node.content).toBeDefined()
-    expect(node.content?.skill?.lastPracticed).toBe(testDate)
+    const content = node.content as NodeContent
+    expect(content?.skill?.lastPracticed).toBe(testDate)
   })
 })
 
