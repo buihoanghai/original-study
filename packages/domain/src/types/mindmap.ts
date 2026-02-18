@@ -17,6 +17,9 @@ export interface MindmapMetadata {
   /** Title of the mindmap */
   title: string
 
+  /** URL-friendly slug (auto-generated from title) */
+  slug: string
+
   /** Optional description */
   description: string
 

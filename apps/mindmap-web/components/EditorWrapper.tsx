@@ -12,6 +12,7 @@ import { SyncStatus } from './SyncStatus'
 import { ToastContainer, useToast } from './Toast'
 import { ConflictResolution, type ConflictData } from './ConflictResolution'
 import { NodeBreadcrumb } from './NodeBreadcrumb'
+import { getNodeSlug } from '@/lib/slug'
 // Removed resizable panels - now using floating overlays
 
 interface EditorWrapperProps {
@@ -34,6 +35,8 @@ export function EditorWrapper({ mindmapId, focusNodeSlug }: EditorWrapperProps) 
   const [showNodeDetailPanel, setShowNodeDetailPanel] = useState(true)
   const [conflict, setConflict] = useState<ConflictData | null>(null)
   const selectedNodeId = useEditorStore((state) => state.ui.selectedNodeId)
+  const nodes = useEditorStore((state) => state.nodes)
+  const mindmap = useEditorStore((state) => state.mindmap)
   const focusedNodeId = useEditorStore((state) => state.focusedNodeId)
   const setSaveCallback = useEditorStore((state) => state.setSaveCallback)
   const focusOnNode = useEditorStore((state) => state.focusOnNode)
@@ -120,7 +123,7 @@ export function EditorWrapper({ mindmapId, focusNodeSlug }: EditorWrapperProps) 
   }, [focusNodeSlug, isLoading, focusOnNode])
 
   // Navigate to node URL when selectedNodeId changes (but not on initial load)
-  const prevSelectedNodeIdRef = useRef<string | null>(null)
+  const prevSelectedNodeIdRef = useRef<string | null | undefined>(undefined)
   useEffect(() => {
     // Skip navigation on initial mount
     if (prevSelectedNodeIdRef.current === undefined) {
@@ -132,15 +135,32 @@ export function EditorWrapper({ mindmapId, focusNodeSlug }: EditorWrapperProps) 
     if (prevSelectedNodeIdRef.current !== selectedNodeId) {
       prevSelectedNodeIdRef.current = selectedNodeId
 
+      // Get mindmap slug for URL
+      const mindmapSlug = mindmap?.metadata.slug
+
+      if (!mindmapSlug) {
+        console.warn('[EditorWrapper] Mindmap slug not available')
+        return
+      }
+
       if (selectedNodeId) {
-        // Navigate to node-focused URL
-        router.push(`/editor/${mindmapId}/${selectedNodeId}`)
+        // Find the node to get its text for slug generation
+        const node = nodes.find(n => n.nodeId === selectedNodeId)
+        if (node) {
+          // Generate slug from node text
+          const nodeSlug = getNodeSlug(node.content.text)
+          // Navigate to node-focused URL with slugs
+          router.push(`/editor/${mindmapSlug}/${nodeSlug}`)
+        } else {
+          // Fallback to nodeId if node not found (shouldn't happen)
+          router.push(`/editor/${mindmapSlug}/${selectedNodeId}`)
+        }
       } else {
         // Navigate back to full mindmap view
-        router.push(`/editor/${mindmapId}`)
+        router.push(`/editor/${mindmapSlug}`)
       }
     }
-  }, [selectedNodeId, mindmapId, router])
+  }, [selectedNodeId, mindmap, router, nodes])
 
   // Keyboard shortcuts for panels
   useEffect(() => {

@@ -27,7 +27,7 @@
     "test:e2e:prod": "playwright test --config=playwright.config.prod.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/.next apps/*/dist packages/*/dist",
+    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/.next apps/*/dist packages/*/dist .cache .turbo apps/*/.cache apps/*/.turbo apps/*/.payload apps/*/build packages/*/build *.tsbuildinfo apps/*/*.tsbuildinfo packages/*/*.tsbuildinfo",
     "prepare": "husky",
     "doctor": "node scripts/doctor.js",
     "triage": "node scripts/triage.js"

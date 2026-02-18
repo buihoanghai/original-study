@@ -8,5 +8,6 @@
  * All types are framework-agnostic and can be used in any context
  * (web app, CMS, CLI tools, etc.).
  */
-export {};
+// Mastery Calculation Utilities
+export { calculateMastery, shouldAutoComplete } from './utils/mastery';
 //# sourceMappingURL=index.js.map

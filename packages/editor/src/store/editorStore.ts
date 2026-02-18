@@ -10,6 +10,20 @@ import { applyTreeLayout } from '../operations/layout'
 enableMapSet()
 
 /**
+ * Convert text to URL-friendly slug
+ * This matches the slug generation in apps/mindmap-web/lib/slug.ts
+ */
+function textToSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+/**
  * Editor Store Actions
  */
 interface EditorActions {
@@ -204,10 +218,11 @@ export const useEditorStore = create<EditorState & EditorActions>()(
     },
 
     // Focus (URL-based navigation)
-    focusOnNode: (nodeId: string | null) => {
+    // Accepts either a slug (from URL) or a nodeId
+    focusOnNode: (slugOrNodeId: string | null) => {
       const { nodes, edges } = get()
 
-      if (!nodeId) {
+      if (!slugOrNodeId) {
         // Show all nodes
         set((state) => {
           state.focusedNodeId = null
@@ -215,6 +230,21 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         })
         return
       }
+
+      // Try to find node by slug first (match against node text converted to slug)
+      let node = nodes.find(n => textToSlug(n.content.text) === slugOrNodeId)
+
+      // Fallback to nodeId if not found by slug
+      if (!node) {
+        node = nodes.find(n => n.nodeId === slugOrNodeId)
+      }
+
+      if (!node) {
+        console.warn('[editorStore] Node not found for slug/id:', slugOrNodeId)
+        return
+      }
+
+      const nodeId = node.nodeId
 
       // Calculate visible nodes: current + children + parent
       const visibleIds = new Set<string>([nodeId])
@@ -328,7 +358,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         state.mindmap = mindmap
         state.nodes = layoutedNodes
         state.edges = edges
-        state.ui.selectedNodeId = layoutedNodes[0]?.nodeId || null
+        state.ui.selectedNodeId = null // Don't select any node by default
         state.history = []
         state.historyIndex = -1
         console.log('[editorStore] - Initial selectedNodeId:', state.ui.selectedNodeId)

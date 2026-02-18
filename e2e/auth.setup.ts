@@ -52,7 +52,7 @@ setup('authenticate', async ({ page, request }) => {
 
   // Navigate to the login page (use localhost to match CMS domain for cookies)
   console.log('  Navigating to login page...')
-  await page.goto('http://localhost:3333/login')
+  await page.goto('http://localhost:3000/login')
 
   // Wait for page to load
   await page.waitForLoadState('networkidle')
@@ -87,7 +87,7 @@ setup('authenticate', async ({ page, request }) => {
   await page.waitForTimeout(2000)
 
   // Wait for redirect to home page
-  await page.waitForURL('http://localhost:3333/', { timeout: 15000 })
+  await page.waitForURL('http://localhost:3000/', { timeout: 15000 })
   console.log('  ✓ Redirected to home page')
 
   // Wait for page to fully load

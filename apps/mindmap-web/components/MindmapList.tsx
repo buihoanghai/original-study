@@ -35,8 +35,9 @@ export function MindmapList({ mindmaps }: MindmapListProps) {
       {mindmaps.map((mindmap) => (
         <Link
           key={mindmap.id}
-          href={`/editor/${mindmap.id}`}
+          href={`/editor/${mindmap.metadata.slug}`}
           className="group rounded-lg border border-zinc-200 bg-white p-6 transition-all hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+          data-testid="mindmap-card"
         >
           <div className="flex items-start justify-between">
             <div className="flex-1">

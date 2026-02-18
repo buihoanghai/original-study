@@ -20,6 +20,7 @@
     { "path": "./apps/mindmap-cms" },
     { "path": "./packages/domain" },
     { "path": "./packages/editor" },
+    { "path": "./packages/flashcard" },
     { "path": "./packages/sync" },
     { "path": "./packages/testing" }
   ],

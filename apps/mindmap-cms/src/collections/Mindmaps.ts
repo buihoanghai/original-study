@@ -1,6 +1,19 @@
 import type { CollectionConfig } from 'payload'
 
 /**
+ * Convert text to URL-friendly slug
+ */
+function textToSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+/**
  * Mindmaps Collection
  *
  * Stores mindmap documents with metadata, status, and ownership.
@@ -10,6 +23,7 @@ import type { CollectionConfig } from 'payload'
  * - Versioning enabled (draft/publish workflow)
  * - Access control by owner
  * - Status: draft, published, archived
+ * - Auto-generated slug from title
  */
 export const Mindmaps: CollectionConfig = {
   slug: 'mindmaps',
@@ -69,6 +83,17 @@ export const Mindmaps: CollectionConfig = {
       label: 'Title',
     },
     {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+      index: true,
+      label: 'Slug',
+      admin: {
+        description: 'URL-friendly identifier (auto-generated from title)',
+      },
+    },
+    {
       name: 'description',
       type: 'textarea',
       label: 'Description',
@@ -108,6 +133,17 @@ export const Mindmaps: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    beforeValidate: [
+      async ({ data, operation }) => {
+        // Auto-generate slug from title on create or when title changes
+        if (data?.title && (operation === 'create' || !data.slug)) {
+          data.slug = textToSlug(data.title)
+        }
+        return data
+      },
+    ],
+  },
   timestamps: true, // Adds createdAt and updatedAt
 }
 

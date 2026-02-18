@@ -28,6 +28,7 @@ function transformToMindmap(doc: any): Mindmap {
     id: doc.id,
     metadata: {
       title: doc.title,
+      slug: doc.slug,
       description: doc.description || '',
       created: new Date(doc.createdAt),
       updated: new Date(doc.updatedAt),
@@ -122,6 +123,64 @@ export async function getMindmap(id: string, cookies?: string): Promise<ApiResul
 
     // Payload returns { doc: {...} } for single document
     const mindmap = transformToMindmap(data.doc)
+
+    return {
+      success: true,
+      data: mindmap,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: `Failed to fetch mindmap: ${error instanceof Error ? error.message : 'Network error'}`,
+    }
+  }
+}
+
+/**
+ * Get a single mindmap by slug
+ *
+ * IMPORTANT: When called from Server Components, cookies must be forwarded manually.
+ */
+export async function getMindmapBySlug(slug: string, cookies?: string): Promise<ApiResult<Mindmap>> {
+  try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    }
+
+    // Forward cookies from Server Component if provided
+    if (cookies) {
+      headers['Cookie'] = cookies
+    }
+
+    const response = await fetch(
+      `${CMS_URL}/api/mindmaps?where[slug][equals]=${encodeURIComponent(slug)}&limit=1`,
+      {
+        method: 'GET',
+        headers,
+        credentials: 'include',
+        cache: 'no-store', // Don't cache authenticated requests
+      }
+    )
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      return {
+        success: false,
+        error: errorData.errors?.[0]?.message || `Failed to fetch mindmap: ${response.statusText}`,
+      }
+    }
+
+    const data = await response.json()
+
+    // Payload returns { docs: [...] } for find queries
+    if (!data.docs || data.docs.length === 0) {
+      return {
+        success: false,
+        error: `Mindmap not found with slug: ${slug}`,
+      }
+    }
+
+    const mindmap = transformToMindmap(data.docs[0])
 
     return {
       success: true,
