@@ -40,6 +40,7 @@ describe('SyncClient Error Handling', () => {
         id: 'test-id',
         metadata: {
           title: 'Test',
+          slug: 'test',
           description: '',
           created: new Date(),
           updated: new Date(),
@@ -88,6 +89,7 @@ describe('SyncClient Error Handling', () => {
         id: 'test-id',
         metadata: {
           title: 'Test',
+          slug: 'test',
           description: '',
           created: new Date(),
           updated: new Date(),
@@ -129,6 +131,7 @@ describe('SyncClient Error Handling', () => {
         id: 'test-id',
         metadata: {
           title: '',
+          slug: '',
           description: '',
           created: new Date(),
           updated: new Date(),
@@ -176,6 +179,7 @@ describe('SyncClient Error Handling', () => {
         id: 'test-id',
         metadata: {
           title: 'Test',
+          slug: 'test',
           description: '',
           created: new Date(),
           updated: new Date(),
@@ -200,6 +204,7 @@ describe('SyncClient Error Handling', () => {
         id: 'test-id',
         metadata: {
           title: 'Test',
+          slug: 'test',
           description: '',
           created: new Date(),
           updated: new Date(),

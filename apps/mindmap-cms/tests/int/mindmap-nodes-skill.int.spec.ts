@@ -35,6 +35,7 @@ describe('MindmapNodes Skill Fields', () => {
       collection: 'mindmaps',
       data: {
         title: 'Skill Test Mindmap',
+        slug: 'skill-test-mindmap',
         description: 'Test mindmap for skill fields',
         status: 'published',
         owner: testUser.id,

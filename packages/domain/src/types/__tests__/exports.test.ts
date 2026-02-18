@@ -25,6 +25,7 @@ describe('Type Exports', () => {
         id: '1',
         metadata: {
           title: 'Test',
+          slug: 'test',
           description: '',
           created: new Date(),
           updated: new Date(),
@@ -35,6 +36,7 @@ describe('Type Exports', () => {
 
       const mockMetadata: MindmapMetadata = {
         title: 'Test',
+        slug: 'test',
         description: '',
         created: new Date(),
         updated: new Date(),

@@ -83,6 +83,7 @@ describe('Edge Loading Bug Reproduction', () => {
       id: 'mindmap-1',
       metadata: {
         title: 'Test Mindmap',
+        slug: 'test-mindmap',
         description: 'Test',
         created: new Date(),
         updated: new Date(),

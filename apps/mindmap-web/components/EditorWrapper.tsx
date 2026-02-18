@@ -146,13 +146,13 @@ export function EditorWrapper({ mindmapId, focusNodeSlug }: EditorWrapperProps) 
       if (selectedNodeId) {
         // Find the node to get its text for slug generation
         const node = nodes.find(n => n.nodeId === selectedNodeId)
-        if (node) {
+        if (node && node.content.text) {
           // Generate slug from node text
           const nodeSlug = getNodeSlug(node.content.text)
           // Navigate to node-focused URL with slugs
           router.push(`/editor/${mindmapSlug}/${nodeSlug}`)
         } else {
-          // Fallback to nodeId if node not found (shouldn't happen)
+          // Fallback to nodeId if node not found or has no text
           router.push(`/editor/${mindmapSlug}/${selectedNodeId}`)
         }
       } else {

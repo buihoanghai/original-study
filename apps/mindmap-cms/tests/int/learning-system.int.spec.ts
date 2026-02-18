@@ -47,10 +47,12 @@ describe('Learning System Integration Tests', () => {
       collection: 'mindmaps',
       data: {
         title: 'Learning Test Mindmap',
+        slug: 'learning-test-mindmap',
         status: 'draft',
         owner: testUser.id,
       },
       user: testUser,
+      draft: false,
     })
   })
 

@@ -232,7 +232,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       }
 
       // Try to find node by slug first (match against node text converted to slug)
-      let node = nodes.find(n => textToSlug(n.content.text) === slugOrNodeId)
+      let node = nodes.find(n => n.content.text && textToSlug(n.content.text) === slugOrNodeId)
 
       // Fallback to nodeId if not found by slug
       if (!node) {
@@ -324,6 +324,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
           id: '', // Will be set after first sync
           metadata: {
             title,
+            slug: title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
             description,
             created: new Date(),
             updated: new Date(),

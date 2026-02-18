@@ -49,6 +49,7 @@ describe('Home Page', () => {
         id: '1',
         metadata: {
           title: 'Test Mindmap 1',
+          slug: 'test-mindmap-1',
           description: 'Description 1',
           created: new Date(),
           updated: new Date(),
@@ -60,6 +61,7 @@ describe('Home Page', () => {
         id: '2',
         metadata: {
           title: 'Test Mindmap 2',
+          slug: 'test-mindmap-2',
           description: 'Description 2',
           created: new Date(),
           updated: new Date(),

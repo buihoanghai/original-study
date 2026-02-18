@@ -402,9 +402,11 @@ describe.skip('API Endpoints Integration Tests (requires server running)', () =>
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap for Nodes API',
+          slug: 'test-mindmap-for-nodes-api',
           status: 'draft',
           owner: user1.id,
         },
+        draft: false,
       })
     })
 

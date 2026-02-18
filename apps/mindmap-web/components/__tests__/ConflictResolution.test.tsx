@@ -8,6 +8,7 @@ describe('ConflictResolution', () => {
     id: 'mindmap-1',
     metadata: {
       title: 'Local Version',
+      slug: 'local-version',
       description: 'Local description',
       created: new Date('2024-01-01'),
       updated: new Date('2024-01-02T10:00:00Z'),
@@ -20,6 +21,7 @@ describe('ConflictResolution', () => {
     id: 'mindmap-1',
     metadata: {
       title: 'Remote Version',
+      slug: 'remote-version',
       description: 'Remote description',
       created: new Date('2024-01-01'),
       updated: new Date('2024-01-02T12:00:00Z'),

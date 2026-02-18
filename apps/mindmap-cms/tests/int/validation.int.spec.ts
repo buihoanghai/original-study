@@ -63,6 +63,7 @@ describe('Data Validation Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap',
+          slug: 'test-mindmap',
           // Missing status - should default to 'draft'
           owner: testUserId,
           status: 'draft',
@@ -97,10 +98,12 @@ describe('Data Validation Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap',
+          slug: 'test-mindmap-optional-desc',
           status: 'draft',
           owner: testUserId,
           // description is optional
         },
+        draft: false,
       })
 
       expect(mindmap.title).toBe('Test Mindmap')
@@ -121,9 +124,11 @@ describe('Data Validation Tests', () => {
           collection: 'mindmaps',
           data: {
             title: 'Test Mindmap',
+            slug: 'test-mindmap-invalid-status',
             status: 'invalid-status' as any,
             owner: testUserId,
           },
+          draft: false,
         })
       ).rejects.toThrow()
     })
@@ -136,9 +141,11 @@ describe('Data Validation Tests', () => {
           collection: 'mindmaps',
           data: {
             title: `Test Mindmap ${status}`,
+            slug: `test-mindmap-${status}`,
             status: status as any,
             owner: testUserId,
           },
+          draft: false,
         })
 
         expect(mindmap.status).toBe(status)
@@ -159,9 +166,11 @@ describe('Data Validation Tests', () => {
           collection: 'mindmaps',
           data: {
             title: 'Test Mindmap',
+            slug: 'test-mindmap-invalid-owner',
             status: 'draft',
             owner: 'non-existent-user-id',
           },
+          draft: false,
         })
       ).rejects.toThrow()
     })
@@ -174,9 +183,11 @@ describe('Data Validation Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap',
+          slug: 'test-mindmap-auto-nodeid',
           status: 'draft',
           owner: testUserId,
         },
+        draft: false,
       })
 
       const node = await payload.create({
@@ -204,9 +215,11 @@ describe('Data Validation Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap',
+          slug: 'test-mindmap-preserve-nodeid',
           status: 'draft',
           owner: testUserId,
         },
+        draft: false,
       })
 
       const customNodeId = 'custom-node-id-123'
@@ -232,9 +245,11 @@ describe('Data Validation Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap',
+          slug: 'test-mindmap-prevent-nodeid-mod',
           status: 'draft',
           owner: testUserId,
         },
+        draft: false,
       })
 
       const node = await payload.create({
@@ -268,9 +283,11 @@ describe('Data Validation Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap',
+          slug: 'test-mindmap-preserve-nodeid-update',
           status: 'draft',
           owner: testUserId,
         },
+        draft: false,
       })
 
       const originalNodeId = 'stable-node-id'

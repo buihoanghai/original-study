@@ -141,6 +141,7 @@ export class SyncClient {
       id: payloadDoc.id,
       metadata: {
         title: payloadDoc.title,
+        slug: payloadDoc.slug,
         description: payloadDoc.description || '',
         created: new Date(payloadDoc.createdAt),
         updated: new Date(payloadDoc.updatedAt),

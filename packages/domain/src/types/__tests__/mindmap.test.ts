@@ -8,6 +8,7 @@ describe('Mindmap Types', () => {
         id: 'mindmap-123',
         metadata: {
           title: 'Test Mindmap',
+          slug: 'test-mindmap',
           description: 'A test mindmap',
           created: new Date(),
           updated: new Date(),
@@ -27,6 +28,7 @@ describe('Mindmap Types', () => {
         id: '1',
         metadata: {
           title: 'Draft',
+          slug: 'draft',
           description: '',
           created: new Date(),
           updated: new Date(),
@@ -39,6 +41,7 @@ describe('Mindmap Types', () => {
         id: '2',
         metadata: {
           title: 'Published',
+          slug: 'published',
           description: '',
           created: new Date(),
           updated: new Date(),
@@ -51,6 +54,7 @@ describe('Mindmap Types', () => {
         id: '3',
         metadata: {
           title: 'Archived',
+          slug: 'archived',
           description: '',
           created: new Date(),
           updated: new Date(),
@@ -69,6 +73,7 @@ describe('Mindmap Types', () => {
     it('should have required fields', () => {
       const mockMetadata: MindmapMetadata = {
         title: 'Test Title',
+        slug: 'test-title',
         description: 'Test Description',
         created: new Date(),
         updated: new Date(),

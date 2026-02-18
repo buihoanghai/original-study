@@ -55,10 +55,12 @@ export async function seedFoundation(userId: string) {
       collection: 'mindmaps',
       data: {
         title: 'Fullstack Developer Skill Tree',
+        slug: 'fullstack-developer-skill-tree',
         description: 'Complete skill progression for fullstack developers - from Foundation to AI-Era Skills',
         status: 'published',
         owner: userId,
       },
+      draft: false,
     })
     console.log(`✅ Created mindmap: ${mindmap.title}`)
   }

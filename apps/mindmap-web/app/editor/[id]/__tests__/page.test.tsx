@@ -8,6 +8,45 @@ import EditorPage from '../page'
  * Tests the editor page rendering with dynamic ID parameter.
  */
 
+// Mock Next.js cookies API
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(() => ({
+    toString: () => 'mock-cookie-string',
+    get: vi.fn(),
+    set: vi.fn(),
+    delete: vi.fn(),
+    has: vi.fn(),
+    getAll: vi.fn(() => []),
+  })),
+}))
+
+// Mock Next.js navigation
+vi.mock('next/navigation', () => ({
+  redirect: vi.fn(),
+  notFound: vi.fn(),
+}))
+
+// Mock API
+vi.mock('@/lib/api', () => ({
+  getMindmapBySlug: vi.fn((slug: string) =>
+    Promise.resolve({
+      success: true,
+      data: {
+        id: slug,
+        metadata: {
+          title: 'Test Mindmap',
+          slug: slug,
+          description: 'Test description',
+          created: new Date(),
+          updated: new Date(),
+        },
+        status: 'published',
+        ownerId: 'test-user',
+      },
+    })
+  ),
+}))
+
 vi.mock('@/components/EditorWrapper', () => ({
   EditorWrapper: ({ mindmapId }: { mindmapId: string }) => (
     <div data-testid="editor-wrapper" data-mindmap-id={mindmapId}>

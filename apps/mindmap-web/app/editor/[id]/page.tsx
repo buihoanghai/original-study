@@ -23,7 +23,7 @@ export default async function EditorPage({ params }: EditorPageProps) {
   // Try to fetch mindmap by slug first
   const result = await getMindmapBySlug(id, cookieHeader)
 
-  if (!result.success) {
+  if (!result.success || !result.data) {
     // If not found by slug, redirect to home
     redirect('/')
   }

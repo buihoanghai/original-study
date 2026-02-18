@@ -52,9 +52,11 @@ describe('Performance Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Large Mindmap Test',
+          slug: 'large-mindmap-test',
           status: 'draft',
           owner: testUserId,
         },
+        draft: false,
       })
 
       // Create 100 nodes
@@ -115,9 +117,11 @@ describe('Performance Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Query Performance Test',
+          slug: 'query-performance-test',
           status: 'draft',
           owner: testUserId,
         },
+        draft: false,
       })
 
       const nodePromises = []
@@ -177,9 +181,11 @@ describe('Performance Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Deep Tree Test',
+          slug: 'deep-tree-test',
           status: 'draft',
           owner: testUserId,
         },
+        draft: false,
       })
 
       // Create 10 levels of nodes
@@ -332,9 +338,11 @@ describe('Performance Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Batch Update Test',
+          slug: 'batch-update-test',
           status: 'draft',
           owner: testUserId,
         },
+        draft: false,
       })
 
       // Create 20 nodes

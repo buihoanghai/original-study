@@ -101,6 +101,7 @@ describe('Component Integration Tests', () => {
           id: 'mindmap-1',
           metadata: {
             title: 'TypeScript Basics',
+            slug: 'typescript-basics',
             description: 'Learn TypeScript fundamentals',
             created: new Date('2024-01-01'),
             updated: new Date('2024-01-15'),
@@ -112,6 +113,7 @@ describe('Component Integration Tests', () => {
           id: 'mindmap-2',
           metadata: {
             title: 'React Patterns',
+            slug: 'react-patterns',
             description: '',
             created: new Date('2024-01-10'),
             updated: new Date('2024-01-20'),
@@ -123,6 +125,7 @@ describe('Component Integration Tests', () => {
           id: 'mindmap-3',
           metadata: {
             title: 'Archived Mindmap',
+            slug: 'archived-mindmap',
             description: 'Old content',
             created: new Date('2023-12-01'),
             updated: new Date('2023-12-15'),
@@ -176,9 +179,9 @@ describe('Component Integration Tests', () => {
         const mindmap2Link = screen.getByText('React Patterns').closest('a')
         const mindmap3Link = screen.getByText('Archived Mindmap').closest('a')
 
-        expect(mindmap1Link).toHaveAttribute('href', '/editor/mindmap-1')
-        expect(mindmap2Link).toHaveAttribute('href', '/editor/mindmap-2')
-        expect(mindmap3Link).toHaveAttribute('href', '/editor/mindmap-3')
+        expect(mindmap1Link).toHaveAttribute('href', '/editor/typescript-basics')
+        expect(mindmap2Link).toHaveAttribute('href', '/editor/react-patterns')
+        expect(mindmap3Link).toHaveAttribute('href', '/editor/archived-mindmap')
       })
 
       it('should apply hover styles to mindmap cards', () => {
@@ -220,6 +223,7 @@ describe('Component Integration Tests', () => {
           id: 'mindmap-1',
           metadata: {
             title: 'Test Mindmap',
+            slug: 'test-mindmap',
             description: 'Test',
             created: new Date(),
             updated: new Date(),
@@ -242,7 +246,7 @@ describe('Component Integration Tests', () => {
 
       // List should have link to editor
       const mindmapLink = screen.getByText('Test Mindmap')
-      expect(mindmapLink.closest('a')).toHaveAttribute('href', '/editor/mindmap-1')
+      expect(mindmapLink.closest('a')).toHaveAttribute('href', '/editor/test-mindmap')
     })
   })
 })

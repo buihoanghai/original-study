@@ -67,6 +67,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap',
+          slug: 'test-mindmap',
           description: 'A test mindmap',
           status: 'draft',
           owner: user1.id,
@@ -89,6 +90,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'User 1 Mindmap',
+          slug: 'user-1-mindmap',
           status: 'draft',
           owner: user1.id,
         },
@@ -117,6 +119,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'User 1 Private Mindmap',
+          slug: 'user-1-private-mindmap',
           status: 'draft',
           owner: user1.id,
         },
@@ -160,6 +163,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Status Test Mindmap',
+          slug: 'status-test-mindmap',
           status: 'draft',
           owner: user1.id,
         },
@@ -198,6 +202,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'User 1 Mindmap',
+          slug: 'user-1-mindmap-update-test',
           status: 'draft',
           owner: user1.id,
         },
@@ -225,6 +230,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'User 1 Mindmap to Delete',
+          slug: 'user-1-mindmap-to-delete',
           status: 'draft',
           owner: user1.id,
         },
@@ -253,6 +259,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap for Nodes',
+          slug: 'test-mindmap-for-nodes',
           status: 'draft',
           owner: user1.id,
         },
@@ -495,6 +502,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap for Flashcards',
+          slug: 'test-mindmap-for-flashcards',
           status: 'draft',
           owner: user1.id,
         },
@@ -733,6 +741,7 @@ describe('CMS Collections Integration Tests', () => {
         collection: 'mindmaps',
         data: {
           title: 'Test Mindmap for Comments',
+          slug: 'test-mindmap-for-comments',
           status: 'draft',
           owner: user1.id,
         },
