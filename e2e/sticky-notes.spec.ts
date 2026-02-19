@@ -17,13 +17,24 @@ test.describe('Sticky Notes - Annotation Feature', () => {
   test.beforeEach(async ({ page }) => {
     // Create a new mindmap
     await page.goto('/new')
-    await page.fill('#title', 'Sticky Notes Test')
+    const timestamp = Date.now()
+    await page.fill('#title', `Sticky Notes Test ${timestamp}`)
     await page.click('button[type="submit"]')
 
     // Wait for editor to load
-    await page.waitForURL(/\/editor\/.*/, { timeout: 10000 })
-    await page.waitForSelector('[data-testid="mindmap-canvas"]', { timeout: 10000 })
+    await page.waitForURL(/\/editor\/[^/]+(?:\/[^/]+)?/, { timeout: 10000 })
+
+    // Wait for canvas to appear
+    await page.waitForSelector('[data-testid="mindmap-canvas"]', { timeout: 20000 })
     await page.waitForTimeout(1000)
+
+    // Close the NodeDetailPanel if it's open (it blocks interactions)
+    const closeButton = page.locator('button[aria-label="Close detail panel"]')
+    const isVisible = await closeButton.isVisible().catch(() => false)
+    if (isVisible) {
+      await closeButton.click()
+      await page.waitForTimeout(500)
+    }
   })
 
   test('Shift+N should create a sticky note', async ({ page }) => {

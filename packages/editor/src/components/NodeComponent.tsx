@@ -16,7 +16,7 @@ export interface NodeData extends Record<string, unknown> {
  * Renders a single mindmap node with editing capabilities.
  * Shows affordances only when selected.
  */
-export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => {
+export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data, dragging }) => {
   const { node, isSelected, isEditing, isCollapsed } = data
   const { updateNode, stopEditing, addSibling, addChild } = useEditorStore()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -93,10 +93,14 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
         background: isEditing ? '#fff' : isSelected ? '#eff6ff' : '#f9fafb',
         minWidth: '120px',
         maxWidth: '300px',
-        boxShadow: isSelected
+        boxShadow: dragging
+          ? '0 12px 24px rgba(0, 0, 0, 0.2)'
+          : isSelected
           ? '0 8px 16px rgba(0, 0, 0, 0.12)'
           : '0 2px 8px rgba(0, 0, 0, 0.06)',
-        transition: 'all 0.2s',
+        opacity: dragging ? 0.8 : 1,
+        cursor: dragging ? 'grabbing' : 'grab',
+        transition: dragging ? 'none' : 'all 0.2s',
       }}
     >
       {/* Connection handles - both sides for bidirectional connections */}

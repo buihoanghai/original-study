@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
-import { ReactFlow, Background, Controls, MiniMap, Node, Edge } from '@xyflow/react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { ReactFlow, Background, Controls, MiniMap, Node, Edge, NodeChange } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { useEditorStore } from '../store/editorStore'
 import { MindmapNode as DomainNode } from '@mindmap/domain'
@@ -27,7 +27,13 @@ export const MindmapEditor: React.FC = () => {
     stopEditing,
     setZoom,
     setCenter,
+    updateNodePosition,
+    saveHistory,
+    triggerSave,
   } = useEditorStore()
+
+  // Debounced auto-save for position changes
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Get all descendants of collapsed nodes (these should be hidden)
   const getDescendantIds = (nodeId: string): string[] => {
@@ -188,6 +194,39 @@ export const MindmapEditor: React.FC = () => {
     [setZoom, setCenter]
   )
 
+  // Handle node changes (drag & drop)
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      changes.forEach((change) => {
+        // Only handle position changes when drag ends
+        if (change.type === 'position' && change.position && !change.dragging) {
+          console.log('[MindmapEditor] Node position changed:', change.id, change.position)
+          updateNodePosition(change.id, change.position)
+          saveHistory() // Save to history for undo/redo
+
+          // Auto-save position changes after 2 seconds of inactivity
+          if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current)
+          }
+          saveTimeoutRef.current = setTimeout(() => {
+            console.log('[MindmapEditor] Auto-saving position changes...')
+            triggerSave()
+          }, 2000)
+        }
+      })
+    },
+    [updateNodePosition, saveHistory, triggerSave]
+  )
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
+  }, [])
+
   // Custom node types
   const nodeTypes = useMemo(
     () => ({
@@ -220,8 +259,10 @@ export const MindmapEditor: React.FC = () => {
         edgeTypes={edgeTypes}
         onNodeClick={onNodeClick}
         onNodeDoubleClick={onNodeDoubleClick}
+        onNodesChange={onNodesChange}
         onPaneClick={onPaneClick}
         onMove={onMove}
+        nodesDraggable={true}
         fitView
         minZoom={0.1}
         maxZoom={2}

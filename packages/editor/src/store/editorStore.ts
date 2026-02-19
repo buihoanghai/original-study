@@ -3,7 +3,7 @@ import { immer } from 'zustand/middleware/immer'
 import { enableMapSet } from 'immer'
 import type { EditorState, HistoryEntry } from '../types'
 import type { MindmapNode, NodeEdge, NodeContent, Mindmap } from '@mindmap/domain'
-import { addChildNode, addSiblingNode, updateNodeContent, deleteNode, createNode } from '../operations/tree'
+import { addChildNode, addSiblingNode, updateNodeContent, updateNodePosition, deleteNode, createNode } from '../operations/tree'
 import { applyTreeLayout } from '../operations/layout'
 import { applyBalancedLayout } from '../operations/balancedLayout'
 
@@ -32,6 +32,7 @@ interface EditorActions {
   addChild: (parentId: string) => void
   addSibling: (nodeId: string) => void
   updateNode: (nodeId: string, content: NodeContent) => void
+  updateNodePosition: (nodeId: string, position: { x: number; y: number }) => void
   removeNode: (nodeId: string) => void
 
   // Sticky notes (annotations)
@@ -155,6 +156,14 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         state.nodes = updateNodeContent(nodes, nodeId, content)
       })
       get().saveHistory()
+    },
+
+    updateNodePosition: (nodeId: string, position: { x: number; y: number }) => {
+      const { nodes } = get()
+      set((state) => {
+        state.nodes = updateNodePosition(nodes, nodeId, position)
+      })
+      // Note: History is saved by the caller (onNodesChange) after drag ends
     },
 
     removeNode: (nodeId: string) => {

@@ -89,6 +89,70 @@ describe('Editor Store', () => {
     })
   })
 
+  describe('Drag & Drop', () => {
+    it('should update node position via store action', () => {
+      const { createMindmap, updateNodePosition } = useEditorStore.getState()
+
+      createMindmap('Root')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+      const originalPosition = useEditorStore.getState().nodes[0].position
+
+      updateNodePosition(rootId, { x: 500, y: 300 })
+
+      const state = useEditorStore.getState()
+      expect(state.nodes[0].position).toEqual({ x: 500, y: 300 })
+      expect(state.nodes[0].position).not.toEqual(originalPosition)
+    })
+
+    it('should preserve node content when updating position', () => {
+      const { createMindmap, updateNode, updateNodePosition } = useEditorStore.getState()
+
+      createMindmap('Root')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+
+      updateNode(rootId, { text: 'Test Content' })
+      updateNodePosition(rootId, { x: 500, y: 300 })
+
+      const state = useEditorStore.getState()
+      expect(state.nodes[0].content.text).toBe('Test Content')
+      expect(state.nodes[0].position).toEqual({ x: 500, y: 300 })
+    })
+
+    it('should support undo/redo for position changes', () => {
+      const { createMindmap, updateNodePosition, saveHistory, undo, redo } = useEditorStore.getState()
+
+      createMindmap('Root')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+      const originalPos = useEditorStore.getState().nodes[0].position
+
+      updateNodePosition(rootId, { x: 500, y: 300 })
+      saveHistory() // Simulate what onNodesChange does
+      expect(useEditorStore.getState().nodes[0].position).toEqual({ x: 500, y: 300 })
+
+      undo()
+      expect(useEditorStore.getState().nodes[0].position).toEqual(originalPos)
+
+      redo()
+      expect(useEditorStore.getState().nodes[0].position).toEqual({ x: 500, y: 300 })
+    })
+
+    it('should update position for multiple nodes independently', () => {
+      const { createMindmap, addChild, updateNodePosition } = useEditorStore.getState()
+
+      createMindmap('Root')
+      const rootId = useEditorStore.getState().nodes[0].nodeId
+      addChild(rootId)
+      const childId = useEditorStore.getState().nodes[1].nodeId
+
+      updateNodePosition(rootId, { x: 100, y: 100 })
+      updateNodePosition(childId, { x: 300, y: 300 })
+
+      const state = useEditorStore.getState()
+      expect(state.nodes[0].position).toEqual({ x: 100, y: 100 })
+      expect(state.nodes[1].position).toEqual({ x: 300, y: 300 })
+    })
+  })
+
   describe('Remove Node', () => {
     it('should remove a node and its descendants', () => {
       const { createMindmap, addChild, removeNode } = useEditorStore.getState()

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createNode, addChildNode, addSiblingNode, updateNodeContent, deleteNode } from '../operations/tree'
+import { createNode, addChildNode, addSiblingNode, updateNodeContent, updateNodePosition, deleteNode } from '../operations/tree'
 import type { MindmapNode, NodeEdge } from '@mindmap/domain'
 
 describe('Tree Operations', () => {
@@ -113,6 +113,49 @@ describe('Tree Operations', () => {
 
       expect(updatedNodes[0].content.text).toBe('Updated')
       expect(updatedNodes[1].content.text).toBe('Node 2')
+    })
+  })
+
+  describe('updateNodePosition', () => {
+    it('should update node position', () => {
+      const node = createNode({ text: 'Test' }, { x: 0, y: 0 })
+      const nodes: MindmapNode[] = [node]
+
+      const updatedNodes = updateNodePosition(nodes, node.nodeId, { x: 100, y: 200 })
+
+      expect(updatedNodes[0].position).toEqual({ x: 100, y: 200 })
+    })
+
+    it('should update timestamp when position changes', () => {
+      const node = createNode({ text: 'Test' }, { x: 0, y: 0 })
+      const nodes: MindmapNode[] = [node]
+      const originalTimestamp = node.metadata.updated.getTime()
+
+      // Wait a tiny bit to ensure timestamp difference
+      const updatedNodes = updateNodePosition(nodes, node.nodeId, { x: 100, y: 200 })
+
+      expect(updatedNodes[0].metadata.updated.getTime()).toBeGreaterThanOrEqual(originalTimestamp)
+    })
+
+    it('should not modify other nodes', () => {
+      const node1 = createNode({ text: 'Node 1' }, { x: 0, y: 0 })
+      const node2 = createNode({ text: 'Node 2' }, { x: 100, y: 100 })
+      const nodes: MindmapNode[] = [node1, node2]
+
+      const updatedNodes = updateNodePosition(nodes, node1.nodeId, { x: 500, y: 300 })
+
+      expect(updatedNodes[0].position).toEqual({ x: 500, y: 300 })
+      expect(updatedNodes[1].position).toEqual({ x: 100, y: 100 })
+    })
+
+    it('should preserve node content when updating position', () => {
+      const node = createNode({ text: 'Test Content' }, { x: 0, y: 0 })
+      const nodes: MindmapNode[] = [node]
+
+      const updatedNodes = updateNodePosition(nodes, node.nodeId, { x: 100, y: 200 })
+
+      expect(updatedNodes[0].content.text).toBe('Test Content')
+      expect(updatedNodes[0].position).toEqual({ x: 100, y: 200 })
     })
   })
 

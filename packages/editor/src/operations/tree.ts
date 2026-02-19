@@ -135,6 +135,31 @@ export function updateNodeContent(
 }
 
 /**
+ * Update node position
+ *
+ * Used for drag & drop operations to update a node's position on the canvas.
+ * Updates the position and the metadata timestamp.
+ */
+export function updateNodePosition(
+  nodes: MindmapNode[],
+  nodeId: string,
+  position: { x: number; y: number }
+): MindmapNode[] {
+  return nodes.map((node) =>
+    node.nodeId === nodeId
+      ? {
+          ...node,
+          position,
+          metadata: {
+            ...node.metadata,
+            updated: new Date(),
+          },
+        }
+      : node
+  )
+}
+
+/**
  * Delete a node and all its descendants
  */
 export function deleteNode(

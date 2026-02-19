@@ -28,7 +28,9 @@ export const StickyNoteComponent: React.FC<NodeProps> = ({ id, data, selected })
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   // Get color based on node ID (deterministic cycling)
-  const colorIndex = parseInt(id.split('-').pop() || '0', 10) % STICKY_COLORS.length
+  const lastPart = id.split('-').pop() || '0'
+  const parsed = parseInt(lastPart, 36) // Use base 36 to handle alphanumeric IDs
+  const colorIndex = (isNaN(parsed) ? 0 : parsed) % STICKY_COLORS.length
   const color = STICKY_COLORS[colorIndex]
 
   // Focus input when entering edit mode

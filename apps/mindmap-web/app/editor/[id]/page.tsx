@@ -1,36 +1,26 @@
 import { EditorWrapper } from '@/components/EditorWrapper'
-import { getMindmapBySlug } from '@/lib/api'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 interface EditorPageProps {
   params: Promise<{
-    id: string // This is actually a slug now, but keeping param name for backward compatibility
+    id: string // Can be either a UUID or a slug
   }>
 }
 
 /**
  * Editor Page
  *
- * Renders the mindmap editor for a specific mindmap slug.
- * The [id] param can be either a slug or a UUID (for backward compatibility).
+ * Renders the mindmap editor for a specific mindmap.
+ * The [id] param can be either a UUID (for backward compatibility) or a slug.
+ *
+ * Note: The EditorWrapper component handles fetching the mindmap data client-side,
+ * which ensures proper cookie handling for authentication.
  */
 export default async function EditorPage({ params }: EditorPageProps) {
   const { id } = await params
-  const cookieStore = await cookies()
-  const cookieHeader = cookieStore.toString()
-
-  // Try to fetch mindmap by slug first
-  const result = await getMindmapBySlug(id, cookieHeader)
-
-  if (!result.success || !result.data) {
-    // If not found by slug, redirect to home
-    redirect('/')
-  }
 
   return (
     <div className="h-[calc(100vh-4rem)]">
-      <EditorWrapper mindmapId={result.data.id} />
+      <EditorWrapper mindmapId={id} />
     </div>
   )
 }
