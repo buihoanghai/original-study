@@ -99,9 +99,11 @@ export const NodeComponent: React.FC<NodeProps<Node<NodeData>>> = ({ data }) => 
         transition: 'all 0.2s',
       }}
     >
-      {/* Connection handles */}
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+      {/* Connection handles - both sides for bidirectional connections */}
+      <Handle type="target" position={Position.Left} id="left" />
+      <Handle type="target" position={Position.Right} id="right" />
+      <Handle type="source" position={Position.Left} id="left" />
+      <Handle type="source" position={Position.Right} id="right" />
 
       {/* Node content */}
       {isEditing ? (

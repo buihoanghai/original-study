@@ -5,6 +5,8 @@ import { useEditorStore } from '../store/editorStore'
 import { MindmapNode as DomainNode } from '@mindmap/domain'
 import { NodeComponent, NodeData } from './NodeComponent'
 import { StickyNoteComponent } from './StickyNoteComponent'
+import { CurvedEdge } from './CurvedEdge'
+import { LayoutControls } from './LayoutControls'
 import { useHotkeys } from '../hooks/useHotkeys'
 import { useNavigation } from '../hooks/useNavigation'
 
@@ -27,10 +29,35 @@ export const MindmapEditor: React.FC = () => {
     setCenter,
   } = useEditorStore()
 
-  // Filter nodes if focused view is active
-  const filteredNodes = visibleNodeIds
+  // Get all descendants of collapsed nodes (these should be hidden)
+  const getDescendantIds = (nodeId: string): string[] => {
+    const children = domainEdges
+      .filter((e) => e.from === nodeId && e.type === 'parent-child')
+      .map((e) => e.to)
+
+    const descendants: string[] = []
+    for (const childId of children) {
+      descendants.push(childId)
+      descendants.push(...getDescendantIds(childId))
+    }
+
+    return descendants
+  }
+
+  // Build set of hidden node IDs (descendants of collapsed nodes)
+  const hiddenNodeIds = new Set<string>()
+  ui.collapsedNodeIds.forEach((collapsedId) => {
+    const descendants = getDescendantIds(collapsedId)
+    descendants.forEach((id) => hiddenNodeIds.add(id))
+  })
+
+  // Filter nodes: apply focused view filter AND hide descendants of collapsed nodes
+  let filteredNodes = visibleNodeIds
     ? domainNodes.filter((n) => visibleNodeIds.has(n.nodeId))
     : domainNodes
+
+  // Remove hidden nodes (descendants of collapsed nodes)
+  filteredNodes = filteredNodes.filter((n) => !hiddenNodeIds.has(n.nodeId))
 
   // Convert domain nodes to React Flow nodes
   const reactFlowNodes: Node<NodeData>[] = filteredNodes.map((node) => ({
@@ -45,19 +72,47 @@ export const MindmapEditor: React.FC = () => {
     },
   }))
 
-  // Filter edges to only show edges between visible nodes
-  const filteredEdges = visibleNodeIds
+  // Filter edges to only show edges between visible nodes (not hidden by collapse or focus)
+  let filteredEdges = visibleNodeIds
     ? domainEdges.filter((e) => visibleNodeIds.has(e.from) && visibleNodeIds.has(e.to))
     : domainEdges
 
-  // Convert domain edges to React Flow edges
-  const reactFlowEdges: Edge[] = filteredEdges.map((edge, index) => ({
-    id: `${edge.from}-${edge.to}-${index}`,
-    source: edge.from,
-    target: edge.to,
-    type: edge.type === 'reference' ? 'straight' : 'default', // Use bezier curves for smoother look
-    hidden: edge.type === 'reference', // Hide reference edges by default
-  }))
+  // Also filter out edges connected to hidden nodes (descendants of collapsed nodes)
+  filteredEdges = filteredEdges.filter(
+    (e) => !hiddenNodeIds.has(e.from) && !hiddenNodeIds.has(e.to)
+  )
+
+  // Convert domain edges to React Flow edges with correct handle positions
+  const reactFlowEdges: Edge[] = filteredEdges.map((edge, index) => {
+    // Find source and target nodes to determine relative positions
+    const sourceNode = domainNodes.find((n) => n.nodeId === edge.from)
+    const targetNode = domainNodes.find((n) => n.nodeId === edge.to)
+
+    // Determine handle positions based on relative X positions
+    let sourceHandle = 'right'
+    let targetHandle = 'left'
+
+    if (sourceNode && targetNode) {
+      const sourceX = sourceNode.position?.x ?? 0
+      const targetX = targetNode.position?.x ?? 0
+
+      // If target is to the left of source, flip the handles
+      if (targetX < sourceX) {
+        sourceHandle = 'left'
+        targetHandle = 'right'
+      }
+    }
+
+    return {
+      id: `${edge.from}-${edge.to}-${index}`,
+      source: edge.from,
+      target: edge.to,
+      sourceHandle,
+      targetHandle,
+      type: edge.type === 'reference' ? 'straight' : 'curved', // Use custom curved edges
+      hidden: edge.type === 'reference', // Hide reference edges by default
+    }
+  })
 
   console.log('[MindmapEditor] Rendering with:')
   console.log('[MindmapEditor] - Nodes:', reactFlowNodes.length)
@@ -142,6 +197,14 @@ export const MindmapEditor: React.FC = () => {
     []
   )
 
+  // Custom edge types
+  const edgeTypes = useMemo(
+    () => ({
+      curved: CurvedEdge,
+    }),
+    []
+  )
+
   // Initialize hotkeys
   useHotkeys()
 
@@ -154,6 +217,7 @@ export const MindmapEditor: React.FC = () => {
         nodes={reactFlowNodes}
         edges={reactFlowEdges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onNodeClick={onNodeClick}
         onNodeDoubleClick={onNodeDoubleClick}
         onPaneClick={onPaneClick}
@@ -162,12 +226,13 @@ export const MindmapEditor: React.FC = () => {
         minZoom={0.1}
         maxZoom={2}
         defaultEdgeOptions={{
-          type: 'smoothstep',
+          type: 'curved',
         }}
       >
         <Background />
         <Controls />
         <MiniMap />
+        <LayoutControls />
       </ReactFlow>
     </div>
   )

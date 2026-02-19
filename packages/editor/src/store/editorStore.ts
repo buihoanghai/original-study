@@ -5,6 +5,7 @@ import type { EditorState, HistoryEntry } from '../types'
 import type { MindmapNode, NodeEdge, NodeContent, Mindmap } from '@mindmap/domain'
 import { addChildNode, addSiblingNode, updateNodeContent, deleteNode, createNode } from '../operations/tree'
 import { applyTreeLayout } from '../operations/layout'
+import { applyBalancedLayout } from '../operations/balancedLayout'
 
 // Enable Map/Set support in Immer
 enableMapSet()
@@ -68,6 +69,11 @@ interface EditorActions {
   setZoom: (zoom: number) => void
   setCenter: (x: number, y: number) => void
 
+  // Layout
+  setLayoutMode: (mode: 'dagre' | 'balanced' | 'manual') => void
+  setCompactLayout: (compact: boolean) => void
+  applyLayout: () => void
+
   // Reset
   reset: () => void
 }
@@ -86,6 +92,8 @@ const initialState: EditorState = {
     focusMode: 'canvas',
     zoom: 1,
     center: { x: 0, y: 0 },
+    layoutMode: 'balanced',
+    compactLayout: false,
   },
   focusedNodeId: null,
   visibleNodeIds: null,
@@ -208,13 +216,88 @@ export const useEditorStore = create<EditorState & EditorActions>()(
 
     // Collapse/expand
     toggleCollapse: (nodeId: string) => {
+      console.log('[toggleCollapse] Called with nodeId:', nodeId)
+      const { nodes, edges, ui } = get()
+      console.log('[toggleCollapse] Current layoutMode:', ui.layoutMode)
+      console.log('[toggleCollapse] Total nodes:', nodes.length)
+
+      // Toggle collapse state
       set((state) => {
         if (state.ui.collapsedNodeIds.has(nodeId)) {
           state.ui.collapsedNodeIds.delete(nodeId)
+          console.log('[toggleCollapse] Expanding node')
         } else {
           state.ui.collapsedNodeIds.add(nodeId)
+          console.log('[toggleCollapse] Collapsing node')
         }
       })
+
+      // Get updated collapsed state
+      const updatedCollapsedIds = get().ui.collapsedNodeIds
+      console.log('[toggleCollapse] Collapsed nodes:', Array.from(updatedCollapsedIds))
+
+      // Helper function to get all descendants of a node
+      const getDescendantIds = (parentId: string): string[] => {
+        const children = edges
+          .filter((e) => e.from === parentId && e.type === 'parent-child')
+          .map((e) => e.to)
+
+        const descendants: string[] = []
+        for (const childId of children) {
+          descendants.push(childId)
+          descendants.push(...getDescendantIds(childId))
+        }
+
+        return descendants
+      }
+
+      // Build set of hidden node IDs (descendants of collapsed nodes)
+      const hiddenNodeIds = new Set<string>()
+      updatedCollapsedIds.forEach((collapsedId) => {
+        const descendants = getDescendantIds(collapsedId)
+        descendants.forEach((id) => hiddenNodeIds.add(id))
+      })
+
+      // Filter nodes to only include visible ones for layout calculation
+      const visibleNodes = nodes.filter((n) => !hiddenNodeIds.has(n.nodeId))
+      console.log('[toggleCollapse] Hidden nodes:', Array.from(hiddenNodeIds))
+      console.log('[toggleCollapse] Visible nodes:', visibleNodes.length)
+
+      // Recalculate layout with only visible nodes
+      let layoutedNodes: MindmapNode[]
+
+      if (ui.layoutMode === 'balanced') {
+        console.log('[toggleCollapse] Using balanced layout')
+        layoutedNodes = applyBalancedLayout(visibleNodes, edges, {
+          compact: ui.compactLayout,
+        })
+      } else if (ui.layoutMode === 'dagre') {
+        console.log('[toggleCollapse] Using dagre layout')
+        layoutedNodes = applyTreeLayout(visibleNodes, edges, {
+          direction: 'LR',
+          nodeSpacing: ui.compactLayout ? 75 : 100,
+          rankSpacing: ui.compactLayout ? 187 : 250,
+        })
+      } else {
+        console.log('[toggleCollapse] Manual mode - skipping layout recalculation')
+        // Manual mode - don't recalculate layout
+        return
+      }
+
+      console.log('[toggleCollapse] Layouted nodes:', layoutedNodes.length)
+
+      // Update positions of visible nodes, keep positions of hidden nodes unchanged
+      const updatedNodes = nodes.map((node) => {
+        const layoutedNode = layoutedNodes.find((n) => n.nodeId === node.nodeId)
+        return layoutedNode || node // Use layouted position if available, otherwise keep original
+      })
+
+      console.log('[toggleCollapse] Updating node positions')
+      // Update nodes with new positions
+      set((state) => {
+        state.nodes = updatedNodes
+      })
+      console.log('[toggleCollapse] Layout recalculation complete')
     },
 
     // Focus (URL-based navigation)
@@ -348,22 +431,19 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       console.log('[editorStore] - Edges count:', edges.length)
       console.log('[editorStore] - Edges:', edges)
 
-      // Apply hierarchical tree layout
-      const layoutedNodes = applyTreeLayout(nodes, edges, {
-        direction: 'LR', // Left to right
-        nodeSpacing: 100,
-        rankSpacing: 250,
-      })
-
+      // Set initial state without layout
       set((state) => {
         state.mindmap = mindmap
-        state.nodes = layoutedNodes
+        state.nodes = nodes
         state.edges = edges
-        state.ui.selectedNodeId = null // Don't select any node by default
+        state.ui.selectedNodeId = null
         state.history = []
         state.historyIndex = -1
         console.log('[editorStore] - Initial selectedNodeId:', state.ui.selectedNodeId)
       })
+
+      // Apply layout based on current mode
+      get().applyLayout()
       get().saveHistory()
     },
 
@@ -417,6 +497,47 @@ export const useEditorStore = create<EditorState & EditorActions>()(
     setCenter: (x: number, y: number) => {
       set((state) => {
         state.ui.center = { x, y }
+      })
+    },
+
+    // Layout
+    setLayoutMode: (mode: 'dagre' | 'balanced' | 'manual') => {
+      set((state) => {
+        state.ui.layoutMode = mode
+      })
+    },
+
+    setCompactLayout: (compact: boolean) => {
+      set((state) => {
+        state.ui.compactLayout = compact
+      })
+    },
+
+    applyLayout: () => {
+      const { nodes, edges, ui } = get()
+
+      if (ui.layoutMode === 'manual') {
+        console.log('[editorStore] Manual layout mode - no auto-layout')
+        return
+      }
+
+      let layoutedNodes: MindmapNode[]
+
+      if (ui.layoutMode === 'balanced') {
+        layoutedNodes = applyBalancedLayout(nodes, edges, {
+          compact: ui.compactLayout,
+        })
+      } else {
+        // dagre layout
+        layoutedNodes = applyTreeLayout(nodes, edges, {
+          direction: 'LR',
+          nodeSpacing: ui.compactLayout ? 75 : 100,
+          rankSpacing: ui.compactLayout ? 187 : 250,
+        })
+      }
+
+      set((state) => {
+        state.nodes = layoutedNodes
       })
     },
 

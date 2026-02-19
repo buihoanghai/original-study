@@ -122,45 +122,49 @@ export function EditorWrapper({ mindmapId, focusNodeSlug }: EditorWrapperProps) 
     }
   }, [focusNodeSlug, isLoading, focusOnNode])
 
-  // Navigate to node URL when selectedNodeId changes (but not on initial load)
-  const prevSelectedNodeIdRef = useRef<string | null | undefined>(undefined)
-  useEffect(() => {
-    // Skip navigation on initial mount
-    if (prevSelectedNodeIdRef.current === undefined) {
-      prevSelectedNodeIdRef.current = selectedNodeId
-      return
-    }
+  // NOTE: Automatic URL navigation on node selection is disabled
+  // to prevent URL changes when clicking nodes in the canvas.
+  // Users can still navigate via breadcrumbs or other UI elements.
+  // If you need to re-enable this, uncomment the code below:
 
-    // Only navigate if selectedNodeId actually changed
-    if (prevSelectedNodeIdRef.current !== selectedNodeId) {
-      prevSelectedNodeIdRef.current = selectedNodeId
-
-      // Get mindmap slug for URL
-      const mindmapSlug = mindmap?.metadata.slug
-
-      if (!mindmapSlug) {
-        console.warn('[EditorWrapper] Mindmap slug not available')
-        return
-      }
-
-      if (selectedNodeId) {
-        // Find the node to get its text for slug generation
-        const node = nodes.find(n => n.nodeId === selectedNodeId)
-        if (node && node.content.text) {
-          // Generate slug from node text
-          const nodeSlug = getNodeSlug(node.content.text)
-          // Navigate to node-focused URL with slugs
-          router.push(`/editor/${mindmapSlug}/${nodeSlug}`)
-        } else {
-          // Fallback to nodeId if node not found or has no text
-          router.push(`/editor/${mindmapSlug}/${selectedNodeId}`)
-        }
-      } else {
-        // Navigate back to full mindmap view
-        router.push(`/editor/${mindmapSlug}`)
-      }
-    }
-  }, [selectedNodeId, mindmap, router, nodes])
+  // const prevSelectedNodeIdRef = useRef<string | null | undefined>(undefined)
+  // useEffect(() => {
+  //   // Skip navigation on initial mount
+  //   if (prevSelectedNodeIdRef.current === undefined) {
+  //     prevSelectedNodeIdRef.current = selectedNodeId
+  //     return
+  //   }
+  //
+  //   // Only navigate if selectedNodeId actually changed
+  //   if (prevSelectedNodeIdRef.current !== selectedNodeId) {
+  //     prevSelectedNodeIdRef.current = selectedNodeId
+  //
+  //     // Get mindmap slug for URL
+  //     const mindmapSlug = mindmap?.metadata.slug
+  //
+  //     if (!mindmapSlug) {
+  //       console.warn('[EditorWrapper] Mindmap slug not available')
+  //       return
+  //     }
+  //
+  //     if (selectedNodeId) {
+  //       // Find the node to get its text for slug generation
+  //       const node = nodes.find(n => n.nodeId === selectedNodeId)
+  //       if (node && node.content.text) {
+  //         // Generate slug from node text
+  //         const nodeSlug = getNodeSlug(node.content.text)
+  //         // Navigate to node-focused URL with slugs
+  //         router.push(`/editor/${mindmapSlug}/${nodeSlug}`)
+  //       } else {
+  //         // Fallback to nodeId if node not found or has no text
+  //         router.push(`/editor/${mindmapSlug}/${selectedNodeId}`)
+  //       }
+  //     } else {
+  //       // Navigate back to full mindmap view
+  //       router.push(`/editor/${mindmapSlug}`)
+  //     }
+  //   }
+  // }, [selectedNodeId, mindmap, router, nodes])
 
   // Keyboard shortcuts for panels
   useEffect(() => {

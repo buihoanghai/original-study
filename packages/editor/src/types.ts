@@ -12,6 +12,11 @@ import type { MindmapNode, NodeEdge, Mindmap } from '@mindmap/domain'
 export type FocusMode = 'canvas' | 'editing' | 'none'
 
 /**
+ * Layout mode for the mindmap
+ */
+export type LayoutMode = 'dagre' | 'balanced' | 'manual'
+
+/**
  * Editor UI state
  */
 export interface EditorUIState {
@@ -32,6 +37,12 @@ export interface EditorUIState {
 
   /** Canvas center position */
   center: { x: number; y: number }
+
+  /** Layout mode */
+  layoutMode: LayoutMode
+
+  /** Compact layout mode */
+  compactLayout: boolean
 }
 
 /**
