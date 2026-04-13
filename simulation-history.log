@@ -11,3 +11,14 @@
 2026-04-07T18:02:27+0700 | simulated commit 011
 2026-04-07T12:44:58+0700 | simulated commit 012
 2026-04-07T11:04:20+0700 | simulated commit 013
+<<<<<<< HEAD
+=======
+2026-04-08T15:01:08+0700 | simulated commit 014
+2026-04-08T10:43:24+0700 | simulated commit 015
+2026-04-09T17:04:53+0700 | simulated commit 016
+2026-04-09T17:05:20+0700 | simulated commit 017
+2026-04-10T12:54:02+0700 | simulated commit 018
+2026-04-10T09:42:14+0700 | simulated commit 019
+2026-04-13T18:37:45+0700 | simulated commit 020
+2026-04-13T14:56:58+0700 | simulated commit 021
+>>>>>>> a1a2fe8 (chore(demo): simulated progress #21)
