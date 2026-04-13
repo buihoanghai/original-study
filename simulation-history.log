@@ -21,4 +21,8 @@
 2026-04-10T09:42:14+0700 | simulated commit 019
 2026-04-13T18:37:45+0700 | simulated commit 020
 2026-04-13T14:56:58+0700 | simulated commit 021
+<<<<<<< HEAD
 >>>>>>> a1a2fe8 (chore(demo): simulated progress #21)
+=======
+2026-04-13T11:49:49+0700 | simulated commit 022
+>>>>>>> 41118d7 (chore(demo): simulated progress #22)
