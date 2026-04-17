@@ -33,4 +33,8 @@
 2026-04-15T18:36:11+0700 | simulated commit 025
 2026-04-16T17:28:54+0700 | simulated commit 026
 2026-04-16T14:29:14+0700 | simulated commit 027
+<<<<<<< HEAD
 >>>>>>> 7bbb509 (chore(demo): simulated progress #27)
+=======
+2026-04-17T16:19:31+0700 | simulated commit 028
+>>>>>>> dfb384b (chore(demo): simulated progress #28)
