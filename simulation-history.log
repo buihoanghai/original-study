@@ -144,4 +144,8 @@
 =======
 2026-05-11T17:59:25+0700 | simulated commit 059
 2026-05-11T18:01:17+0700 | simulated commit 060
+<<<<<<< HEAD
 >>>>>>> 1f24368 (chore(demo): simulated progress #60)
+=======
+2026-05-11T12:51:01+0700 | simulated commit 061
+>>>>>>> 140dbcb (chore(demo): simulated progress #61)
