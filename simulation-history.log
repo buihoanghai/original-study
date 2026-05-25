@@ -203,4 +203,8 @@
 2026-05-21T14:52:42+0700 | simulated commit 078
 2026-05-22T11:42:18+0700 | simulated commit 079
 2026-05-22T15:43:58+0700 | simulated commit 080
+<<<<<<< HEAD
 >>>>>>> b398df0 (chore(demo): simulated progress #80)
+=======
+2026-05-25T18:12:49+0700 | simulated commit 081
+>>>>>>> cc33065 (chore(demo): simulated progress #81)
