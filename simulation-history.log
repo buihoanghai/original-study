@@ -223,4 +223,8 @@
 >>>>>>> 1a8d2fb (chore(demo): simulated progress #84)
 =======
 2026-05-26T10:48:13+0700 | simulated commit 085
+<<<<<<< HEAD
 >>>>>>> 761a83e (chore(demo): simulated progress #85)
+=======
+2026-05-27T17:40:12+0700 | simulated commit 086
+>>>>>>> 582b33a (chore(demo): simulated progress #86)
