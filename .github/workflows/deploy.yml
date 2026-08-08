@@ -1,0 +1,172 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  # Run tests first
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run type check
+        run: npm run typecheck
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run doctor check
+        run: npm run doctor -- --fast
+        env:
+          CI: true
+          DEBUG_TRACE: '0'
+          NEXT_PUBLIC_DEBUG_TRACE: '0'
+
+  # Build Docker images
+  build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: test
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Web App Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/mindmap-web/Dockerfile
+          push: false
+          tags: mindmap-web:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build CMS Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/mindmap-cms/Dockerfile
+          push: false
+          tags: mindmap-cms:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Deploy to Digital Ocean
+  deploy:
+    name: Deploy to Digital Ocean
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://mindmap.yourdomain.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.DO_SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Create .env.production on server
+        run: |
+          ssh ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SERVER_IP }} << 'EOF'
+            cd ${{ secrets.DO_PROJECT_PATH }}
+            
+            # Create .env.production from secrets
+            cat > .env.production << 'ENVEOF'
+          MONGO_ROOT_USER=${{ secrets.MONGO_ROOT_USER }}
+          MONGO_ROOT_PASSWORD=${{ secrets.MONGO_ROOT_PASSWORD }}
+          MONGO_DATABASE=${{ secrets.MONGO_DATABASE }}
+          PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }}
+          PAYLOAD_PUBLIC_SERVER_URL=${{ secrets.PAYLOAD_PUBLIC_SERVER_URL }}
+          NEXT_PUBLIC_CMS_URL=${{ secrets.NEXT_PUBLIC_CMS_URL }}
+          NODE_ENV=production
+          DEBUG_TRACE=0
+          NEXT_PUBLIC_DEBUG_TRACE=0
+          ENVEOF
+          EOF
+
+      - name: Deploy to server
+        run: |
+          ssh ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SERVER_IP }} << 'EOF'
+            set -e
+            
+            cd ${{ secrets.DO_PROJECT_PATH }}
+            
+            echo "📦 Pulling latest code..."
+            git fetch origin
+            git reset --hard origin/main
+            
+            echo "🏗️  Building and deploying..."
+            chmod +x deploy.sh
+            ./deploy.sh deploy
+            
+            echo "✅ Deployment complete!"
+          EOF
+
+      - name: Verify deployment
+        run: |
+          ssh ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SERVER_IP }} << 'EOF'
+            cd ${{ secrets.DO_PROJECT_PATH }}
+            
+            echo "🔍 Checking service status..."
+            ./deploy.sh status
+            
+            echo "📊 Checking container health..."
+            docker ps --filter "name=mindmap" --format "table {{.Names}}\t{{.Status}}"
+          EOF
+
+      - name: Create deployment backup
+        run: |
+          ssh ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SERVER_IP }} << 'EOF'
+            cd ${{ secrets.DO_PROJECT_PATH }}
+            
+            echo "💾 Creating post-deployment backup..."
+            ./deploy.sh backup
+          EOF
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "✅ Deployment successful!"
+          echo "🌐 Web App: https://mindmap.yourdomain.com"
+          echo "⚙️  CMS Admin: https://mindmap-api.yourdomain.com/admin"
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed!"
+          echo "Check the logs above for details."
+
